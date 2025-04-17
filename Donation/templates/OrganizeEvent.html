@@ -1,0 +1,665 @@
+{% extends "base.html" %}
+
+{% block title_block %} Schedule Event | LifeDrops {% endblock %}
+
+{% block main_block %}
+    <style>
+        /* Hero Section */
+        .schedule-hero {
+            height: 60vh;
+            background: linear-gradient(135deg, #4e0000, #6a0000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .schedule-hero::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.03)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ff4d4d, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Interactive Timeline */
+        .schedule-container {
+            padding: 5rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 3rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: #ff4d4d;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+            text-align: left;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -15px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 15px solid white;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -15px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 15px solid white;
+        }
+
+        .timeline-circle {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ff4d4d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 0 0 8px rgba(255, 77, 77, 0.2);
+            z-index: 1;
+        }
+
+        .timeline-date {
+            color: #ff4d4d;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4e0000;
+        }
+
+        /* Interactive Calendar */
+        .calendar {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 3rem auto;
+            max-width: 800px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-title {
+            font-size: 1.8rem;
+            color: #4e0000;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .calendar-nav button {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: #4e0000;
+            transform: scale(1.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            color: #4e0000;
+            padding: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: rgba(255, 77, 77, 0.1);
+        }
+
+        .calendar-day.active {
+            background: #ff4d4d;
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.has-events::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            width: 6px;
+            height: 6px;
+            background: #ff4d4d;
+            border-radius: 50%;
+        }
+
+        .calendar-day.active.has-events::after {
+            background: white;
+        }
+
+        /* Confirmation Section */
+        .confirmation {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #ff4d4d, #cc0000);
+            color: white;
+            border-radius: 15px;
+            margin: 3rem auto;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confirmation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+            opacity: 0.2;
+        }
+
+        .confirmation h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            position: relative;
+        }
+
+        .confirmation p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: #ff4d4d;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #ff4d4d;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #4e0000;
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .tables-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .navbar .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: #4e0000;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 30px;
+                transition: all 0.5s ease;
+            }
+            
+            .navbar .nav-links.active {
+                left: 0;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 32px;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .blood-groups {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .blood-groups {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-column p, 
+            .footer-links {
+                text-align: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="schedule-hero">
+        <div class="hero-content">
+            <h1>Schedule Your Event</h1>
+            <p>Plan your group blood donation in just a few simple steps</p>
+        </div>
+    </section>
+
+    <!-- Interactive Timeline -->
+    <div class="schedule-container">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem; color: #4e0000; font-family: 'Playfair Display', serif;">How To Schedule</h2>
+        
+        <div class="timeline">
+            <!-- Step 1 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 1</div>
+                    <h3 class="timeline-title">Choose Your Date</h3>
+                    <p>Select a preferred date from our interactive calendar. We recommend scheduling at least 2 weeks in advance.</p>
+                </div>
+                <div class="timeline-circle">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 2</div>
+                    <h3 class="timeline-title">Select Location</h3>
+                    <p>Tell us where you'd like to host - we can come to your location or arrange a group visit to our center.</p>
+                </div>
+                <div class="timeline-circle">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 3</div>
+                    <h3 class="timeline-title">Estimate Participants</h3>
+                    <p>Let us know approximately how many donors to expect so we can prepare accordingly.</p>
+                </div>
+                <div class="timeline-circle">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 4</div>
+                    <h3 class="timeline-title">Confirm Details</h3>
+                    <p>Review your event details and receive confirmation within 24 hours.</p>
+                </div>
+                <div class="timeline-circle">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Calendar -->
+        <div class="calendar">
+            <div class="calendar-header">
+                <h3 class="calendar-title">Select a Date</h3>
+                <div class="calendar-nav">
+                    <button><i class="fas fa-chevron-left"></i></button>
+                    <button><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="calendar-grid">
+                <!-- Day headers -->
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+                
+                <!-- Calendar days (sample data) -->
+                <div class="calendar-day">28</div>
+                <div class="calendar-day">29</div>
+                <div class="calendar-day">30</div>
+                <div class="calendar-day">1</div>
+                <div class="calendar-day">2</div>
+                <div class="calendar-day">3</div>
+                <div class="calendar-day">4</div>
+                
+                <div class="calendar-day">5</div>
+                <div class="calendar-day">6</div>
+                <div class="calendar-day">7</div>
+                <div class="calendar-day">8</div>
+                <div class="calendar-day">9</div>
+                <div class="calendar-day">10</div>
+                <div class="calendar-day">11</div>
+                
+                <div class="calendar-day">12</div>
+                <div class="calendar-day">13</div>
+                <div class="calendar-day has-events">14</div>
+                <div class="calendar-day has-events">15</div>
+                <div class="calendar-day">16</div>
+                <div class="calendar-day">17</div>
+                <div class="calendar-day">18</div>
+                
+                <div class="calendar-day">19</div>
+                <div class="calendar-day active">20</div>
+                <div class="calendar-day has-events">21</div>
+                <div class="calendar-day">22</div>
+                <div class="calendar-day">23</div>
+                <div class="calendar-day">24</div>
+                <div class="calendar-day">25</div>
+                
+                <div class="calendar-day">26</div>
+                <div class="calendar-day">27</div>
+                <div class="calendar-day">28</div>
+                <div class="calendar-day">29</div>
+                <div class="calendar-day">30</div>
+                <div class="calendar-day">31</div>
+                <div class="calendar-day">1</div>
+            </div>
+        </div>
+
+        <!-- Location Selection (Visual Map) -->
+        <div class="calendar" style="margin-top: 3rem;">
+            <div class="calendar-header">
+                <h3 class="calendar-title">Select Location</h3>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem;">
+                <div style="flex: 1; min-width: 250px; background: #f8f8f8; border-radius: 10px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;">
+                    <h4 style="color: #4e0000; margin-bottom: 0.5rem;"><i class="fas fa-building" style="color: #ff4d4d; margin-right: 0.5rem;"></i> Our Location</h4>
+                    <p style="color: #555;">Visit our main donation center with your group</p>
+                    <div style="margin-top: 1rem; display: flex; align-items: center;">
+                        <i class="fas fa-map-marker-alt" style="color: #ff4d4d; margin-right: 0.5rem;"></i>
+                        <span>123 LifeSaver Ave, Health City</span>
+                    </div>
+                </div>
+                
+                <div style="flex: 1; min-width: 250px; background: #f8f8f8; border-radius: 10px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;">
+                    <h4 style="color: #4e0000; margin-bottom: 0.5rem;"><i class="fas fa-truck-medical" style="color: #ff4d4d; margin-right: 0.5rem;"></i> Mobile Unit</h4>
+                    <p style="color: #555;">We'll bring the donation center to your location</p>
+                    <div style="margin-top: 1rem; display: flex; align-items: center;">
+                        <i class="fas fa-edit" style="color: #ff4d4d; margin-right: 0.5rem;"></i>
+                        <span>Enter your address</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Size Selector -->
+        <div class="calendar" style="margin-top: 3rem; text-align: center;">
+            <div class="calendar-header" style="justify-content: center;">
+                <h3 class="calendar-title">Estimated Participants</h3>
+            </div>
+            
+            <div style="margin: 2rem 0; display: flex; justify-content: center; align-items: center; gap: 1rem;">
+                <button style="background: #ff4d4d; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;">-</button>
+                <div style="font-size: 1.5rem; font-weight: 600; min-width: 60px; text-align: center;">15</div>
+                <button style="background: #ff4d4d; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;">+</button>
+            </div>
+            
+            <div style="width: 100%; height: 10px; background: #f0f0f0; border-radius: 5px; margin: 1rem 0; overflow: hidden;">
+                <div style="width: 50%; height: 100%; background: #ff4d4d;"></div>
+            </div>
+            
+            <p style="color: #555;">This helps us prepare the right amount of staff and equipment</p>
+        </div>
+    </div>
+
+    <!-- Confirmation Section -->
+    <div class="confirmation">
+        <h2>Ready to Save Lives Together?</h2>
+        <p>Review your selections and confirm your group donation event. We'll contact you within 24 hours to finalize details.</p>
+        <a href="#" class="btn"><i class="fas fa-paper-plane"></i> Confirm Event</a>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Interactive Calendar
+        const calendarDays = document.querySelectorAll('.calendar-day');
+        calendarDays.forEach(day => {
+            day.addEventListener('click', () => {
+                // Remove active class from all days
+                calendarDays.forEach(d => d.classList.remove('active'));
+                
+                // Add active class to clicked day
+                day.classList.add('active');
+            });
+        });
+
+        // Group Size Selector
+        const minusBtn = document.querySelector('.calendar button:first-of-type');
+        const plusBtn = document.querySelector('.calendar button:last-of-type');
+        const countDisplay = document.querySelector('.calendar div:nth-of-type(2)');
+        const progressBar = document.querySelector('.confirmation div:last-of-type div');
+        
+        let count = 15;
+        
+        minusBtn.addEventListener('click', () => {
+            if (count > 5) {
+                count -= 5;
+                updateCount();
+            }
+        });
+        
+        plusBtn.addEventListener('click', () => {
+            if (count < 50) {
+                count += 5;
+                updateCount();
+            }
+        });
+        
+        function updateCount() {
+            countDisplay.textContent = count;
+            const percentage = (count / 50) * 100;
+            progressBar.style.width = `${percentage}%`;
+        }
+
+        // Location Selection
+        const locationOptions = document.querySelectorAll('.calendar > div > div');
+        locationOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                locationOptions.forEach(opt => {
+                    opt.style.background = '#f8f8f8';
+                    opt.style.boxShadow = 'none';
+                });
+                
+                option.style.background = 'rgba(255, 77, 77, 0.1)';
+                option.style.boxShadow = '0 5px 15px rgba(255, 77, 77, 0.1)';
+            });
+        });
+    </script>
+</body>
+{% endblock %}

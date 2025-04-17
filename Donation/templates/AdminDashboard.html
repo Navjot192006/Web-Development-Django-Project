@@ -1,0 +1,201 @@
+            <!-- Blood Request Management Section -->
+            <section class="blood-request-management">
+                <div class="section-title">
+                    <h2>Blood Request Management</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Requester</th>
+                                <th>Patient Name</th>
+                                <th>Blood Type</th>
+                                <th>Units Needed</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if blood_requests %}
+                                {% for request in blood_requests %}
+                                    <tr>
+                                        <td>{{ request.request_id }}</td>
+                                        <td>{{ request.requester_name }}</td>
+                                        <td>{{ request.patient_name }}</td>
+                                        <td>{{ request.blood_type }}</td>
+                                        <td>{{ request.units_needed }}</td>
+                                        <td>
+                                            {% if request.priority == 'emergency' %}
+                                                <span class="badge badge-danger">Emergency</span>
+                                            {% elif request.priority == 'urgent' %}
+                                                <span class="badge badge-warning">Urgent</span>
+                                            {% else %}
+                                                <span class="badge badge-info">Standard</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if request.status == 'pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% elif request.status == 'approved' %}
+                                                <span class="badge badge-success">Approved</span>
+                                            {% elif request.status == 'fulfilled' %}
+                                                <span class="badge badge-primary">Fulfilled</span>
+                                            {% elif request.status == 'rejected' %}
+                                                <span class="badge badge-danger">Rejected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'view_blood_request' request.id %}" class="btn btn-sm btn-info">View</a>
+                                                {% if request.status == 'pending' %}
+                                                    <a href="{% url 'approve_blood_request' request.id %}" class="btn btn-sm btn-success">Approve</a>
+                                                    <a href="{% url 'reject_blood_request' request.id %}" class="btn btn-sm btn-danger">Reject</a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="8" style="text-align: center;">No blood requests to manage.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Appointment Request Management Section -->
+            <section class="appointment-request-management">
+                <div class="section-title">
+                    <h2>Appointment Request Management</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Requester</th>
+                                <th>Preferred Date</th>
+                                <th>Preferred Time</th>
+                                <th>Doctor</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if appointment_requests %}
+                                {% for request in appointment_requests %}
+                                    <tr>
+                                        <td>{{ request.request_id }}</td>
+                                        <td>{{ request.requester_name }}</td>
+                                        <td>{{ request.preferred_date|date:"d M Y" }}</td>
+                                        <td>{{ request.preferred_time }}</td>
+                                        <td>{{ request.selected_doctor }}</td>
+                                        <td>{{ request.appointment_type }}</td>
+                                        <td>
+                                            {% if request.status == 'Pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% elif request.status == 'Reviewed' %}
+                                                <span class="badge badge-info">Reviewed</span>
+                                            {% elif request.status == 'Contacted' %}
+                                                <span class="badge badge-primary">Contacted</span>
+                                            {% elif request.status == 'Scheduled' %}
+                                                <span class="badge badge-success">Scheduled</span>
+                                            {% elif request.status == 'Declined' %}
+                                                <span class="badge badge-danger">Declined</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'view_appointment_request' request.id %}" class="btn btn-sm btn-info">View</a>
+                                                {% if request.status == 'Pending' %}
+                                                    <a href="{% url 'review_appointment_request' request.id %}" class="btn btn-sm btn-primary">Review</a>
+                                                    <a href="{% url 'schedule_appointment' request.id %}" class="btn btn-sm btn-success">Schedule</a>
+                                                    <a href="{% url 'decline_appointment_request' request.id %}" class="btn btn-sm btn-danger">Decline</a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="8" style="text-align: center;">No appointment requests to manage.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Doctor Appointment Management Section -->
+            <section class="doctor-appointment-management">
+                <div class="section-title">
+                    <h2>Doctor Appointment Management</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Specialty</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if doctor_appointments %}
+                                {% for appointment in doctor_appointments %}
+                                    <tr>
+                                        <td>{{ appointment.appointment_id }}</td>
+                                        <td>{{ appointment.patient_name }}</td>
+                                        <td>{{ appointment.doctor_name }}</td>
+                                        <td>{{ appointment.specialty }}</td>
+                                        <td>{{ appointment.appointment_date|date:"d M Y" }}</td>
+                                        <td>{{ appointment.appointment_time }}</td>
+                                        <td>{{ appointment.appointment_type }}</td>
+                                        <td>
+                                            {% if appointment.status == 'Requested' %}
+                                                <span class="badge badge-warning">Requested</span>
+                                            {% elif appointment.status == 'Confirmed' %}
+                                                <span class="badge badge-success">Confirmed</span>
+                                            {% elif appointment.status == 'Completed' %}
+                                                <span class="badge badge-info">Completed</span>
+                                            {% elif appointment.status == 'Cancelled' %}
+                                                <span class="badge badge-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'view_appointment' appointment.id %}" class="btn btn-sm btn-info">View</a>
+                                                {% if appointment.status == 'Requested' %}
+                                                    <a href="{% url 'confirm_appointment' appointment.id %}" class="btn btn-sm btn-success">Confirm</a>
+                                                    <a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                {% elif appointment.status == 'Confirmed' %}
+                                                    <a href="{% url 'complete_appointment' appointment.id %}" class="btn btn-sm btn-primary">Complete</a>
+                                                    <a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="9" style="text-align: center;">No doctor appointments to manage.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section> 

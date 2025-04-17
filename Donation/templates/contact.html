@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block title_block %} Contact us {% endblock %}
+{% block main_block %}
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f9f9f9;
+    }
+
+    /* Main Content Styles */
+    .main-container {
+        flex: 1;
+        padding: 100px 0 40px;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        color: #4e0000;
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        font-size: 36px;
+    }
+
+    .contact-section {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+    .contact-form, .contact-info {
+        flex: 1;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-form h2, .contact-info h2 {
+        color: #4e0000;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+    }
+
+    .form-group button {
+        background-color: #4e0000;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group button:hover {
+        background-color: #610707;
+        transform: translateY(-2px);
+    }
+
+    .contact-info p {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .contact-info p strong {
+        color: #4e0000;
+    }
+
+    .map iframe {
+        width: 100%;
+        height: 300px;
+        border: 0;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .contact-section {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 32px;
+        }
+        
+        .contact-form, .contact-info {
+            padding: 25px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        h1 {
+            font-size: 28px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Main Content -->
+<div class="main-container">
+    <div class="container">
+        <h1>Contact Us</h1>
+        <div class="contact-section">
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email:</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject:</label>
+                        <input type="text" id="subject" name="subject" required placeholder="Enter the subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Enter your message"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Send Message</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <h2>Our Contact Information</h2>
+                <p><strong>Address:</strong> 123 Blood Donation Street, City, Country</p>
+                <p><strong>Phone:</strong> +123 456 7890</p>
+                <p><strong>Email:</strong> info@blooddonation.com</p>
+                <p><strong>Working Hours:</strong> Mon - Fri: 9 AM - 6 PM</p>
+
+                <!-- Map -->
+                <div class="map">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.8354345093747!2d144.9537353153166!3d-37.816279742021665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11fd81%3A0xf577d6d2e5a0b3b4!2sBlood%20Donation%20Center!5e0!3m2!1sen!2sus!4v1622549400000!5m2!1sen!2sus"
+                        allowfullscreen=""
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+{% endblock %}

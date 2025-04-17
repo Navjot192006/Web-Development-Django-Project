@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0"><i class="fas fa-check-circle mr-2"></i> Appointment Confirmed</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-calendar-check fa-4x text-success mb-3"></i>
+                        <h4>Thank you for scheduling your blood test appointment!</h4>
+                        <p class="text-muted">Your appointment has been successfully booked. Please save the details below for your reference.</p>
+                    </div>
+
+                    <h5 class="border-bottom pb-2">Appointment Details</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>Appointment ID:</strong> #{{ appointment.appointment_id }}</p>
+                            <p><strong>Patient Name:</strong> {{ appointment.first_name }} {{ appointment.last_name }}</p>
+                            <p><strong>Email:</strong> {{ appointment.email }}</p>
+                            <p><strong>Phone:</strong> {{ appointment.phone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Date:</strong> {{ appointment.appointment_date|date:"F d, Y" }}</p>
+                            <p><strong>Time:</strong> {{ appointment.appointment_time|time:"h:i A" }}</p>
+                            <p><strong>Total Amount:</strong> ${{ appointment.total_price|floatformat:2 }}</p>
+                            <p><strong>Status:</strong> <span class="badge badge-warning">Pending</span></p>
+                        </div>
+                    </div>
+
+                    <h5 class="border-bottom pb-2">Selected Tests</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Test Code</th>
+                                    <th>Test Name</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for selected_test in selected_tests %}
+                                <tr>
+                                    <td>{{ selected_test.test.test_code }}</td>
+                                    <td>{{ selected_test.test.name }}</td>
+                                    <td>${{ selected_test.test.price|floatformat:2 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No tests selected</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-info-circle mr-2"></i> Please arrive 15 minutes before your scheduled appointment time. Don't forget to bring your ID and insurance card.
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{% url 'bloodlab:test_form' %}" class="btn btn-outline-primary mr-2">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Tests
+                        </a>
+                        <a href="#" class="btn btn-primary" onclick="window.print(); return false;">
+                            <i class="fas fa-print mr-1"></i> Print Receipt
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

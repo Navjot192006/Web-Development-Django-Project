@@ -1,0 +1,797 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title_block %} Education Programs {% endblock %}
+
+{% block main_block %}
+
+<style>
+    :root {
+        --primary-color: #4e0000; /* Deep Red */
+        --secondary-color: #ff4d4d; /* Bright Red */
+        --accent-color: #f7caca; /* Light Pink Accent */
+        --light-gray: #f8f9fa; /* Very Light Gray */
+        --medium-gray: #e9ecef; /* Light Gray */
+        --dark-gray: #555; /* Dark Gray Text */
+        --white: #fff;
+        --card-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+        --card-hover-shadow: 0 10px 25px rgba(255, 77, 77, 0.15);
+        --border-radius-md: 15px;
+        --border-radius-lg: 20px;
+        --font-primary: 'Poppins', sans-serif;
+        --font-secondary: 'Playfair Display', serif;
+   }
+
+   body {
+        font-family: var(--font-primary);
+        color: var(--dark-gray);
+        line-height: 1.7;
+    }
+
+    .education-page-container {
+        padding-top: 80px; /* Account for fixed navbar */
+        background-color: var(--light-gray);
+        min-height: 100vh;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* Hero Section */
+    .education-hero {
+        background: linear-gradient(rgba(78, 0, 0, 0.7), rgba(78, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+        background-size: cover;
+        padding: 120px 20px 100px;
+        text-align: center;
+        color: var(--white);
+        border-bottom-left-radius: var(--border-radius-lg);
+        border-bottom-right-radius: var(--border-radius-lg);
+        margin-bottom: -50px; /* Overlap with content area */
+        position: relative;
+       z-index: 1;
+   }
+
+   .education-hero h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        font-family: var(--font-secondary);
+        font-weight: 700;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+   }
+
+   .education-hero p {
+        font-size: 18px;
+        max-width: 750px;
+        margin: 0 auto;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    /* Main Content Area */
+    .education-content-area {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 80px 20px 50px; /* Increased top padding due to hero overlap */
+        position: relative;
+       z-index: 2;
+    }
+
+    /* Tab Navigation */
+    .education-tabs {
+       display: flex;
+       justify-content: center;
+       margin-bottom: 50px;
+        background-color: var(--white);
+        padding: 10px;
+        border-radius: 50px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+       flex-wrap: wrap;
+        gap: 8px;
+        max-width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+   }
+
+    .edu-tab-button {
+        padding: 12px 25px;
+       border: none;
+        background-color: transparent;
+        color: var(--dark-gray);
+        font-weight: 600;
+        font-size: 15px;
+       border-radius: 50px;
+       cursor: pointer;
+       transition: all 0.3s ease;
+    }
+
+    .edu-tab-button.active {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+    }
+
+    .edu-tab-button:hover:not(.active) {
+        background-color: var(--medium-gray);
+        color: var(--primary-color);
+    }
+
+    /* Tab Content Styling */
+    .edu-tab-content {
+       display: none;
+        animation: fadeIn 0.5s ease-in-out;
+   }
+
+    .edu-tab-content.active {
+       display: block;
+   }
+
+   @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+       to { opacity: 1; transform: translateY(0); }
+   }
+
+    /* Program Card Grid */
+    .edu-programs-grid {
+       display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 35px;
+    }
+
+    /* Program Card Styling */
+    .edu-program-card {
+        background-color: var(--white);
+        border-radius: var(--border-radius-md);
+       overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .edu-program-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    .edu-card-image {
+       height: 200px;
+       position: relative;
+        overflow: hidden; /* Keep image zoom contained */
+    }
+
+    .edu-card-image img {
+       width: 100%;
+       height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+     .edu-program-card:hover .edu-card-image img {
+        transform: scale(1.05);
+    }
+
+    .edu-card-level {
+       position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: rgba(255, 77, 77, 0.9);
+        color: var(--white);
+        padding: 5px 12px;
+       font-size: 12px;
+       font-weight: 600;
+        border-radius: 50px;
+        backdrop-filter: blur(2px);
+   }
+
+    .edu-card-content {
+       padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .edu-card-content h3 {
+        font-size: 21px;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+
+    .edu-card-content p {
+        color: var(--dark-gray);
+        font-size: 14px;
+       margin-bottom: 20px;
+        flex-grow: 1;
+        line-height: 1.6;
+   }
+
+    .edu-card-meta {
+       display: flex;
+       justify-content: space-between;
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        gap: 10px; /* Add gap between meta items */
+       color: #777;
+        font-size: 13px;
+       margin-bottom: 20px;
+        border-top: 1px solid var(--medium-gray);
+        padding-top: 15px;
+   }
+
+    .edu-card-meta span {
+       display: flex;
+       align-items: center;
+   }
+
+    .edu-card-meta i {
+        margin-right: 8px;
+        color: var(--secondary-color);
+        width: 16px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .edu-card-action {
+        margin-top: auto; /* Push button to bottom */
+    }
+
+    .edu-card-btn {
+       display: inline-block;
+       padding: 10px 25px;
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: 2px solid var(--secondary-color);
+       border-radius: 50px;
+       text-decoration: none;
+       font-weight: 600;
+       transition: all 0.3s ease;
+       font-size: 14px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .edu-card-btn:hover {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    /* Section Base Styling */
+    section {
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+
+     section h2 {
+        text-align: center;
+        font-size: 36px;
+        color: var(--primary-color);
+        margin-bottom: 40px;
+        font-family: var(--font-secondary);
+        font-weight: 600;
+        position: relative;
+    }
+     section h2::after {
+       content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: var(--secondary-color);
+        margin: 10px auto 0;
+    }
+
+    /* Knowledge Hub Section */
+    .knowledge-hub {
+        background-color: var(--accent-color);
+        border-radius: var(--border-radius-lg);
+        padding: 60px 40px;
+    }
+
+    .hub-cards {
+       display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+       gap: 30px;
+        margin-top: 30px;
+   }
+
+    .hub-card {
+        background-color: var(--white);
+       padding: 30px;
+        border-radius: var(--border-radius-md);
+        text-align: center;
+        box-shadow: var(--card-shadow);
+       transition: all 0.3s ease;
+   }
+     .hub-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    .hub-card i {
+       font-size: 40px;
+        color: var(--secondary-color);
+       margin-bottom: 20px;
+   }
+
+    .hub-card h3 {
+        font-size: 20px;
+        color: var(--primary-color);
+       margin-bottom: 15px;
+       font-weight: 600;
+   }
+
+    .hub-card p {
+       font-size: 14px;
+        color: var(--dark-gray);
+        line-height: 1.6;
+   }
+
+   /* CTA Section */
+    .edu-cta {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: var(--white);
+       text-align: center;
+        padding: 80px 40px;
+        border-radius: var(--border-radius-lg);
+    }
+
+     .edu-cta h2 {
+        color: var(--white);
+        font-size: 38px;
+        margin-bottom: 20px;
+    }
+     .edu-cta h2::after {
+        background-color: var(--white);
+         opacity: 0.7;
+    }
+
+     .edu-cta p {
+        font-size: 18px;
+        max-width: 650px;
+        margin: 0 auto 35px;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .cta-btn {
+        padding: 14px 35px;
+       border-radius: 50px;
+       text-decoration: none;
+       font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        display: inline-block;
+    }
+
+    .cta-btn-primary {
+        background-color: var(--white);
+        color: var(--secondary-color);
+        border-color: var(--white);
+    }
+    .cta-btn-primary:hover {
+        background-color: transparent;
+        color: var(--white);
+        border-color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    .cta-btn-secondary {
+        background-color: transparent;
+        color: var(--white);
+        border-color: var(--white);
+    }
+     .cta-btn-secondary:hover {
+        background-color: var(--white);
+        color: var(--secondary-color);
+        border-color: var(--white);
+        transform: translateY(-2px);
+    }
+
+
+     /* Responsive */
+    @media (max-width: 992px) {
+        .edu-programs-grid {
+             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+             gap: 30px;
+        }
+    }
+    @media (max-width: 768px) {
+        .education-hero h1 {
+            font-size: 36px;
+        }
+        .education-hero p {
+            font-size: 16px;
+        }
+        .education-tabs {
+            flex-direction: column;
+            align-items: stretch;
+            border-radius: var(--border-radius-md);
+            max-width: 90%;
+        }
+        .edu-tab-button {
+            text-align: center;
+            border-radius: 8px;
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+        .edu-programs-grid {
+             grid-template-columns: 1fr; /* Stack cards */
+             gap: 25px;
+        }
+        section h2 {
+            font-size: 30px;
+            margin-bottom: 30px;
+        }
+        .knowledge-hub, .faq-section, .edu-cta {
+            padding: 40px 20px;
+        }
+        .hub-cards {
+           grid-template-columns: 1fr;
+       }
+        .edu-cta h2 {
+           font-size: 32px;
+       }
+        .edu-cta p {
+            font-size: 16px;
+        }
+        .faq-question {
+            font-size: 16px;
+        }
+        .faq-answer {
+            font-size: 14px;
+        }
+    }
+    @media (max-width: 480px) {
+        .education-hero {
+            padding: 100px 15px 80px;
+        }
+        .education-content-area {
+             padding: 70px 15px 40px;
+        }
+         .edu-card-content {
+            padding: 20px;
+        }
+        .edu-card-meta {
+            font-size: 12px;
+        }
+        .edu-card-btn {
+            padding: 8px 20px;
+            font-size: 13px;
+            width: 100%; /* Full width button on small screens */
+            box-sizing: border-box;
+        }
+        .cta-buttons {
+            flex-direction: column;
+            gap: 15px;
+        }
+         .cta-btn {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            font-size: 15px;
+            padding: 12px 30px;
+        }
+    }
+
+</style>
+
+<div class="education-page-container">
+
+    <!-- Hero Section -->
+<section class="education-hero">
+   <div class="education-hero-content">
+            <h1>Expand Your Knowledge</h1>
+            <p>Explore our comprehensive educational programs designed to enhance understanding of blood science, donation practices, and transfusion medicine. Whether you're a curious donor, aspiring medical student, healthcare professional, or community advocate, we have tailored programs to meet your needs.</p>
+   </div>
+</section>
+
+    <!-- Main Content Area -->
+    <div class="education-content-area">
+        <!-- Tab Navigation -->
+        <div class="education-tabs">
+            <button class="edu-tab-button active" data-tab="donor-education">Donor Education</button>
+            <button class="edu-tab-button" data-tab="student-programs">Student Programs</button>
+            <button class="edu-tab-button" data-tab="professional-courses">Professional Courses</button>
+            <button class="edu-tab-button" data-tab="community-outreach">Community Outreach</button>
+       </div>
+       
+        <!-- Tab Content: Donor Education -->
+        <div class="edu-tab-content active" id="donor-education">
+            <div class="edu-programs-grid">
+                <!-- Card 1 -->
+                <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Blood Donation Process">
+                        <span class="edu-card-level">Beginner</span>
+       </div>
+                    <div class="edu-card-content">
+                       <h3>Blood Donation 101</h3>
+                        <p>Learn the fundamentals of blood donation in this comprehensive introductory course. Understand the entire donation process from registration to post-donation care, discover the health benefits for donors, and learn what makes you eligible to donate. Perfect for first-time donors or those considering donation.</p>
+                        <div class="edu-card-meta">
+                           <span><i class="fas fa-clock"></i> 1.5 hours</span>
+                           <span><i class="fas fa-user-graduate"></i> 500+ students</span>
+                       </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Enroll Now</a>
+                        </div>
+                   </div>
+               </div>
+                <!-- Card 2 -->
+                <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Blood Type Testing">
+                         <span class="edu-card-level">Intermediate</span>
+                   </div>
+                    <div class="edu-card-content">
+                       <h3>Understanding Blood Types</h3>
+                        <p>Dive deep into the science of blood typing and compatibility. This course covers the ABO and Rh systems, rare blood types, universal donors/recipients, and why certain donations are more critical than others. Learn how your blood type affects donation and transfusion processes in medical settings.</p>
+                        <div class="edu-card-meta">
+                           <span><i class="fas fa-clock"></i> 2 hours</span>
+                           <span><i class="fas fa-user-graduate"></i> 320+ students</span>
+                       </div>
+                        <div class="edu-card-action">
+                             <a href="#" class="edu-card-btn">Enroll Now</a>
+                        </div>
+                   </div>
+               </div>
+                <!-- Card 3 -->
+                <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Platelet Donation">
+                        <span class="edu-card-level">Advanced</span>
+                   </div>
+                    <div class="edu-card-content">
+                       <h3>Platelet & Plasma Donation</h3>
+                        <p>Specialized course covering apheresis donation processes for platelets and plasma. Learn about the unique requirements, medical uses, and patient impact of these specialized donations. Includes virtual tour of our apheresis center and testimonials from patients who benefited from these life-saving products.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-clock"></i> 2.5 hours</span>
+                           <span><i class="fas fa-user-graduate"></i> 180+ students</span>
+                       </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Enroll Now</a>
+                        </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       
+        <!-- Tab Content: Student Programs -->
+        <div class="edu-tab-content" id="student-programs">
+            <div class="edu-programs-grid">
+                 <!-- Card 1 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="High School Students Learning">
+                        <span class="edu-card-level">High School</span>
+                   </div>
+                    <div class="edu-card-content">
+                       <h3>High School Curriculum</h3>
+                        <p>Comprehensive STEM program designed for high school students covering hematology basics, blood component functions, and the science behind donation. Includes interactive lab demonstrations, career exploration in blood banking, and opportunities to organize school blood drives. Aligned with national science standards.</p>
+                        <div class="edu-card-meta">
+                           <span><i class="fas fa-book-open"></i> 4 modules</span>
+                           <span><i class="fas fa-user-graduate"></i> 1,200+ students</span>
+                       </div>
+                        <div class="edu-card-action">
+                             <a href="#" class="edu-card-btn">Learn More</a>
+                        </div>
+                   </div>
+               </div>
+                 <!-- Card 2 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Medical Students in Lab">
+                        <span class="edu-card-level">University</span>
+                   </div>
+                    <div class="edu-card-content">
+                       <h3>Medical Student Program</h3>
+                        <p>Advanced coursework for pre-med and medical students focusing on transfusion medicine, blood banking operations, and clinical applications. Features case studies, hands-on blood typing labs, and shadowing opportunities with our medical directors. Eligible for academic credit at participating institutions.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-calendar-alt"></i> 8 weeks</span>
+                           <span><i class="fas fa-user-graduate"></i> 450+ students</span>
+                       </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Learn More</a>
+                        </div>
+                   </div>
+               </div>
+                 <!-- Card 3 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Alternative Lab Image">                        <span class="edu-card-level">Internship</span>
+                   </div>
+                    <div class="edu-card-content">
+                       <h3>Blood Bank Internship</h3>
+                        <p>Hands-on experience working alongside our blood bank team in donor screening, component processing, quality control, and distribution logistics. STEM students gain practical laboratory skills, data analysis experience, and insight into regulatory compliance in blood banking. Competitive application process with limited positions.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-clock"></i> 12 weeks</span>
+                           <span><i class="fas fa-user-graduate"></i> 30+ students/year</span>
+                       </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Apply Now</a>
+                        </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       
+        <!-- Tab Content: Professional Courses -->
+        <div class="edu-tab-content" id="professional-courses">
+            <div class="edu-programs-grid">
+                <!-- Card 1 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Phlebotomy Training">
+                        <span class="edu-card-level">Certification</span>
+                    </div>
+                    <div class="edu-card-content">
+                        <h3>Advanced Phlebotomy Techniques</h3>
+                        <p>Comprehensive certification course for healthcare professionals covering advanced venipuncture techniques, difficult draws, pediatric phlebotomy, and donor-specific considerations. Includes simulation training and competency assessments. Meets continuing education requirements for nurses, EMTs, and laboratory technicians.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-certificate"></i> Certification</span>
+                           <span><i class="fas fa-user-md"></i> Healthcare Pros</span>
+                        </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">View Course</a>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 2 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Blood Bank Management">
+                        <span class="edu-card-level">Management</span>
+                    </div>
+                    <div class="edu-card-content">
+                        <h3>Blood Bank Management</h3>
+                        <p>Leadership training program covering all aspects of blood bank operations including inventory management, cold chain logistics, regulatory compliance, staff training protocols, and crisis resource management. Designed for laboratory supervisors, blood bank managers, and healthcare administrators.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-users-cog"></i> Management</span>
+                            <span><i class="fas fa-calendar-alt"></i> 6 weeks</span>
+                        </div>
+                        <div class="edu-card-action">
+                             <a href="#" class="edu-card-btn">Register Interest</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Transfusion Medicine">
+                        <span class="edu-card-level">CME</span>
+                    </div>
+                    <div class="edu-card-content">
+                        <h3>Transfusion Medicine Update</h3>
+                        <p>Annual continuing medical education program for physicians covering latest developments in transfusion medicine, blood utilization guidelines, massive transfusion protocols, and management of transfusion reactions. Features case-based learning and expert panels. Approved for AMA PRA Category 1 Credit™.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-stethoscope"></i> For Physicians</span>
+                           <span><i class="fas fa-credit-card"></i> CME Credits</span>
+                        </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+       
+        <!-- Tab Content: Community Outreach -->
+        <div class="edu-tab-content" id="community-outreach">
+            <div class="edu-programs-grid">
+                <!-- Card 1 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Community Workshop">
+                         <span class="edu-card-level">Community</span>
+                    </div>
+                    <div class="edu-card-content">
+                        <h3>Community Awareness Workshops</h3>
+                        <p>Interactive 90-minute sessions designed for churches, civic groups, and workplaces to understand blood donation's vital role in healthcare. Dispels common myths, explains the donation process, and highlights local impact. Available in multiple languages with flexible scheduling options for your organization.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-users"></i> Groups</span>
+                           <span><i class="fas fa-map-marker-alt"></i> On-demand</span>
+                        </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Request Workshop</a>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 2 -->
+                 <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1541178735493-479c1a27ed24?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Volunteer Ambassador">
+                        <span class="edu-card-level">Volunteer</span>
+                    </div>
+                    <div class="edu-card-content">
+                        <h3>Donor Ambassador Program</h3>
+                        <p>Comprehensive training for volunteers who want to become community advocates for blood donation. Learn presentation skills, blood drive coordination, and donor recruitment strategies. Ambassadors receive ongoing support, resource materials, and recognition for their service. Flexible time commitment with quarterly training sessions.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-hands-helping"></i> Volunteer</span>
+                           <span><i class="fas fa-calendar-check"></i> Ongoing</span>
+                        </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Become Ambassador</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="edu-program-card">
+                    <div class="edu-card-image">
+                        <img src="https://images.unsplash.com/photo-1521791055366-0d553872125f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Corporate Partnership">
+                        <span class="edu-card-level">Business</span>
+                    </div>
+                    <div class="edu-card-content">
+                        <h3>Corporate Partnership Program</h3>
+                        <p>Tailored program for businesses wanting to support their community's blood supply. Includes employee education sessions, blood drive coordination, and corporate sponsorship opportunities. Participating companies receive impact reports, employee engagement metrics, and recognition for their life-saving contributions.</p>
+                         <div class="edu-card-meta">
+                           <span><i class="fas fa-building"></i> For Companies</span>
+                           <span><i class="fas fa-handshake"></i> Partnership</span>
+                        </div>
+                        <div class="edu-card-action">
+                            <a href="#" class="edu-card-btn">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+           </div>
+           
+    <!-- Knowledge Hub Section -->
+    <section class="knowledge-hub">
+        <h2>Blood Science Knowledge Hub</h2>
+        <div class="hub-cards">
+            <div class="hub-card">
+                <i class="fas fa-flask"></i>
+                <h3>Hematology Basics</h3>
+                <p>Explore the fascinating world of blood components and their vital functions in the human body through our interactive learning modules.</p>
+            </div>
+            <div class="hub-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Donation Impact</h3>
+                <p>Discover how a single donation can save multiple lives and the journey blood takes from donor to patient through our visual storytelling.</p>
+           </div>
+            <div class="hub-card">
+                <i class="fas fa-microscope"></i>
+                <h3>Research Updates</h3>
+                <p>Stay informed about the latest breakthroughs in transfusion medicine, blood substitutes, and hematology research from leading scientists.</p>
+           </div>
+       </div>
+   </section>
+
+    <!-- CTA Section -->
+    <section class="edu-cta">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Whether you want to learn, teach, or donate, your involvement helps save lives. Join our community of educated donors and advocates today.</p>
+        <div class="cta-buttons">
+            <a href="#" class="cta-btn cta-btn-primary">Find a Blood Drive</a>
+            <a href="#" class="cta-btn cta-btn-secondary">Contact Our Education Team</a>
+        </div>
+   </section>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabButtons = document.querySelectorAll('.edu-tab-button');
+        const tabContents = document.querySelectorAll('.edu-tab-content');
+    
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+    
+                // Deactivate all buttons and content
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+    
+                // Activate clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+           });
+       });
+   });
+</script>
+
+{% endblock %}

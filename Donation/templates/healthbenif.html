@@ -1,0 +1,539 @@
+{% extends 'base.html' %}
+{% block title_block %}Health Benefits{% endblock %}
+
+{% block main_block %}
+
+
+<style>
+    /* Reusing styles from the main page */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    /* Hero Section */
+    .health-hero {
+        height: 70vh;
+        background: linear-gradient(rgba(78, 0, 0, 0.8), rgba(78, 0, 0, 0.8)), 
+                    url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 100px 20px 0;
+        margin-top: 80px;
+    }
+
+    .hero-content {
+        max-width: 800px;
+    }
+
+    .hero-content h1 {
+        font-size: 72px;
+        margin-bottom: 25px;
+        font-family: 'Playfair Display', serif;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.5s ease;
+    }
+
+    .hero-content p {
+        font-size: 24px;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 2s ease;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 16px 40px;
+        font-size: 18px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease-in-out;
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 2.5s ease;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        background: #fff;
+        color: #ff4d4d;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(255, 77, 77, 0.7);
+    }
+
+    /* Main Content Sections */
+    .main-content {
+        padding: 100px 20px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+        margin-bottom: 100px;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .benefit-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+    }
+
+    .benefit-image {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .benefit-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .benefit-card:hover .benefit-image img {
+        transform: scale(1.1);
+    }
+
+    .benefit-content {
+        padding: 30px;
+    }
+
+    .benefit-content h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .benefit-content p {
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .benefit-content .learn-more {
+        color: #ff4d4d;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .benefit-content .learn-more i {
+        margin-left: 5px;
+        transition: transform 0.3s ease;
+    }
+
+    .benefit-content .learn-more:hover {
+        color: #4e0000;
+    }
+
+    .benefit-content .learn-more:hover i {
+        transform: translateX(5px);
+    }
+
+    /* Scientific Evidence Section */
+    .evidence-section {
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+        color: white;
+        padding: 100px 20px;
+        margin-bottom: 100px;
+        border-radius: 15px;
+    }
+
+    .evidence-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+
+    .evidence-image {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .evidence-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .evidence-content h2 {
+        font-size: 36px;
+        margin-bottom: 25px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .evidence-content ul {
+        list-style: none;
+        margin-bottom: 30px;
+    }
+
+    .evidence-content li {
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .evidence-content li::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: #ff4d4d;
+    }
+
+    /* Health Check Section */
+    .healthcheck-section {
+        margin-bottom: 100px;
+    }
+
+    .healthcheck-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+
+    .healthcheck-image {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .healthcheck-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .healthcheck-content h2 {
+        font-size: 36px;
+        margin-bottom: 25px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .healthcheck-content p {
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    /* CTA Section */
+    /* .cta-section {
+        background: linear-gradient(135deg, #ff4d4d, #cc0000);
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin-bottom: 100px;
+    }
+
+    .cta-section h2 {
+        font-size: 42px;
+        margin-bottom: 30px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 40px;
+        font-size: 20px;
+    } */
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .hero-content h1 {
+            font-size: 58px;
+        }
+        
+        .hero-content p {
+            font-size: 22px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+        }
+
+        .evidence-container,
+        .healthcheck-container {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .evidence-image,
+        .healthcheck-image {
+            order: -1;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        
+        .hero-content h1 {
+            font-size: 42px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+        }
+
+        .evidence-content h2,
+        .healthcheck-content h2 {
+            font-size: 28px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .health-hero {
+            height: 60vh;
+            margin-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: 36px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+        }
+        
+        .cta-section h2 {
+            font-size: 32px;
+        }
+        
+        .cta-section p {
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="health-hero">
+    <div class="hero-content">
+        <h1>Health Benefits of Blood Donation</h1>
+        <p>Regular blood donation helps reduce harmful iron stores, lowers risk of heart disease, and stimulates production of new blood cells.</p>
+        <!-- <a href="d10signin.html" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Blood Today</a> -->
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="section-title">
+            <h2>How Donating Blood Benefits You</h2>
+            <p>While saving lives is the primary reward, donors enjoy several health advantages too</p>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-image">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Heart Health">
+                </div>
+                <div class="benefit-content">
+                    <h3>Cardiovascular Health</h3>
+                    <p>Regular blood donation helps reduce the viscosity of blood, lowering the risk of heart attacks and strokes. It also helps maintain healthy iron levels, reducing oxidative stress on your cardiovascular system.</p>
+                    <a href="#" class="learn-more">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-image">
+                    <img src="https://images.unsplash.com/photo-1579684453423-f84349ef60b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2089&q=80" alt="Iron Reduction">
+                </div>
+                <div class="benefit-content">
+                    <h3>Iron Regulation</h3>
+                    <p>Donating blood removes excess iron stores from your body. While iron is essential, too much can lead to health problems affecting your liver, heart, and pancreas. Regular donation helps maintain optimal levels.</p>
+                    <a href="#" class="learn-more">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-image">
+                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Blood Cell Production">
+                </div>
+                <div class="benefit-content">
+                    <h3>Stimulates Blood Cell Production</h3>
+                    <p>After donating, your body works to replenish the blood loss, stimulating the production of new blood cells. This process helps maintain a healthy blood cell turnover rate and can improve overall vitality.</p>
+                    <a href="#" class="learn-more">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scientific Evidence Section -->
+    <section class="evidence-section">
+        <div class="evidence-container">
+            <div class="evidence-image">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Scientific Research">
+            </div>
+            <div class="evidence-content">
+                <h2>Scientific Evidence</h2>
+                <p>Multiple studies confirm the health benefits of regular blood donation:</p>
+                <ul>
+                    <li>88% reduction in heart attack risk for frequent donors (American Journal of Epidemiology)</li>
+                    <li>Lower risk of cancer due to reduced iron stores (Journal of the National Cancer Institute)</li>
+                    <li>Improved blood flow and reduced arterial blockages (Transfusion Medicine Reviews)</li>
+                    <li>Burns approximately 650 calories per donation (University of California study)</li>
+                    <li>Reduced risk of liver, lung, and colon cancers (Journal of Clinical Oncology)</li>
+                </ul>
+                <a href="#" class="btn">View Research Studies</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Health Check Section -->
+    <section class="healthcheck-section">
+        <div class="healthcheck-container">
+            <div class="healthcheck-content">
+                <h2>Free Health Screening</h2>
+                <p>Every blood donation includes a complimentary mini-physical that checks your:</p>
+                <p><strong>Blood pressure:</strong> Regular monitoring helps detect hypertension early</p>
+                <p><strong>Pulse rate:</strong> Can indicate cardiovascular health</p>
+                <p><strong>Hemoglobin levels:</strong> Screens for anemia and other blood disorders</p>
+                <p><strong>Body temperature:</strong> Helps identify potential infections</p>
+                <p>You'll also receive information about your blood type and any detected irregularities.</p>
+            </div>
+            <div class="healthcheck-image">
+                <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Health Check">
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <!-- <section class="cta-section"> -->
+        <!-- <h2>Give Blood, Gain Health</h2>
+        <p>Experience the dual benefits of saving lives while improving your own health. Schedule your donation today.</p>
+        <a href="d10signin.html" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Now</a>
+    </section>
+</div> -->
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+</script>
+</body>
+
+
+{% endblock %}

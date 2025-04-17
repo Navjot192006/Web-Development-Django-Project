@@ -1,0 +1,509 @@
+{% extends "base1.html" %}
+{% block title_block %} About {% endblock %}
+{% block main_block %}
+
+
+<style>
+    /* Hero Section */
+    .about-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .hero-content h1 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+    
+    .hero-content p {
+        font-size: 20px;
+        margin-bottom: 30px;
+        font-weight: 300;
+    }
+    
+    /* About Content */
+    .about-section {
+        margin-bottom: 80px;
+    }
+    
+    .section-title {
+        font-size: 32px;
+        color: #e74c3c;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+        text-align: center;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: #e74c3c;
+    }
+    
+    .about-content {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+    
+    .about-text {
+        flex: 1;
+    }
+    
+    .about-text h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .about-text p {
+        margin-bottom: 20px;
+        font-size: 16px;
+        line-height: 1.8;
+    }
+    
+    .about-image {
+        flex: 1;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .about-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.5s;
+    }
+    
+    .about-image:hover img {
+        transform: scale(1.05);
+    }
+    
+    /* Mission & Values */
+    .values-section {
+        margin-bottom: 80px;
+    }
+    
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .value-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    
+    .value-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .value-icon {
+        font-size: 40px;
+        color: #e74c3c;
+        margin-bottom: 20px;
+    }
+    
+    .value-card h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    /* Team Section */
+    .team-section {
+        margin-bottom: 80px;
+    }
+    
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .team-member {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    .member-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .member-info {
+        padding: 25px;
+    }
+    
+    .member-info h3 {
+        font-size: 20px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+    
+    .member-info p {
+        color: #e74c3c;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .member-bio {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .social-links a {
+        color: #888;
+        transition: color 0.3s ease;
+        font-size: 1.1em;
+    }
+    
+    .social-links a:hover {
+        color: #e74c3c;
+    }
+    
+    /* Stats Section */
+    .stats-section {
+        background-color: #e74c3c;
+        color: white;
+        padding: 80px 0;
+        margin-bottom: 80px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .stat-item h2 {
+        font-size: 48px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .stat-item p {
+        font-size: 18px;
+        opacity: 0.9;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        margin-bottom: 80px;
+    }
+    
+    .cta-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 50px;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cta-card h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .cta-card p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #666;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+        transition: all 0.3s;
+        border: 2px solid #e74c3c;
+    }
+    
+    .btn:hover {
+        background-color: transparent;
+        color: #e74c3c;
+    }
+    
+    .btn-outline {
+        background-color: transparent;
+        color: #e74c3c;
+        margin-left: 20px;
+    }
+    
+    .btn-outline:hover {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+   
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .about-content {
+            flex-direction: column;
+        }
+        
+        .hero-content h1 {
+            font-size: 36px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            display: none;
+        }
+        
+        .btn-outline {
+            margin-left: 0;
+            margin-top: 15px;
+            display: block;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+<section class="about-hero">
+    <div class="hero-content">
+        <h1>Our Commitment to Your Health</h1>
+        <p>Connecting patients with quality healthcare through innovative technology and compassionate service.</p>
+    </div>
+</section>
+
+<div class="container">
+    <section class="about-section">
+        <h2 class="section-title">Our Story</h2>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Revolutionizing Healthcare Access</h3>
+                <p>Founded in 2015, HealthConnect began with a simple mission: to make quality healthcare more accessible to everyone. Our founders, a team of doctors and technology experts, recognized the challenges patients faced in scheduling timely medical appointments and navigating complex healthcare systems.</p>
+                <p>What started as a small startup in a Silicon Valley garage has grown into a nationwide platform connecting millions of patients with thousands of healthcare providers. We've eliminated the frustration of phone tag, long hold times, and confusing scheduling systems.</p>
+                <p>Today, HealthConnect is proud to be the leading online appointment scheduling platform in the healthcare industry, serving patients in all 50 states with plans for international expansion in the coming year.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Medical team discussing">
+            </div>
+        </div>
+        
+        <div class="about-content">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Doctor using digital tablet">
+            </div>
+            <div class="about-text">
+                <h3>Technology Meets Compassion</h3>
+                <p>At HealthConnect, we believe technology should enhance, not replace, the human connection at the heart of healthcare. Our platform is designed to remove administrative barriers so doctors can focus on what they do best—caring for patients.</p>
+                <p>We've invested heavily in developing intuitive interfaces that work for patients of all ages and tech-savviness. Our multilingual support ensures language is never a barrier to care, and our accessibility features make our platform usable for patients with disabilities.</p>
+                <p>Behind every line of code is a team committed to improving healthcare outcomes. We regularly consult with medical professionals, patient advocacy groups, and healthcare administrators to ensure our solutions meet real-world needs.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="values-section">
+        <h2 class="section-title">Our Core Values</h2>
+        
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>Patient-Centered Care</h3>
+                <p>Every decision we make begins with what's best for the patient. We prioritize your needs, privacy, and healthcare experience above all else.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3>Innovation</h3>
+                <p>We continuously seek new ways to improve healthcare access through technology while maintaining the human touch essential to healing.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3>Compassion</h3>
+                <p>We treat every patient with the kindness and respect we would want for our own family members, recognizing healthcare can be stressful.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <h3>Integrity</h3>
+                <p>We maintain the highest ethical standards in all our interactions, from data privacy to transparent pricing and honest communication.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Collaboration</h3>
+                <p>We believe the best healthcare happens when patients, providers, and technology work together as partners in wellness.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3>Excellence</h3>
+                <p>We strive for perfection in every aspect of our service, from platform reliability to customer support responsiveness.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h2>250,000+</h2>
+                    <p>Patients Served Monthly</p>
+                </div>
+                <div class="stat-item">
+                    <h2>15,000+</h2>
+                    <p>Healthcare Providers</p>
+                </div>
+                <div class="stat-item">
+                    <h2>98%</h2>
+                    <p>Patient Satisfaction</p>
+                </div>
+                <div class="stat-item">
+                    <h2>24/7</h2>
+                    <p>Support Availability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="team-section">
+        <h2 class="section-title">Meet Our Leadership</h2>
+        
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Sarah Johnson" class="member-image">
+                <div class="member-info">
+                    <h3>Dr. Sarah Johnson</h3>
+                    <p>Co-Founder & Chief Medical Officer</p>
+                    <div class="member-bio">
+                        Board-certified physician with 20 years of clinical experience leading our medical strategy and provider network.
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Michael Chen" class="member-image">
+                <div class="member-info">
+                    <h3>Michael Chen</h3>
+                    <p>Co-Founder & CEO</p>
+                    <div class="member-bio">
+                        Technology entrepreneur focused on creating healthcare solutions that prioritize user experience and accessibility.
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Priya Patel" class="member-image">
+                <div class="member-info">
+                    <h3>Priya Patel</h3>
+                    <p>Chief Operations Officer</p>
+                    <div class="member-bio">
+                        Healthcare administration expert ensuring our platform delivers seamless experiences for patients and providers.
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="David Wilson" class="member-image">
+                <div class="member-info">
+                    <h3>David Wilson</h3>
+                    <p>Chief Technology Officer</p>
+                    <div class="member-bio">
+                        Leads our engineering team in developing secure, scalable solutions that power millions of healthcare interactions.
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2>Ready to Experience Better Healthcare Access?</h2>
+            <p>Join millions of patients who have discovered the convenience and reliability of HealthConnect's appointment scheduling platform.</p>
+            <a href="{% url 'health:book_appointment_home' %}" class="btn">Schedule an Appointment</a>
+            <a href="#" class="btn btn-outline">Contact Our Team</a>
+        </div>
+    </section>
+</div>
+</body>
+
+
+{% endblock %}

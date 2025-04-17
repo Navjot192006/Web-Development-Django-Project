@@ -1,0 +1,604 @@
+{% extends "base1.html" %}
+{% block title_block %} HealthConnect | Book Doctor Appointments Online {% endblock %}
+{% block main_block %}
+<style>
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 600px;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .hero h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+    
+    .hero p {
+        font-size: 22px;
+        margin-bottom: 30px;
+        font-weight: 300;
+    }
+    
+    /* Main Content Section */
+    .main-content {
+        display: flex;
+        margin-bottom: 80px;
+        gap: 40px;
+    }
+    
+    .content-left {
+        flex: 2;
+    }
+    
+    .content-right {
+        flex: 1;
+    }
+    
+    .section-title {
+        font-size: 32px;
+        color: #e74c3c;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 3px;
+        background-color: #e74c3c;
+    }
+    
+    .content-text {
+        margin-bottom: 30px;
+        font-size: 16px;
+        line-height: 1.8;
+    }
+    
+    .content-text p {
+        margin-bottom: 20px;
+    }
+    
+    .content-image {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .benefits-list {
+        margin-bottom: 30px;
+    }
+    
+    .benefits-list li {
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .benefits-list li:before {
+        content: '\f058';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        color: #e74c3c;
+        position: absolute;
+        left: 0;
+        top: 2px;
+    }
+    
+    /* Appointment Card */
+    .appointment-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 100px;
+        margin-bottom: 30px;
+    }
+    
+    .appointment-card h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #e74c3c;
+    }
+    
+    .appointment-card p {
+        margin-bottom: 25px;
+        color: #555;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background-color: #ddd;
+        margin: 25px 0;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s;
+        border: 2px solid #e74c3c;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .btn:hover {
+        background-color: transparent;
+        color: #e74c3c;
+    }
+    
+    .btn-outline {
+        background-color: transparent;
+        color: #e74c3c;
+    }
+    
+    .btn-outline:hover {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    /* Doctors Section */
+    .doctors-section {
+        margin-bottom: 80px;
+    }
+    
+    .doctors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+    }
+    
+    .doctor-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    
+    .doctor-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .doctor-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .doctor-info {
+        padding: 20px;
+    }
+    
+    .doctor-name {
+        font-size: 20px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+    
+    .doctor-specialty {
+        color: #e74c3c;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .doctor-bio {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    /* Testimonials */
+    .testimonials {
+        margin-bottom: 80px;
+    }
+    
+    .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+    }
+    
+    .testimonial-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .testimonial-text:before {
+        content: '\201C';
+        font-size: 60px;
+        color: #e74c3c;
+        opacity: 0.3;
+        position: absolute;
+        left: -15px;
+        top: -15px;
+    }
+    
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+    }
+    
+    .author-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+    
+    .author-name {
+        font-weight: 600;
+    }
+    
+    .author-title {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+        margin-bottom: 80px;
+    }
+    
+    .faq-item {
+        background-color: white;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    
+    .faq-question {
+        padding: 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        transition: background-color 0.3s;
+    }
+    
+    .faq-question:hover {
+        background-color: #f9f9f9;
+    }
+    
+    .faq-question i {
+        color: #e74c3c;
+        transition: transform 0.3s;
+    }
+    
+    .faq-answer {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s, padding 0.3s;
+    }
+    
+    .faq-item.active .faq-question i {
+        transform: rotate(180deg);
+    }
+    
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+        padding: 0 20px 20px;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .main-content {
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            display: none;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Book Your Doctor Appointment Online</h1>
+        <p>Skip the phone calls and waiting rooms. Schedule your next medical visit in just a few clicks.</p>
+        <a href="{% url 'health:book_appointment_home' %}" class="btn">Schedule Now</a>
+    </div>
+</section>
+
+<div class="container">
+    <div class="main-content">
+        <div class="content-left">
+            <h2 class="section-title">Easy Online Appointment Scheduling</h2>
+            
+            <div class="content-text">
+                <p>At HealthConnect, we've revolutionized the way you book doctor appointments. Our online scheduling platform provides a seamless experience that saves you time and eliminates the frustration of traditional appointment booking methods.</p>
+                
+                    <!-- <img src="https://images.unsplash.com/photo-1588776814546-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Doctor consultation" class="content-image"> -->
+                
+                <h3>Why Choose Our Online Scheduling System?</h3>
+                <p>Traditional appointment booking often involves long wait times on phone calls, limited availability information, and back-and-forth communication. Our digital solution addresses all these pain points with:</p>
+                
+                <ul class="benefits-list">
+                    <li>Real-time availability from multiple doctors and specialists</li>
+                    <li>24/7 access to schedule or modify appointments</li>
+                    <li>Instant confirmation and reminders</li>
+                    <li>Secure patient portal for medical history</li>
+                    <li>Option for in-person or virtual consultations</li>
+                </ul>
+                
+                <h3>How It Works</h3>
+                <p>Booking your medical appointment has never been easier. Follow these simple steps:</p>
+                
+                <ol class="benefits-list" style="list-style-type: decimal; padding-left: 30px;">
+                    <li>Select your preferred doctor or specialty</li>
+                    <li>Choose from available time slots that fit your schedule</li>
+                    <li>Provide basic information about your health concern</li>
+                    <li>Receive instant confirmation via email and SMS</li>
+                    <li>Get reminder notifications as your appointment approaches</li>
+                </ol>
+                
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Medical technology" class="content-image">
+                
+                <h3>Specialized Care at Your Fingertips</h3>
+                <p>Our platform connects you with a wide network of healthcare professionals across various specialties. Whether you need routine check-ups, specialized consultations, or second opinions, we've got you covered.</p>
+                
+                <p>Some of our most booked specialties include:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <i class="fas fa-heart" style="color: #e74c3c; margin-right: 10px;"></i>
+                        <span>Cardiology</span>
+                    </div>
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <i class="fas fa-brain" style="color: #e74c3c; margin-right: 10px;"></i>
+                        <span>Neurology</span>
+                    </div>
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <i class="fas fa-bone" style="color: #e74c3c; margin-right: 10px;"></i>
+                        <span>Orthopedics</span>
+                    </div>
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <i class="fas fa-baby" style="color: #e74c3c; margin-right: 10px;"></i>
+                        <span>Pediatrics</span>
+                    </div>
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <i class="fas fa-eye" style="color: #e74c3c; margin-right: 10px;"></i>
+                        <span>Ophthalmology</span>
+                    </div>
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px;">
+                        <i class="fas fa-tooth" style="color: #e74c3c; margin-right: 10px;"></i>
+                        <span>Dentistry</span>
+                    </div>
+                </div>
+            </div>
+            
+            <section class="doctors-section">
+                <h2 class="section-title">Our Featured Doctors</h2>
+                
+                <div class="doctors-grid">
+                    <div class="doctor-card">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Sarah Johnson" class="doctor-image">
+                        <div class="doctor-info">
+                            <h4 class="doctor-name">Dr. Sarah Johnson</h4>
+                            <span class="doctor-specialty">Cardiologist</span>
+                            <p class="doctor-bio">Board-certified cardiologist with 15 years of experience in preventive and interventional cardiology.</p>
+                                <a href="{% url 'health:appointment_form' %}?doctor=Dr.%20Sarah%20Johnson&specialty=Cardiologist" class="btn btn-outline">Book Appointment</a>
+                        </div>
+                    </div>
+                    
+                    <div class="doctor-card">
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Michael Chen" class="doctor-image">
+                        <div class="doctor-info">
+                            <h4 class="doctor-name">Dr. Michael Chen</h4>
+                            <span class="doctor-specialty">Neurologist</span>
+                            <p class="doctor-bio">Specializes in treating migraines, epilepsy, and neurodegenerative disorders with cutting-edge therapies.</p>
+                                <a href="{% url 'health:appointment_form' %}?doctor=Dr.%20Michael%20Chen&specialty=Neurologist" class="btn btn-outline">Book Appointment</a>
+                        </div>
+                    </div>
+                    
+                    <div class="doctor-card">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Priya Patel" class="doctor-image">
+                        <div class="doctor-info">
+                            <h4 class="doctor-name">Dr. Pavan Ambulkar</h4>
+                            <span class="doctor-specialty">Pediatrician</span>
+                            <p class="doctor-bio">Passionate about children's health with a gentle approach that makes kids feel comfortable.</p>
+                                <a href="{% url 'health:appointment_form' %}?doctor=Dr.%20Priya%20Patel&specialty=Pediatrician" class="btn btn-outline">Book Appointment</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="testimonials">
+                <h2 class="section-title">Patient Testimonials</h2>
+                
+                <div class="testimonial-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "I was able to book a same-day appointment with a specialist when I was experiencing severe back pain. The process was so simple and saved me hours of phone calls."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Jennifer L." class="author-image">
+                            <div>
+                                <div class="author-name">Jennifer L.</div>
+                                <div class="author-title">Patient since 2020</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "As a busy professional, I love being able to schedule appointments during my lunch break. The reminder texts prevent me from forgetting my visits."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Robert T." class="author-image">
+                            <div>
+                                <div class="author-name">Robert T.</div>
+                                <div class="author-title">Patient since 2021</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "The virtual consultation option has been a game-changer for my elderly mother who has mobility issues. We can now see her doctor without leaving home."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maria G." class="author-image">
+                            <div>
+                                <div class="author-name">Maria G.</div>
+                                <div class="author-title">Patient since 2019</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="faq-section">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How far in advance can I book an appointment?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our scheduling system shows availability up to 3 months in advance for most providers. Some specialists may have different booking windows depending on demand.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there a cancellation fee?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We require at least 24 hours notice for cancellations. Appointments canceled with less than 24 hours notice may be subject to a fee, depending on the provider's policy.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I reschedule my appointment online?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can reschedule any appointment through our patient portal up to 24 hours before your scheduled time. Just log in to your account and select "Reschedule" next to your upcoming appointment.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What information do I need to book an appointment?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For new patients, we'll need your full name, date of birth, contact information, and insurance details (if applicable). For follow-up visits, just your name and the reason for your visit are typically sufficient.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do virtual consultations work?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Virtual consultations are conducted through our secure video platform. After booking, you'll receive a link to join the video call at your scheduled time. You'll need a device with a camera, microphone, and internet connection.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div class="content-right">
+            <div id="appointment" class="appointment-card">
+                <h3>Schedule Your Appointment</h3>
+                <p>Book your in-person or virtual doctor visit in just a few clicks. Available 24/7.</p>
+                <hr>
+                    <a href="{% url 'health:schedule_info' %}" class="btn">Book Appointment</a>
+                <p style="text-align: center; margin-top: 15px; font-size: 14px;">
+                    <i class="fas fa-phone-alt" style="margin-right: 5px;"></i>
+                    Or call: (555) 123-4567
+                </p>
+            </div>
+            
+            <div class="appointment-card" style="background-color: #f9f9f9;">
+                <h3>Need Urgent Care?</h3>
+                <p>If you're experiencing a medical emergency, please call 911 or go to the nearest emergency room.</p>
+                <hr>
+                <p>For urgent but non-life-threatening conditions, our same-day appointments are often available.</p>
+                    <a href="{% url 'health:day_availability' %}" class="btn btn-outline">Check Same-Day Availability</a>
+            </div>
+            
+            <div class="appointment-card">
+                <h3>New Patient?</h3>
+                <p>Welcome! Please arrive 15 minutes early for your first appointment to complete paperwork.</p>
+                <hr>
+                <p>What to bring:</p>
+                <ul style="margin-bottom: 20px; padding-left: 20px;">
+                    <li style="margin-bottom: 8px;">Photo ID</li>
+                    <li style="margin-bottom: 8px;">Insurance card</li>
+                    <li style="margin-bottom: 8px;">List of medications</li>
+                    <li>Medical records (if transferring care)</li>
+                </ul>
+                <!-- <a href="#" class="btn btn-outline">Download Forms</a> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // FAQ toggle functionality
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentNode;
+            item.classList.toggle('active');
+        });
+    });
+</script>
+</body>
+
+
+{% endblock %}

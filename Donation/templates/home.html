@@ -1,0 +1,1384 @@
+{% extends "base.html" %}
+{% block title_block %} Home Page {% endblock %}
+{% block main_block %}
+
+{% load static %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+    }
+
+    .hero video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+    }
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(78, 0, 0, 0.7), rgba(255, 77, 77, 0.4));
+        z-index: 2;
+    }
+
+    .blur-box {
+        position: relative;
+        z-index: 3;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 50px;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 1.5s ease-in-out;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-content h1 {
+        font-size: 58px;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        font-family: 'Playfair Display', serif;
+        line-height: 1.2;
+    }
+
+    .hero-content p {
+        font-size: 22px;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 16px 40px;
+        font-size: 18px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease-in-out;
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        background: #fff;
+        color: #ff4d4d;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(255, 77, 77, 0.7);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        border: 2px solid #fff;
+        margin-left: 20px;
+        box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+        background: #fff;
+        color: #4e0000;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* Main Content */
+    .main-content {
+        padding: 100px 20px;
+        background: linear-gradient(to bottom, #f8f8f8, #fff);
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .section-title p {
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 18px;
+        color: #555;
+    }
+
+    /* Why Donate Section */
+    .why-donate {
+        margin-bottom: 100px;
+    }
+
+    .cards {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 350px;
+        padding: 35px 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease-in-out;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #ff4d4d;
+        transition: height 0.3s ease;
+    }
+
+    .card:hover::before {
+        height: 10px;
+    }
+
+    .card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+    }
+
+    .card i {
+        font-size: 50px;
+        color: #ff4d4d;
+        margin-bottom: 25px;
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover i {
+        transform: scale(1.2);
+    }
+
+    .card h3 {
+        font-size: 26px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .card p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .card .learn-more {
+        color: #ff4d4d;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .card .learn-more i {
+        font-size: 14px;
+        margin-left: 5px;
+        margin-bottom: 0;
+    }
+
+    .card .learn-more:hover {
+        color: #4e0000;
+    }
+
+    /* Blood Types Section */
+    .blood-types {
+        background: #fff;
+        padding: 80px 20px;
+        margin-bottom: 100px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .blood-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .blood-type {
+        background: #f8f8f8;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blood-type::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #ff4d4d;
+    }
+
+    .blood-type:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.1);
+    }
+
+    .blood-type .blood-group {
+        font-size: 32px;
+        font-weight: bold;
+        color: #4e0000;
+        margin-bottom: 10px;
+    }
+
+    .blood-type .compatibility {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .blood-type .demand {
+        margin-top: 15px;
+        font-weight: 600;
+        color: #ff4d4d;
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+        margin-bottom: 100px;
+    }
+
+    .steps {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .steps::before {
+        content: '';
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 3px;
+        background: #ff4d4d;
+        z-index: 1;
+    }
+
+    .step {
+        width: 250px;
+        padding: 30px 25px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease-in-out;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0 auto 20px;
+        position: relative;
+    }
+
+    .step:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+    }
+
+    .step i {
+        font-size: 40px;
+        color: #ff4d4d;
+        margin-bottom: 20px;
+    }
+
+    .step h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .step p {
+        font-size: 15px;
+        color: #555;
+    }
+
+    /* Eligibility Section */
+    .eligibility {
+        background: #4e0000;
+        color: white;
+        padding: 80px 20px;
+        margin-bottom: 100px;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .eligibility::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 77, 77, 0.1);
+        border-radius: 50%;
+    }
+
+    .eligibility::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        left: -80px;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 77, 77, 0.1);
+        border-radius: 50%;
+    }
+
+    .eligibility .section-title h2,
+    .eligibility .section-title p {
+        color: white;
+    }
+
+    .eligibility-criteria {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .criteria-item {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .criteria-item:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .criteria-item h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #ff4d4d;
+        display: flex;
+        align-items: center;
+    }
+
+    .criteria-item h3 i {
+        margin-right: 10px;
+    }
+
+    .criteria-item ul {
+        list-style: none;
+    }
+
+    .criteria-item li {
+        margin-bottom: 10px;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .criteria-item li::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: #ff4d4d;
+    }
+
+    /* Live Stats Section */
+    .live-stats {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+        color: #fff;
+        border-radius: 15px;
+        margin: 0 auto 100px;
+        max-width: 1000px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .live-stats::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.03)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+        background-size: cover;
+        opacity: 0.1;
+    }
+
+    .live-stats h2 {
+        font-size: 42px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-item {
+        font-size: 24px;
+        font-weight: bold;
+        min-width: 200px;
+    }
+
+    .stat-item span {
+        display: block;
+        font-size: 48px;
+        font-weight: 700;
+        color: #ff4d4d;
+        margin-bottom: 10px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .stat-item .stat-label {
+        font-size: 16px;
+        font-weight: normal;
+        opacity: 0.9;
+    }
+
+    /* Counter Animation */
+    .counter {
+        display: inline-block;
+    }
+
+    /* Testimonial Section */
+    .testimonials {
+        margin-bottom: 100px;
+    }
+
+    .testimonial-slider {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-track {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .testimonial {
+        min-width: 100%;
+        padding: 50px;
+        background: #fff;
+        text-align: center;
+    }
+
+    .testimonial-content {
+        font-size: 20px;
+        font-style: italic;
+        color: #555;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .testimonial-content::before,
+    .testimonial-content::after {
+        content: '"';
+        font-size: 60px;
+        color: #ff4d4d;
+        opacity: 0.3;
+        position: absolute;
+    }
+
+    .testimonial-content::before {
+        top: -30px;
+        left: -20px;
+    }
+
+    .testimonial-content::after {
+        bottom: -50px;
+        right: -20px;
+    }
+
+    .testimonial-author {
+        font-weight: 600;
+        color: #4e0000;
+        font-size: 18px;
+    }
+
+    .testimonial-role {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .testimonial-nav {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        gap: 15px;
+    }
+
+    .testimonial-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .testimonial-dot.active {
+        background: #ff4d4d;
+        transform: scale(1.2);
+    }
+
+    /* FAQ Section */
+    .faq {
+        background: #fff;
+        padding: 80px 20px;
+        margin-bottom: 100px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .faq-question {
+        background: #f8f8f8;
+        padding: 20px 25px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #4e0000;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+        background: #f0f0f0;
+    }
+
+    .faq-question i {
+        transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-question i {
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        padding: 0 25px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        background: white;
+    }
+
+    .faq-item.active .faq-answer {
+        padding: 20px 25px;
+        max-height: 500px;
+    }
+
+    /* CTA Section */
+    .cta {
+        background: linear-gradient(135deg, #ff4d4d, #cc0000);
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin-bottom: 100px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+        background-size: cover;
+        opacity: 0.2;
+    }
+
+    .cta h2 {
+        font-size: 42px;
+        margin-bottom: 30px;
+        position: relative;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .cta p {
+        font-size: 20px;
+        max-width: 700px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+
+    /* Partners Section */
+    .partners {
+        margin-bottom: 100px;
+        padding: 60px 20px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .partner-logos {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 40px;
+        max-width: 1000px;
+        margin: 20px auto 0;
+    }
+
+    .partner-logo {
+        max-width: 150px;
+        height: 60px;
+        object-fit: contain;
+        filter: grayscale(80%);
+        opacity: 0.8;
+        transition: all 0.4s ease;
+    }
+
+    .partner-logo:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background: #4e0000;
+        transform: translateY(-5px);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .hero-content h1 {
+            font-size: 48px;
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+        }
+        
+        .card, .step {
+            width: 300px;
+        }
+        
+        .steps::before {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+        
+        .hero-content h1 {
+            font-size: 36px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+        }
+        
+        .blur-box {
+            padding: 30px;
+        }
+        
+        .btn-container {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn-secondary {
+            margin-left: 0;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+        }
+        
+        .steps {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .step {
+            width: 80%;
+        }
+        
+        .testimonial {
+            padding: 30px;
+        }
+        
+        .testimonial-content {
+            font-size: 18px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-content h1 {
+            font-size: 32px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+        }
+        
+        .card, .step {
+            width: 100%;
+        }
+        
+        .stat-item {
+            min-width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="hero">
+    <video autoplay muted loop id="bg-video">
+        <source src="{% static 'vedios/2.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="blur-box">
+        <div class="hero-content">
+            <h1>Give the Gift of Life</h1>
+            <p>Every drop counts. Join our community of heroes who save lives through blood donation.</p>
+            <div class="btn-container">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'check_eligibility' %}" class="btn">Become a Donor</a>
+                {% else %}
+                    <a href="{% url 'Login' %}" class="btn">Become a Donor</a>
+                {% endif %}
+                <a href="#blood-types" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Why Donate Section -->
+    <section class="why-donate">
+        <div class="section-title">
+            <h2>Why Donate Blood?</h2>
+            <p>Blood donation is a simple, safe way to make a big difference in the lives of others. Here's why your donation matters:</p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Save Lives</h3>
+                <p>One blood donation can save up to three lives. Your contribution could help accident victims, surgery patients, newborns, and those battling cancer.</p>
+                <a href="{% url 'save_life' %}" class="learn-more">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Health Benefits</h3>
+                <p>Regular blood donation helps reduce harmful iron stores, lowers risk of heart disease, and stimulates production of new blood cells.</p>
+                <a href="{% url 'health_benefits' %}" class="learn-more">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card">
+                <i class="fas fa-users"></i>
+                <h3>Community Impact</h3>
+                <p>Blood cannot be manufactured. It can only come from volunteer donors like you, making each donation invaluable to your community.</p>
+                <a href="{% url 'community' %}" class="learn-more">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blood Types Section -->
+    <section class="blood-types" id="blood-types">
+        <div class="section-title">
+            <h2>Blood Type Compatibility</h2>
+            <p>Understanding blood types is crucial for effective donations. Here's how different blood types match:</p>
+        </div>
+        <div class="blood-grid">
+            <div class="blood-type">
+                <div class="blood-group">A+</div>
+                <div class="compatibility">Can donate to: A+, AB+</div>
+                <div class="compatibility">Can receive from: A+, A-, O+, O-</div>
+                <div class="demand">High Demand</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">A-</div>
+                <div class="compatibility">Can donate to: A+, A-, AB+, AB-</div>
+                <div class="compatibility">Can receive from: A-, O-</div>
+                <div class="demand">Critical Need</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">B+</div>
+                <div class="compatibility">Can donate to: B+, AB+</div>
+                <div class="compatibility">Can receive from: B+, B-, O+, O-</div>
+                <div class="demand">Moderate Demand</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">B-</div>
+                <div class="compatibility">Can donate to: B+, B-, AB+, AB-</div>
+                <div class="compatibility">Can receive from: B-, O-</div>
+                <div class="demand">Critical Need</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">AB+</div>
+                <div class="compatibility">Can donate to: AB+</div>
+                <div class="compatibility">Can receive from: All Types</div>
+                <div class="demand">Universal Recipient</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">AB-</div>
+                <div class="compatibility">Can donate to: AB+, AB-</div>
+                <div class="compatibility">Can receive from: AB-, A-, B-, O-</div>
+                <div class="demand">Rare Type</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">O+</div>
+                <div class="compatibility">Can donate to: O+, A+, B+, AB+</div>
+                <div class="compatibility">Can receive from: O+, O-</div>
+                <div class="demand">Most Needed</div>
+            </div>
+            <div class="blood-type">
+                <div class="blood-group">O-</div>
+                <div class="compatibility">Can donate to: All Types</div>
+                <div class="compatibility">Can receive from: O-</div>
+                <div class="demand">Universal Donor</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="section-title">
+            <h2>How Blood Donation Works</h2>
+            <p>The donation process is simple, safe, and takes less than an hour from start to finish.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <i class="fas fa-user-edit"></i>
+                <h3>Registration</h3>
+                <p>Complete our quick registration form with your basic information and medical history.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <i class="fas fa-notes-medical"></i>
+                <h3>Health Screening</h3>
+                <p>A trained professional will check your temperature, pulse, blood pressure and hemoglobin level.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <i class="fas fa-hand-holding-medical"></i>
+                <h3>Donation</h3>
+                <p>The actual donation takes about 8-10 minutes during which approximately 1 pint of blood is collected.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <i class="fas fa-cookie-bite"></i>
+                <h3>Refreshment</h3>
+                <p>Enjoy snacks and drinks for 10-15 minutes before resuming your day. Your body replaces the fluid within hours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Eligibility Section -->
+    <section class="eligibility">
+        <div class="section-title">
+            <h2>Donor Eligibility</h2>
+            <p>To ensure the safety of both donors and recipients, these are our general eligibility requirements:</p>
+        </div>
+        <div class="eligibility-criteria">
+            <div class="criteria-item">
+                <h3><i class="fas fa-check-circle"></i> Basic Requirements</h3>
+                <ul>
+                    <li>Be at least 17 years old (16 with parental consent)</li>
+                    <li>Weigh at least 110 pounds (50 kg)</li>
+                    <li>Be in good general health</li>
+                    <li>Have valid ID with photo and birth date</li>
+                </ul>
+            </div>
+            <div class="criteria-item">
+                <h3><i class="fas fa-clock"></i> Donation Frequency</h3>
+                <ul>
+                    <li>Whole blood: Every 56 days (up to 6 times/year)</li>
+                    <li>Platelets: Every 7 days (up to 24 times/year)</li>
+                    <li>Plasma: Every 28 days (up to 13 times/year)</li>
+                    <li>Double red cells: Every 112 days (up to 3 times/year)</li>
+                </ul>
+            </div>
+            <div class="criteria-item">
+                <h3><i class="fas fa-procedures"></i> Medical Considerations</h3>
+                <ul>
+                    <li>No cold or flu symptoms for 48 hours</li>
+                    <li>No antibiotics for 24 hours</li>
+                    <li>No major surgery in last 6 months</li>
+                    <li>No tattoos/piercings in last 4 months</li>
+                </ul>
+            </div>
+            <div class="criteria-item">
+                <h3><i class="fas fa-ban"></i> Temporary Deferrals</h3>
+                <ul>
+                    <li>Pregnancy: 6 weeks postpartum</li>
+                    <li>Travel to malaria-risk areas: 3 months</li>
+                    <li>Dental procedures: 24-72 hours</li>
+                    <li>Certain vaccinations: 2-4 weeks</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Stats Section -->
+    <section class="live-stats">
+        <h2>Our Life-Saving Impact</h2>
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="counter" data-target="25489">0</span>
+                <span class="stat-label">Lives Saved</span>
+            </div>
+            <div class="stat-item">
+                <span class="counter" data-target="8496">0</span>
+                <span class="stat-label">Active Donors</span>
+            </div>
+            <div class="stat-item">
+                <span class="counter" data-target="127">0</span>
+                <span class="stat-label">Donation Centers</span>
+            </div>
+            <div class="stat-item">
+                <span class="counter" data-target="42">0</span>
+                <span class="stat-label">Partner Hospitals</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class="testimonials">
+        <div class="section-title">
+            <h2>Stories From Our Donors</h2>
+            <p>Hear from people whose lives have been touched by blood donation</p>
+        </div>
+        <div class="testimonial-slider">
+            <div class="testimonial-track">
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        I started donating blood after my father needed transfusions during his cancer treatment. Knowing I might be helping someone like him keeps me coming back every 8 weeks like clockwork.
+                    </div>
+                    <div class="testimonial-author">Pavan</div>
+                    <div class="testimonial-role">Regular Donor for 7 years</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        The staff made my first donation experience so comfortable. I was nervous about needles, but they talked me through everything. Now I bring friends with me to donate!
+                    </div>
+                    <div class="testimonial-author">Kapil</div>
+                    <div class="testimonial-role">First-time donor turned advocate</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        My daughter was born prematurely and needed blood transfusions. I'll never forget the strangers who donated the blood that saved her life. Now I donate every chance I get to pay it forward.
+                    </div>
+                    <div class="testimonial-author">Chirag</div>
+                    <div class="testimonial-role">Grateful parent and donor</div>
+                </div>
+            </div>
+            <div class="testimonial-nav">
+                <div class="testimonial-dot active"></div>
+                <div class="testimonial-dot"></div>
+                <div class="testimonial-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Get answers to common questions about blood donation</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is donating blood safe?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Absolutely. All equipment is sterile, used only once, and then discarded. There's no risk of contracting any infectious disease from donating blood. Our staff are highly trained professionals who follow strict safety protocols.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    How long does the process take?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>The entire process takes about an hour from start to finish. The actual blood donation only takes 8-10 minutes. This includes registration, a health screening, donation time, and refreshments afterward.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    How often can I donate blood?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You can donate whole blood every 56 days (about 8 weeks). Platelet donations can be made more frequently - up to 24 times per year. Your body replaces the donated fluid within 24 hours and red blood cells within 4-6 weeks.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What should I do before donating?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Eat a healthy meal and drink plenty of fluids before your donation. Avoid fatty foods. Get a good night's sleep. Bring your ID and list of any medications you're taking. Wear comfortable clothing with sleeves that can be rolled up.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What happens to my donated blood?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Your donation is tested, processed, and distributed to hospitals where it's needed most. Whole blood can be separated into red cells, plasma, and platelets to help multiple patients. You'll receive notification when your blood is used to help someone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join thousands of lifesavers in your community. Schedule your donation appointment today and become someone's hero.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'check_eligibility' %}" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Now</a>
+        {% else %}
+            <a href="{% url 'Login' %}" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Now</a>
+        {% endif %}
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners">
+        <div class="section-title">
+            <h2>Our Trusted Partners</h2>
+            <p>We collaborate with leading healthcare organizations to ensure blood reaches those in need</p>
+        </div>
+        <div class="partner-logos">
+            <img src="https://placehold.co/150x60/eee/4e0000?text=Red+Cross" alt="Red Cross" class="partner-logo">
+            <img src="https://placehold.co/150x60/eee/4e0000?text=Children's+Hospital" alt="Children's Hospital" class="partner-logo">
+            <img src="https://placehold.co/150x60/eee/4e0000?text=National+Health" alt="National Health" class="partner-logo">
+            <img src="https://placehold.co/150x60/eee/4e0000?text=City+Medical" alt="City Medical" class="partner-logo">
+            <img src="https://placehold.co/150x60/eee/4e0000?text=Hope+Clinic" alt="Hope Clinic" class="partner-logo">
+        </div>
+    </section>
+</div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? 
+            '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    });
+
+    // Testimonial Slider
+    const track = document.querySelector('.testimonial-track');
+    const dots = document.querySelectorAll('.testimonial-dot');
+    let currentIndex = 0;
+    
+    function updateTestimonial(index) {
+        track.style.transform = `translateX(-${index * 100}%)`;
+        
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+        
+        currentIndex = index;
+    }
+    
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            updateTestimonial(index);
+        });
+    });
+    
+    // Auto-rotate testimonials
+    setInterval(() => {
+        const nextIndex = (currentIndex + 1) % dots.length;
+        updateTestimonial(nextIndex);
+    }, 5000);
+
+    // FAQ Accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+            // Close all other items
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+            
+            // Toggle current item
+            item.classList.toggle('active');
+        });
+    });
+
+    // Counter Animation
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
+    
+    function animateCounters() {
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const increment = target / speed;
+            
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(animateCounters, 1);
+            } else {
+                counter.innerText = target;
+            }
+        });
+    }
+    
+    // Start counters when section is in view
+    const statsSection = document.querySelector('.live-stats');
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            animateCounters();
+            observer.unobserve(statsSection);
+        }
+    }, { threshold: 0.5 });
+    
+    observer.observe(statsSection);
+
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Smooth scrolling for all links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+        });
+    });
+</script>
+</body>
+{% endblock %}

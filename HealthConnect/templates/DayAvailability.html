@@ -1,0 +1,420 @@
+{% extends "base1.html" %}
+{% block title_block %} Day Availability | HealthConnect {% endblock %}
+{% block main_block %}
+
+
+<style>
+    /* Hero Section */
+    .availability-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .hero-content h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+    
+    /* Availability Checker Section */
+    .availability-section {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+    
+    .checker-container {
+        flex: 1;
+        background-color: white;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .checker-container h2 {
+        font-size: 24px;
+        margin-bottom: 25px;
+        color: #2c3e50;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #e74c3c;
+        outline: none;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+    }
+    
+    .radio-group {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .radio-option {
+        display: flex;
+        align-items: center;
+    }
+    
+    .radio-option input {
+        margin-right: 8px;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 14px 30px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .btn:hover {
+        background-color: #c0392b;
+    }
+    
+    /* Results Section */
+    .results-container {
+        margin-top: 30px;
+        display: none;
+    }
+    
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .results-header h3 {
+        font-size: 20px;
+        color: #2c3e50;
+    }
+    
+    .doctor-card {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .doctor-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #eee;
+    }
+    
+    .doctor-info {
+        flex: 1;
+    }
+    
+    .doctor-info h4 {
+        font-size: 18px;
+        margin-bottom: 5px;
+        color: #2c3e50;
+    }
+    
+    .doctor-specialty {
+        color: #e74c3c;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .time-slots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .time-slot {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .time-slot:hover {
+        background-color: #e74c3c;
+        color: white;
+        border-color: #e74c3c;
+    }
+    
+    .time-slot.booked {
+        background-color: #eee;
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    /* Info Sidebar */
+    .info-sidebar {
+        width: 300px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+    }
+    
+    .info-sidebar h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    
+    .contact-info {
+        margin-bottom: 25px;
+    }
+    
+    .contact-info p {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .contact-info i {
+        margin-right: 10px;
+        color: #e74c3c;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .availability-section {
+            flex-direction: column;
+        }
+        
+        .info-sidebar {
+            width: 100%;
+        }
+        
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .nav-links {
+            display: none;
+        }
+        
+        .doctor-card {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+<section class="availability-hero">
+    <div class="container hero-content">
+        <h1>Same-Day Availability</h1>
+        <p>Find immediate appointments with our available doctors today</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="availability-section">
+        <div class="checker-container">
+            <h2>Check Today's Availability</h2>
+            <form id="availabilityForm">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <select id="location" required>
+                        <option value="">Select a location</option>
+                        <option value="main">Main Health Center</option>
+                        <option value="downtown">Downtown Clinic</option>
+                        <option value="northside">Northside Medical</option>
+                        <option value="southside">Southside Health</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Appointment Type</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="inPerson" name="appointmentType" value="in-person" checked>
+                            <label for="inPerson">In-Person</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="virtual" name="appointmentType" value="virtual">
+                            <label for="virtual">Virtual</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialty">Specialty (Optional)</label>
+                    <select id="specialty">
+                        <option value="">Any specialty</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="dermatology">Dermatology</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="orthopedics">Orthopedics</option>
+                        <option value="neurology">Neurology</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn">Check Availability</button>
+            </form>
+            
+            <div class="results-container" id="resultsContainer">
+                <div class="results-header">
+                    <h3>Available Appointments Today</h3>
+                    <p id="resultsSummary">Showing results for Main Health Center</p>
+                </div>
+                
+                <div class="doctor-card">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Sarah Johnson" class="doctor-image">
+                    <div class="doctor-info">
+                        <h4>Dr. Sarah Johnson</h4>
+                        <span class="doctor-specialty">Cardiologist</span>
+                        <div class="time-slots">
+                            <div class="time-slot">9:30 AM</div>
+                            <div class="time-slot">11:15 AM</div>
+                            <div class="time-slot booked">1:45 PM</div>
+                            <div class="time-slot">3:30 PM</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="doctor-card">
+                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Michael Chen" class="doctor-image">
+                    <div class="doctor-info">
+                        <h4>Dr. Michael Chen</h4>
+                        <span class="doctor-specialty">Neurologist</span>
+                        <div class="time-slots">
+                            <div class="time-slot booked">8:00 AM</div>
+                            <div class="time-slot">10:30 AM</div>
+                            <div class="time-slot">2:15 PM</div>
+                            <div class="time-slot">4:45 PM</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="doctor-card">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Priya Patel" class="doctor-image">
+                    <div class="doctor-info">
+                        <h4>Dr. Priya Patel</h4>
+                        <span class="doctor-specialty">Pediatrician</span>
+                        <div class="time-slots">
+                            <div class="time-slot">8:45 AM</div>
+                            <div class="time-slot booked">11:00 AM</div>
+                            <div class="time-slot">1:30 PM</div>
+                            <div class="time-slot">3:15 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-sidebar">
+            <h3>Same-Day Appointments</h3>
+            <p>Our same-day appointment service helps you get the care you need quickly when you can't wait for a scheduled visit.</p>
+            
+            <h3 style="margin-top: 25px;">How It Works</h3>
+            <ol style="margin-left: 20px; margin-bottom: 25px;">
+                <li style="margin-bottom: 8px;">Select your preferred location</li>
+                <li style="margin-bottom: 8px;">Choose appointment type</li>
+                <li style="margin-bottom: 8px;">View available time slots</li>
+                <li>Book your appointment instantly</li>
+            </ol>
+            
+            <h3>Need Immediate Care?</h3>
+            <p>For urgent medical needs that aren't emergencies, our same-day appointments provide timely access to care.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('availabilityForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const location = document.getElementById('location').value;
+        const appointmentType = document.querySelector('input[name="appointmentType"]:checked').value;
+        const specialty = document.getElementById('specialty').value;
+        
+        // Validate form
+        if (!location) {
+            alert('Please select a location');
+            return;
+        }
+        
+        // Update results summary
+        const locationName = document.getElementById('location').options[document.getElementById('location').selectedIndex].text;
+        document.getElementById('resultsSummary').textContent = `Showing results for ${locationName}`;
+        
+        // Show results (in a real app, this would fetch from server)
+        document.getElementById('resultsContainer').style.display = 'block';
+        
+        // Scroll to results
+        document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // Time slot click handler
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('time-slot') && !e.target.classList.contains('booked')) {
+            const doctorName = e.target.closest('.doctor-card').querySelector('h4').textContent;
+            const time = e.target.textContent;
+            alert(`Booking appointment with ${doctorName} at ${time}`);
+            // In a real app, this would open a booking modal or process the reservation
+        }
+    });
+</script>
+</body>
+
+
+
+{% endblock %}

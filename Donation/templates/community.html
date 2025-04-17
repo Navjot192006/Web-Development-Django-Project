@@ -1,0 +1,622 @@
+{% extends 'base.html' %}
+{% block title_block %}Community{% endblock %}
+
+{% block main_block %}
+
+
+<style>
+    /* Reusing styles from the main page */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .community-hero {
+        height: 70vh;
+        background: linear-gradient(rgba(78, 0, 0, 0.8), rgba(78, 0, 0, 0.8)), 
+                    url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 100px 20px 0;
+        margin-top: 80px;
+    }
+
+    .hero-content {
+        max-width: 800px;
+    }
+
+    .hero-content h1 {
+        font-size: 72px;
+        margin-bottom: 25px;
+        font-family: 'Playfair Display', serif;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.5s ease;
+    }
+
+    .hero-content p {
+        font-size: 24px;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 2s ease;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 16px 40px;
+        font-size: 18px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease-in-out;
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 2.5s ease;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        background: #fff;
+        color: #ff4d4d;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(255, 77, 77, 0.7);
+    }
+
+    /* Main Content Sections */
+    .main-content {
+        padding: 100px 20px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Impact Stats Section */
+    .stats-section {
+        margin-bottom: 100px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+    }
+
+    .stat-number {
+        font-size: 48px;
+        font-weight: bold;
+        color: #ff4d4d;
+        margin-bottom: 10px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .stat-label {
+        font-size: 18px;
+        color: #4e0000;
+    }
+
+    /* Community Stories Section */
+    .stories-section {
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+        color: white;
+        padding: 100px 20px;
+        margin-bottom: 100px;
+        border-radius: 15px;
+    }
+
+    .stories-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+    }
+
+    .story-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .story-image {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .story-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .story-card:hover .story-image img {
+        transform: scale(1.1);
+    }
+
+    .story-content h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #ff4d4d;
+    }
+
+    .story-content p {
+        margin-bottom: 20px;
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    /* Partners Section */
+    .partners-section {
+        margin-bottom: 100px;
+    }
+
+    .partners-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+        align-items: center;
+    }
+
+    .partner-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .partner-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(255, 77, 77, 0.1);
+    }
+
+    .partner-logo {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .partner-logo img {
+        max-width: 100%;
+        max-height: 100%;
+        filter: grayscale(100%);
+        transition: filter 0.3s ease;
+    }
+
+    .partner-card:hover .partner-logo img {
+        filter: grayscale(0%);
+    }
+
+    .partner-card h3 {
+        color: #4e0000;
+        margin-bottom: 10px;
+    }
+
+    /* How to Help Section */
+    .help-section {
+        margin-bottom: 100px;
+    }
+
+    .help-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+
+    .help-image {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .help-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .help-content h2 {
+        font-size: 36px;
+        margin-bottom: 25px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .help-content ul {
+        list-style: none;
+        margin-bottom: 30px;
+    }
+
+    .help-content li {
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 35px;
+    }
+
+    .help-content li::before {
+        content: '\f058';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: #ff4d4d;
+        font-size: 20px;
+    }
+
+    /* CTA Section */
+    /* .cta-section {
+        background: linear-gradient(135deg, #ff4d4d, #cc0000);
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin-bottom: 100px;
+    }
+
+    .cta-section h2 {
+        font-size: 42px;
+        margin-bottom: 30px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 40px;
+        font-size: 20px;
+    } */
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .hero-content h1 {
+            font-size: 58px;
+        }
+        
+        .hero-content p {
+            font-size: 22px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+        }
+
+        .help-container {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .help-image {
+            order: -1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        
+        .hero-content h1 {
+            font-size: 42px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+        }
+
+        .help-content h2 {
+            font-size: 28px;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .community-hero {
+            height: 60vh;
+            margin-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: 36px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+        }
+        
+        .cta-section h2 {
+            font-size: 32px;
+        }
+        
+        .cta-section p {
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="community-hero">
+    <div class="hero-content">
+        <h1>Community Impact</h1>
+        <p>Blood cannot be manufactured. It can only come from volunteer donors like you, making each donation invaluable to your community.</p>
+        <!-- <a href="d10signin.html" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Join Our Community</a> -->
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Impact Stats Section -->
+    <section class="stats-section">
+        <div class="section-title">
+            <h2>Your Donation Makes a Difference</h2>
+            <p>See how each blood donation creates a ripple effect throughout our community</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Donation Can Save Up To 3 Lives</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">36,000</div>
+                <div class="stat-label">Units Needed Daily in the U.S.</div>
+            </div>  
+            <div class="stat-card">
+                <div class="stat-number">4.5M</div>
+                <div class="stat-label">Americans Would Die Yearly Without Transfusions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">65%</div>
+                <div class="stat-label">Of The Population Eligible To Donate</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Stories Section -->
+    <section class="stories-section">
+        <div class="section-title">
+            <h2 style="color: white;">Stories From Our Community</h2>
+            <p style="color: rgba(255,255,255,0.8);">Real people whose lives were changed by blood donors</p>
+        </div>
+        
+        <div class="stories-container">
+            <div class="story-card">
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Accident Survivor">
+                </div>
+                <div class="story-content">
+                    <h3>From Tragedy to Thanksgiving</h3>
+                    <p>"After a horrific car accident, I needed 12 units of blood to survive. The doctors told my family it was the donors who saved my life. Now I organize blood drives in my community to give others the same second chance I got."</p>
+                    <p><strong>- James R., accident survivor</strong></p>
+                </div>
+            </div>
+            
+            <div class="story-card">
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Cancer Patient">
+                </div>
+                <div class="story-content">
+                    <h3>My Cancer Battle</h3>
+                    <p>"During my leukemia treatment, I needed regular blood transfusions. Those bags of blood were my lifeline, giving me strength to continue fighting. I'll never forget the strangers who donated - they're my silent heroes."</p>
+                    <p><strong>- Maria T., cancer survivor</strong></p>
+                </div>
+            </div>
+            
+            <div class="story-card">
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Premature Baby">
+                </div>
+                <div class="story-content">
+                    <h3>Our Miracle Baby</h3>
+                    <p>"Our daughter was born 3 months premature and needed 5 blood transfusions in her first month. Today she's a healthy 3-year-old, and we donate regularly to pay forward the gift that helped save her life."</p>
+                    <p><strong>- The Chen Family</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners-section">
+        <div class="section-title">
+            <h2>Our Community Partners</h2>
+            <p>Working together to ensure a safe and sufficient blood supply</p>
+        </div>
+        
+        <div class="partners-grid">
+            <div class="partner-card">
+                <div class="partner-logo">
+                    <img src="https://via.placeholder.com/150x60?text=City+Hospital" alt="City Hospital">
+                </div>
+                <h3>City Hospital</h3>
+                <p>Our primary blood recipient, serving over 500 patients monthly</p>
+            </div>
+            
+            <div class="partner-card">
+                <div class="partner-logo">
+                    <img src="https://via.placeholder.com/150x60?text=Local+Schools" alt="Local Schools">
+                </div>
+                <h3>Local Schools</h3>
+                <p>Hosting blood drives and educating future donors</p>
+            </div>
+            
+            <div class="partner-card">
+                <div class="partner-logo">
+                    <img src="https://via.placeholder.com/150x60?text=Business+Alliance" alt="Business Alliance">
+                </div>
+                <h3>Business Alliance</h3>
+                <p>Corporate sponsors and employee donation programs</p>
+            </div>
+            
+            <div class="partner-card">
+                <div class="partner-logo">
+                    <img src="https://via.placeholder.com/150x60?text=Community+Clubs" alt="Community Clubs">
+                </div>
+                <h3>Community Clubs</h3>
+                <p>Organizing local blood drives and awareness campaigns</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Help Section -->
+    <section class="help-section">
+        <div class="help-container">
+            <div class="help-image">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Community Blood Drive">
+            </div>
+            <div class="help-content">
+                <h2>How You Can Help</h2>
+                <p>Beyond donating blood, there are many ways to support our community's blood supply:</p>
+                <ul>
+                    <li>Organize a blood drive at your workplace or school</li>
+                    <li>Volunteer at donation centers or mobile drives</li>
+                    <li>Educate others about the importance of blood donation</li>
+                    <li>Sponsor a blood donation awareness campaign</li>
+                    <li>Encourage friends and family to become regular donors</li>
+                    <li>Share your donation experience on social media</li>
+                </ul>
+                <a href="#" class="btn">Get Involved</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <!-- <section class="cta-section">
+        <h2>Be Someone's Hero</h2>
+        <p>Your blood donation could mean the difference between life and death for someone in your community.</p>
+        <a href="d10signin.html" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Now</a>
+    </section>
+</div> -->
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+</script>
+</body>
+
+
+{% endblock %}

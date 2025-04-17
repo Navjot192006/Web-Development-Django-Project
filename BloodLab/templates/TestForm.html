@@ -1,0 +1,1617 @@
+{% extends "Test.html" %}
+{% block title_block %}Book Appointment - BloodLab Diagnostics{% endblock %}
+{% block main_block %}
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.8), rgba(69, 123, 157, 0.8)), url('https://images.unsplash.com/photo-1579684453423-f84349ef60b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Appointment Section */
+        .appointment {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+        
+        /* Test Selection Wizard */
+        .booking-wizard {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 4rem;
+        }
+        
+        .wizard-header {
+            background: var(--dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .wizard-steps {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .step.active {
+            background: var(--primary);
+        }
+        
+        .step.completed {
+            background: var(--accent);
+            color: var(--dark);
+        }
+        
+        .wizard-body {
+            padding: 2rem;
+        }
+        
+        /* Test Categories */
+        .test-categories {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        
+        .category-nav {
+            border-right: 1px solid #eee;
+            padding-right: 1rem;
+        }
+        
+        .category-nav h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-item {
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .category-item:hover {
+            background: rgba(168, 218, 220, 0.2);
+        }
+        
+        .category-item.active {
+            background: var(--accent);
+            color: var(--dark);
+        }
+        
+        /* Test Cards */
+        .tests-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+        
+        .test-card.selected {
+            border: 2px solid var(--primary);
+            background: rgba(230, 57, 70, 0.05);
+        }
+        
+        .test-card h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .test-card .price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .test-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .test-card .test-details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .test-card.selected .test-details {
+            display: block;
+        }
+        
+        .test-details ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+        
+        .test-details li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            display: flex;
+        }
+        
+        .test-details li::before {
+            content: '•';
+            color: var(--primary);
+            margin-right: 8px;
+        }
+        
+        /* Selected Tests */
+        .selected-tests {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .selected-tests h3 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .selected-tests h3 span {
+            color: var(--primary);
+        }
+        
+        .selected-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .selected-item:last-child {
+            border-bottom: none;
+        }
+        
+        .remove-test {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .total-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: right;
+            margin-top: 1rem;
+        }
+        
+        /* Patient Info Form */
+        .patient-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+        
+        .form-actions {
+            grid-column: span 2;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        /* Calendar */
+        .calendar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-header h3 {
+            color: var(--dark);
+        }
+        
+        .month-nav {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .month-nav button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark);
+            padding: 0.5rem;
+        }
+        
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .day:hover {
+            background: rgba(168, 218, 220, 0.3);
+        }
+        
+        .day.selected {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .day.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        
+        .time-slot {
+            padding: 0.8rem;
+            text-align: center;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .time-slot:hover {
+            border-color: var(--accent);
+        }
+        
+        .time-slot.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Confirmation */
+        .confirmation {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        
+        .confirmation-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .confirmation h3 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .confirmation p {
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .test-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-nav {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding-right: 0;
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+                justify-content: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px 10px;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .patient-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .form-actions {
+                grid-column: span 1;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                width: 95%;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Book Your Lab Test Appointment</h2>
+            <p>Schedule your blood tests quickly and easily with our online booking system. Fast, accurate results you can trust.</p>
+        </div>
+    </section>
+
+    <!-- Appointment Section -->
+    <section class="appointment">
+        <div class="container">
+            <div class="section-title">
+                <h2>Schedule Your Test</h2>
+            </div>
+            
+            <!-- Booking Wizard -->
+            <div class="booking-wizard">
+                <div class="wizard-header">
+                    <h3>Book Your Appointment</h3>
+                    <div class="wizard-steps">
+                        <div class="step active">1</div>
+                        <div class="step">2</div>
+                        <div class="step">3</div>
+                    </div>
+                </div>
+                
+                <div class="wizard-body">
+                    <!-- Step 1: Select Tests -->
+                    <div id="step1">
+                        <h3>Select Your Tests</h3>
+                        <p>Choose from our comprehensive range of blood tests categorized for your convenience.</p>
+                        
+                        <div class="test-categories">
+                            <div class="category-nav">
+                                <h3>Categories</h3>
+                                <ul class="category-list">
+                                    <li class="category-item active" data-category="general">General Health</li>
+                                    <li class="category-item" data-category="hormones">Hormones</li>
+                                    <li class="category-item" data-category="vitamins">Vitamins & Nutrition</li>
+                                    <li class="category-item" data-category="cardiac">Cardiac Risk</li>
+                                    <li class="category-item" data-category="diabetes">Diabetes</li>
+                                    <li class="category-item" data-category="thyroid">Thyroid</li>
+                                    <li class="category-item" data-category="allergy">Allergy</li>
+                                    <li class="category-item" data-category="immunity">Immunity</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="tests-container">
+                                <!-- General Health Tests -->
+                                <div class="test-card category-general" data-test="cbc">
+                                    <h4>Complete Blood Count <span class="price">$49</span></h4>
+                                    <p>Measures your overall health and detects a wide range of disorders.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Red blood cell count</li>
+                                            <li>White blood cell count</li>
+                                            <li>Hemoglobin levels</li>
+                                            <li>Platelet count</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-general" data-test="metabolic">
+                                    <h4>Basic Metabolic Panel <span class="price">$59</span></h4>
+                                    <p>Provides information about your body's metabolism.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Glucose levels</li>
+                                            <li>Calcium levels</li>
+                                            <li>Electrolytes</li>
+                                            <li>Kidney function</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-general" data-test="liver">
+                                    <h4>Liver Function Panel <span class="price">$65</span></h4>
+                                    <p>Evaluates how well your liver is working.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>ALT, AST (liver enzymes)</li>
+                                            <li>Bilirubin levels</li>
+                                            <li>Albumin</li>
+                                            <li>Total protein</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hormone Tests -->
+                                <div class="test-card category-hormones" data-test="thyroid" style="display: none;">
+                                    <h4>Thyroid Panel <span class="price">$89</span></h4>
+                                    <p>Evaluates how well your thyroid is working.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>TSH</li>
+                                            <li>T3</li>
+                                            <li>T4</li>
+                                            <li>Thyroid antibodies</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-hormones" data-test="testosterone" style="display: none;">
+                                    <h4>Testosterone Test <span class="price">$79</span></h4>
+                                    <p>Measures testosterone levels in your blood.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Total testosterone</li>
+                                            <li>Free testosterone</li>
+                                            <li>SHBG</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vitamins & Nutrition Tests -->
+                                <div class="test-card category-vitamins" data-test="vitamin-d" style="display: none;">
+                                    <h4>Vitamin D Test <span class="price">$69</span></h4>
+                                    <p>Measures vitamin D levels in your blood.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>25-hydroxyvitamin D</li>
+                                            <li>1,25-dihydroxyvitamin D</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-vitamins" data-test="b-vitamins" style="display: none;">
+                                    <h4>B Vitamins Panel <span class="price">$99</span></h4>
+                                    <p>Comprehensive assessment of B vitamin levels.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Vitamin B12</li>
+                                            <li>Folate (B9)</li>
+                                            <li>Vitamin B6</li>
+                                            <li>Vitamin B1, B2</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-vitamins" data-test="iron-panel" style="display: none;">
+                                    <h4>Iron Panel <span class="price">$75</span></h4>
+                                    <p>Evaluates iron levels and iron-binding capacity.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Serum iron</li>
+                                            <li>Ferritin</li>
+                                            <li>Transferrin</li>
+                                            <li>TIBC</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cardiac Risk Tests -->
+                                <div class="test-card category-cardiac" data-test="lipid-panel" style="display: none;">
+                                    <h4>Lipid Panel <span class="price">$55</span></h4>
+                                    <p>Measures cholesterol and triglycerides in your blood.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Total cholesterol</li>
+                                            <li>LDL (bad cholesterol)</li>
+                                            <li>HDL (good cholesterol)</li>
+                                            <li>Triglycerides</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-cardiac" data-test="cardiac-markers" style="display: none;">
+                                    <h4>Cardiac Markers <span class="price">$119</span></h4>
+                                    <p>Tests for indicators of heart damage or stress.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Troponin</li>
+                                            <li>CK-MB</li>
+                                            <li>BNP/NT-proBNP</li>
+                                            <li>Myoglobin</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-cardiac" data-test="homocysteine" style="display: none;">
+                                    <h4>Homocysteine Test <span class="price">$85</span></h4>
+                                    <p>Measures homocysteine levels, a risk factor for heart disease.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Homocysteine level</li>
+                                            <li>Risk assessment</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diabetes Tests -->
+                                <div class="test-card category-diabetes" data-test="glucose" style="display: none;">
+                                    <h4>Fasting Glucose <span class="price">$35</span></h4>
+                                    <p>Measures blood sugar levels after an overnight fast.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Blood glucose level</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-diabetes" data-test="a1c" style="display: none;">
+                                    <h4>Hemoglobin A1C <span class="price">$49</span></h4>
+                                    <p>Measures average blood sugar levels over past 3 months.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Glycated hemoglobin</li>
+                                            <li>3-month glucose average</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-diabetes" data-test="insulin" style="display: none;">
+                                    <h4>Insulin Test <span class="price">$65</span></h4>
+                                    <p>Measures insulin levels to assess insulin resistance.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Fasting insulin</li>
+                                            <li>HOMA-IR calculation</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Thyroid Tests -->
+                                <div class="test-card category-thyroid" data-test="tsh" style="display: none;">
+                                    <h4>TSH Test <span class="price">$45</span></h4>
+                                    <p>Measures thyroid-stimulating hormone levels.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Thyroid-stimulating hormone</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-thyroid" data-test="free-t4" style="display: none;">
+                                    <h4>Free T4 Test <span class="price">$55</span></h4>
+                                    <p>Measures free thyroxine hormone levels.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Free thyroxine (T4)</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-thyroid" data-test="thyroid-antibodies" style="display: none;">
+                                    <h4>Thyroid Antibodies <span class="price">$95</span></h4>
+                                    <p>Tests for antibodies that attack the thyroid.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Anti-TPO antibodies</li>
+                                            <li>Anti-thyroglobulin antibodies</li>
+                                            <li>TSI</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Allergy Tests -->
+                                <div class="test-card category-allergy" data-test="food-allergy" style="display: none;">
+                                    <h4>Food Allergy Panel <span class="price">$199</span></h4>
+                                    <p>Tests for allergies to common food allergens.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Dairy, Eggs</li>
+                                            <li>Wheat, Soy</li>
+                                            <li>Nuts, Fish</li>
+                                            <li>And 20+ more foods</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-allergy" data-test="environmental-allergy" style="display: none;">
+                                    <h4>Environmental Allergy Panel <span class="price">$179</span></h4>
+                                    <p>Tests for allergies to environmental factors.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Pollen</li>
+                                            <li>Dust mites</li>
+                                            <li>Animal dander</li>
+                                            <li>Mold spores</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-allergy" data-test="ige-level" style="display: none;">
+                                    <h4>Total IgE Level <span class="price">$75</span></h4>
+                                    <p>Measures overall levels of IgE antibodies.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Immunoglobulin E</li>
+                                            <li>Allergy indicator</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Immunity Tests -->
+                                <div class="test-card category-immunity" data-test="immune-panel" style="display: none;">
+                                    <h4>Immune System Panel <span class="price">$149</span></h4>
+                                    <p>Comprehensive assessment of immune system function.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>Lymphocyte subsets</li>
+                                            <li>Immunoglobulin levels</li>
+                                            <li>Complement system</li>
+                                            <li>Inflammatory markers</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-immunity" data-test="crp" style="display: none;">
+                                    <h4>CRP Test <span class="price">$59</span></h4>
+                                    <p>Measures C-reactive protein, a marker of inflammation.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>High-sensitivity CRP</li>
+                                            <li>Inflammation assessment</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-card category-immunity" data-test="autoimmune" style="display: none;">
+                                    <h4>Autoimmune Screening <span class="price">$189</span></h4>
+                                    <p>Screening for common autoimmune antibodies.</p>
+                                    <div class="test-details">
+                                        <ul>
+                                            <li>ANA</li>
+                                            <li>Rheumatoid factor</li>
+                                            <li>Anti-CCP</li>
+                                            <li>Other autoantibodies</li>
+                                        </ul>
+                                        <button class="btn-outline add-test">Add Test</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="selected-tests">
+                            <h3>Selected Tests <span id="selected-count">0</span></h3>
+                            <ul class="selected-list" id="selected-tests-list">
+                                <!-- Selected tests will appear here -->
+                            </ul>
+                            <div class="total-price">
+                                Total: <span id="total-price">$0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn-outline" disabled>Back</button>
+                            <button class="btn next-step">Continue to Patient Info</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Patient Information -->
+                    <div id="step2" style="display: none;">
+                        <h3>Patient Information</h3>
+                        <p>Please provide your details to complete the booking process.</p>
+                        
+                        <form class="patient-form" id="patientForm">
+                            <div class="form-group">
+                                <label for="first-name">First Name *</label>
+                                <input type="text" id="first-name" name="firstName" required>
+                                <span class="error-message" id="first-name-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="last-name">Last Name *</label>
+                                <input type="text" id="last-name" name="lastName" required>
+                                <span class="error-message" id="last-name-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required>
+                                <span class="error-message" id="email-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required>
+                                <span class="error-message" id="phone-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="dob">Date of Birth *</label>
+                                <input type="date" id="dob" name="dob" required>
+                                <span class="error-message" id="dob-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gender">Gender *</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                                <span class="error-message" id="gender-error"></span>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="address">Street Address *</label>
+                                <input type="text" id="address" name="address" required>
+                                <span class="error-message" id="address-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" name="city" required>
+                                <span class="error-message" id="city-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="state">State/Province *</label>
+                                <input type="text" id="state" name="state" required>
+                                <span class="error-message" id="state-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="zip">ZIP/Postal Code *</label>
+                                <input type="text" id="zip" name="zip" required>
+                                <span class="error-message" id="zip-error"></span>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="insurance">Insurance Provider (if applicable)</label>
+                                <input type="text" id="insurance" name="insurance">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="notes">Special Instructions or Notes</label>
+                                <textarea id="notes" name="notes" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-outline prev-step">Back</button>
+                                <button type="button" class="btn next-step" id="submit-patient-info">Continue to Schedule</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Step 3: Schedule Appointment -->
+                    <div id="step3" style="display: none;">
+                        <h3>Select Date & Time</h3>
+                        <p>Choose a convenient time for your appointment from our available slots.</p>
+                        
+                        <div class="calendar">
+                            <div class="calendar-header">
+                                <h3>June 2023</h3>
+                                <div class="month-nav">
+                                    <button class="prev-month">&lt;</button>
+                                    <button class="next-month">&gt;</button>
+                                </div>
+                            </div>
+                            
+                            <div class="days-grid">
+                                <div class="day-header">Sun</div>
+                                <div class="day-header">Mon</div>
+                                <div class="day-header">Tue</div>
+                                <div class="day-header">Wed</div>
+                                <div class="day-header">Thu</div>
+                                <div class="day-header">Fri</div>
+                                <div class="day-header">Sat</div>
+                                
+                                <!-- Calendar days will be populated by JavaScript -->
+                                <div class="day disabled">28</div>
+                                <div class="day disabled">29</div>
+                                <div class="day disabled">30</div>
+                                <div class="day disabled">31</div>
+                                <div class="day">1</div>
+                                <div class="day">2</div>
+                                <div class="day">3</div>
+                                <div class="day">4</div>
+                                <div class="day">5</div>
+                                <div class="day">6</div>
+                                <div class="day">7</div>
+                                <div class="day">8</div>
+                                <div class="day">9</div>
+                                <div class="day">10</div>
+                                <div class="day">11</div>
+                                <div class="day">12</div>
+                                <div class="day">13</div>
+                                <div class="day selected">14</div>
+                                <div class="day">15</div>
+                                <div class="day">16</div>
+                                <div class="day">17</div>
+                                <div class="day">18</div>
+                                <div class="day">19</div>
+                                <div class="day">20</div>
+                                <div class="day">21</div>
+                                <div class="day">22</div>
+                                <div class="day">23</div>
+                                <div class="day">24</div>
+                                <div class="day">25</div>
+                                <div class="day">26</div>
+                                <div class="day">27</div>
+                                <div class="day">28</div>
+                                <div class="day">29</div>
+                                <div class="day">30</div>
+                                <div class="day disabled">1</div>
+                            </div>
+                            
+                            <h4 style="margin-top: 2rem;">Available Time Slots</h4>
+                            <div class="time-slots">
+                                <div class="time-slot">8:00 AM</div>
+                                <div class="time-slot">8:30 AM</div>
+                                <div class="time-slot selected">9:00 AM</div>
+                                <div class="time-slot">9:30 AM</div>
+                                <div class="time-slot">10:00 AM</div>
+                                <div class="time-slot">10:30 AM</div>
+                                <div class="time-slot">11:00 AM</div>
+                                <div class="time-slot">11:30 AM</div>
+                                <div class="time-slot">1:00 PM</div>
+                                <div class="time-slot">1:30 PM</div>
+                                <div class="time-slot">2:00 PM</div>
+                                <div class="time-slot">2:30 PM</div>
+                                <div class="time-slot">3:00 PM</div>
+                                <div class="time-slot">3:30 PM</div>
+                                <div class="time-slot">4:00 PM</div>
+                                <div class="time-slot">4:30 PM</div>
+                            </div>
+                        </div>
+                        
+                        <div class="selected-tests">
+                            <h3>Appointment Summary</h3>
+                            <ul class="selected-list">
+                                <li class="selected-item">
+                                    <span>Date:</span>
+                                    <strong id="summary-date">June 14, 2023</strong>
+                                </li>
+                                <li class="selected-item">
+                                    <span>Time:</span>
+                                    <strong id="summary-time">9:00 AM</strong>
+                                </li>
+                                <li class="selected-item">
+                                    <span>Location:</span>
+                                    <strong>Main Laboratory Center</strong>
+                                </li>
+                                <li class="selected-item">
+                                    <span>Tests:</span>
+                                    <strong id="summary-tests">3 tests selected</strong>
+                                </li>
+                                <li class="selected-item">
+                                    <span>Total:</span>
+                                    <strong id="summary-total">$197</strong>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-outline prev-step">Back</button>
+                            <form method="POST" action="{% url 'bloodlab:submit_appointment' %}" id="final-submission-form">
+                                {% csrf_token %}
+                                <!-- Hidden fields to capture form data -->
+                                <input type="hidden" name="firstName" id="hidden-firstName">
+                                <input type="hidden" name="lastName" id="hidden-lastName">
+                                <input type="hidden" name="email" id="hidden-email">
+                                <input type="hidden" name="phone" id="hidden-phone">
+                                <input type="hidden" name="dob" id="hidden-dob">
+                                <input type="hidden" name="gender" id="hidden-gender">
+                                <input type="hidden" name="address" id="hidden-address">
+                                <input type="hidden" name="city" id="hidden-city">
+                                <input type="hidden" name="state" id="hidden-state">
+                                <input type="hidden" name="zipCode" id="hidden-zip">
+                                <input type="hidden" name="insurance" id="hidden-insurance">
+                                <input type="hidden" name="notes" id="hidden-notes">
+                                <input type="hidden" name="appointmentDate" id="hidden-appointmentDate">
+                                <input type="hidden" name="appointmentTime" id="hidden-appointmentTime">
+                                <input type="hidden" name="selectedTests" id="hidden-selectedTests">
+                            <button type="button" class="btn confirm-booking">Confirm Appointment</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4: Confirmation -->
+                    <div id="step4" style="display: none;">
+                        <div class="confirmation">
+                            <div class="confirmation-icon">✓</div>
+                            <h3>Appointment Confirmed!</h3>
+                            <p>Your lab test appointment has been successfully scheduled. A confirmation email with all the details has been sent to your email address.</p>
+                            <p><strong>Appointment ID:</strong> <span id="appointment-id"></span></p>
+                            <div class="selected-tests" style="max-width: 500px; margin: 2rem auto;">
+                                <ul class="selected-list">
+                                    <li class="selected-item">
+                                        <span>Date:</span>
+                                        <strong>June 14, 2023</strong>
+                                    </li>
+                                    <li class="selected-item">
+                                        <span>Time:</span>
+                                        <strong>9:00 AM</strong>
+                                    </li>
+                                    <li class="selected-item">
+                                        <span>Location:</span>
+                                        <strong>Main Laboratory Center</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a href="{% url 'bloodlab:labtest_home' %}" class="btn">Return to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Test Selection Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initially hide all non-general category tests
+            document.querySelectorAll('.test-card').forEach(card => {
+                if (!card.classList.contains('category-general')) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'block';
+                }
+            });
+            
+            // Initialize category navigation
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Update active category
+                    document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show tests for selected category
+                    const category = this.getAttribute('data-category');
+                    document.querySelectorAll('.test-card').forEach(card => {
+                        if (card.classList.contains(`category-${category}`)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Test Card Selection
+            document.querySelectorAll('.test-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('add-test') && !e.target.classList.contains('remove-test')) {
+                        this.classList.toggle('selected');
+                    }
+                });
+            });
+            
+            // Add Test Button
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add-test')) {
+                    e.stopPropagation();
+                    const testCard = e.target.closest('.test-card');
+                    const testCode = testCard.getAttribute('data-test');
+                    const testName = testCard.querySelector('h4').textContent.split('$')[0].trim();
+                    const testPrice = testCard.querySelector('.price').textContent;
+                    
+                    // Add to selected tests list
+                    const selectedList = document.getElementById('selected-tests-list');
+                    
+                    // Check if this test is already added
+                    const existingTest = document.querySelector(`.selected-item[data-test="${testCode}"]`);
+                    if (existingTest) {
+                        // Test already added, show notification
+                        showNotification('This test is already in your selection');
+                        return;
+                    }
+                    
+                    const listItem = document.createElement('li');
+                    listItem.className = 'selected-item';
+                    listItem.setAttribute('data-test', testCode);
+                    listItem.innerHTML = `
+                        <span>${testName}</span>
+                        <span>${testPrice} <span class="remove-test">×</span></span>
+                    `;
+                    selectedList.appendChild(listItem);
+                    
+                    // Update counts and total
+                    updateSelectionSummary();
+                    
+                    // Close the test details
+                    testCard.classList.remove('selected');
+                    
+                    // Show success notification
+                    showNotification('Test added to your selection');
+                }
+                
+                // Remove test
+                if (e.target.classList.contains('remove-test')) {
+                    e.target.closest('.selected-item').remove();
+                    updateSelectionSummary();
+                    showNotification('Test removed from your selection');
+                }
+            });
+            
+            // Initialize the summary
+            updateSelectionSummary();
+        });
+        
+        function updateSelectionSummary() {
+            const selectedItems = document.querySelectorAll('#selected-tests-list .selected-item');
+            const selectedCount = selectedItems.length;
+            document.getElementById('selected-count').textContent = selectedCount;
+            
+            // Enable/disable continue button based on selection
+            const continueButton = document.querySelector('#step1 .next-step');
+            if (continueButton) {
+                continueButton.disabled = selectedCount === 0;
+            }
+            
+            // Calculate total price
+            let total = 0;
+            selectedItems.forEach(item => {
+                const priceText = item.querySelector('span:last-child').textContent.trim();
+                const price = parseFloat(priceText.replace(/[^\d.]/g, ''));
+                if (!isNaN(price)) {
+                    total += price;
+                }
+            });
+            
+            document.getElementById('total-price').textContent = `$${total}`;
+            
+            // Update summary in step 3
+            if (document.getElementById('summary-tests')) {
+                document.getElementById('summary-tests').textContent = `${selectedCount} test${selectedCount !== 1 ? 's' : ''} selected`;
+                document.getElementById('summary-total').textContent = `$${total}`;
+            }
+        }
+        
+        function showNotification(message) {
+            // Create notification element if it doesn't exist
+            let notification = document.querySelector('.notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.className = 'notification';
+                document.body.appendChild(notification);
+                
+                // Add styles
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = 'rgba(230, 57, 70, 0.9)';
+                notification.style.color = 'white';
+                notification.style.padding = '12px 20px';
+                notification.style.borderRadius = '8px';
+                notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                notification.style.zIndex = '1000';
+                notification.style.transition = 'all 0.3s ease';
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+            }
+            
+            // Update message and show
+            notification.textContent = message;
+            notification.style.transform = 'translateY(0)';
+            notification.style.opacity = '1';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+            }, 3000);
+        }
+        
+        // Wizard Navigation
+        let currentStep = 1;
+        let selectedAppointmentDate = null;
+        let selectedAppointmentTime = null;
+        
+        document.querySelectorAll('.next-step').forEach(button => {
+            button.addEventListener('click', function() {
+                if (validateStep(currentStep)) {
+                    document.getElementById(`step${currentStep}`).style.display = 'none';
+                    currentStep++;
+                    document.getElementById(`step${currentStep}`).style.display = 'block';
+                    updateWizardSteps();
+                    
+                    // If moving to step 3 (calendar), load available slots
+                    if (currentStep === 3) {
+                        loadAvailableSlots();
+                    }
+                }
+            });
+        });
+        
+        document.querySelectorAll('.prev-step').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById(`step${currentStep}`).style.display = 'none';
+                currentStep--;
+                document.getElementById(`step${currentStep}`).style.display = 'block';
+                updateWizardSteps();
+            });
+        });
+        
+        function updateWizardSteps() {
+            document.querySelectorAll('.wizard-steps .step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                } else if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+        
+        function validateStep(step) {
+            if (step === 1) {
+                // Validate test selection
+                const selectedCount = document.querySelectorAll('.selected-item').length;
+                if (selectedCount === 0) {
+                    showNotification('Please select at least one test to continue');
+                    return false;
+                }
+                return true;
+            } else if (step === 2) {
+                // Validate patient information form
+                const form = document.getElementById('patientForm');
+                const requiredFields = [
+                    'first-name', 'last-name', 'email', 'phone', 'dob', 
+                    'gender', 'address', 'city', 'state', 'zip'
+                ];
+                
+                let isValid = true;
+                
+                // Clear previous error messages
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.textContent = '';
+                });
+                
+                // Check each required field
+                requiredFields.forEach(field => {
+                    const input = document.getElementById(field);
+                    const errorElement = document.getElementById(`${field}-error`);
+                    
+                    if (!input.value.trim()) {
+                        errorElement.textContent = 'This field is required';
+                        isValid = false;
+                    }
+                });
+                
+                // Validate email format
+                const emailInput = document.getElementById('email');
+                const emailError = document.getElementById('email-error');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (emailInput.value && !emailRegex.test(emailInput.value)) {
+                    emailError.textContent = 'Please enter a valid email address';
+                    isValid = false;
+                }
+                
+                // Validate phone format
+                const phoneInput = document.getElementById('phone');
+                const phoneError = document.getElementById('phone-error');
+                const phoneRegex = /^[\d\s\-\(\)]+$/;
+                
+                if (phoneInput.value && !phoneRegex.test(phoneInput.value)) {
+                    phoneError.textContent = 'Please enter a valid phone number';
+                    isValid = false;
+                }
+                
+                // Show error notification if validation fails
+                if (!isValid) {
+                    showNotification('Please fill out all required fields correctly');
+                }
+                
+                return isValid;
+            } else if (step === 3) {
+                // Validate date and time selection
+                if (!selectedAppointmentDate) {
+                    showNotification('Please select an appointment date');
+                    return false;
+                }
+                
+                if (!selectedAppointmentTime) {
+                    showNotification('Please select an appointment time');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            return true;
+        }
+        
+        // Calendar Selection
+        function initializeCalendar() {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Update calendar header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.querySelector('.calendar-header h3').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Generate calendar days
+            const daysGrid = document.querySelector('.days-grid');
+            // First, clear existing day headers
+            while (daysGrid.children.length > 7) {
+                daysGrid.removeChild(daysGrid.lastChild);
+            }
+            
+            // Get first day of month and total days
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            // Add previous month's days
+            for (let i = 0; i < firstDay; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day disabled';
+                dayElement.textContent = new Date(currentYear, currentMonth, -firstDay + i + 1).getDate();
+                daysGrid.appendChild(dayElement);
+            }
+            
+            // Add current month's days
+            for (let i = 1; i <= lastDate; i++) {
+                const date = new Date(currentYear, currentMonth, i);
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.textContent = i;
+                
+                // Disable past dates
+                if (date < new Date(today.setHours(0, 0, 0, 0)) || date.getDay() === 0) { // Disable Sundays too
+                    dayElement.classList.add('disabled');
+                } else {
+                    dayElement.addEventListener('click', function() {
+                        // Update selected date
+                document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                this.classList.add('selected');
+                        
+                        const year = currentYear;
+                        const month = currentMonth + 1; // Month is 0-indexed in JS
+                        const day = parseInt(this.textContent);
+                        
+                        // Format date for API and display
+                        selectedAppointmentDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                
+                // Update summary
+                        document.getElementById('summary-date').textContent = `${monthNames[currentMonth]} ${day}, ${year}`;
+                        
+                        // Load available time slots for this date
+                        loadAvailableSlots(selectedAppointmentDate);
+                    });
+                }
+                
+                daysGrid.appendChild(dayElement);
+            }
+        }
+        
+        function loadAvailableSlots(date = null) {
+            // If no date provided, use the current selected date in calendar
+            if (!date) {
+                const selectedDayElement = document.querySelector('.day.selected');
+                if (selectedDayElement) {
+                    const day = parseInt(selectedDayElement.textContent);
+                    const monthYear = document.querySelector('.calendar-header h3').textContent.split(' ');
+                    const month = monthYear[0];
+                    const year = parseInt(monthYear[1]);
+                    
+                    // Convert month name to number
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                      'July', 'August', 'September', 'October', 'November', 'December'];
+                    const monthNumber = monthNames.indexOf(month) + 1;
+                    
+                    // Format date as YYYY-MM-DD
+                    date = `${year}-${monthNumber.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                    selectedAppointmentDate = date;
+                }
+            }
+            
+            if (!date) {
+                // No date selected, use default slots
+                return;
+            }
+            
+            // Here you would fetch available slots from the server
+            // For now, generate demo slots
+            const timeSlotsContainer = document.querySelector('.time-slots');
+            timeSlotsContainer.innerHTML = ''; // Clear existing slots
+            
+            // Generate slots from 8:00 AM to 4:30 PM in 30-minute increments
+            const startHour = 8;
+            const endHour = 16; // 4:30 PM
+            
+            for (let hour = startHour; hour <= endHour; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    // Skip 4:30 PM
+                    if (hour === endHour && minute === 30) continue;
+                    
+                    const formattedHour = hour > 12 ? hour - 12 : hour;
+                    const period = hour >= 12 ? 'PM' : 'AM';
+                    const formattedMinute = minute.toString().padStart(2, '0');
+                    const timeDisplay = `${formattedHour}:${formattedMinute} ${period}`;
+                    
+                    // Format for data storage (24-hour)
+                    const timeValue = `${hour.toString().padStart(2, '0')}:${formattedMinute}`;
+                    
+                    const slotElement = document.createElement('div');
+                    slotElement.className = 'time-slot';
+                    slotElement.textContent = timeDisplay;
+                    slotElement.setAttribute('data-time', timeValue);
+                    
+                    // Random availability for demo
+                    const isAvailable = Math.random() > 0.3; // 70% chance of availability
+                    if (!isAvailable) {
+                        slotElement.classList.add('disabled');
+                    } else {
+                        slotElement.addEventListener('click', function() {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                            // Update time selection
+                            selectedAppointmentTime = this.getAttribute('data-time');
+                document.getElementById('summary-time').textContent = this.textContent;
+            });
+                    }
+                    
+                    timeSlotsContainer.appendChild(slotElement);
+                }
+            }
+        }
+        
+        // Initialize calendar when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalendar();
+            updateSelectionSummary();
+        });
+        
+        // Confirm Booking - submit data to server
+        document.querySelector('.confirm-booking').addEventListener('click', function() {
+            if (!validateStep(3)) {
+                return;
+            }
+            
+            // Fill hidden form fields
+            document.getElementById('hidden-firstName').value = document.getElementById('first-name').value;
+            document.getElementById('hidden-lastName').value = document.getElementById('last-name').value;
+            document.getElementById('hidden-email').value = document.getElementById('email').value;
+            document.getElementById('hidden-phone').value = document.getElementById('phone').value;
+            document.getElementById('hidden-dob').value = document.getElementById('dob').value;
+            document.getElementById('hidden-gender').value = document.getElementById('gender').value;
+            document.getElementById('hidden-address').value = document.getElementById('address').value;
+            document.getElementById('hidden-city').value = document.getElementById('city').value;
+            document.getElementById('hidden-state').value = document.getElementById('state').value;
+            document.getElementById('hidden-zip').value = document.getElementById('zip').value;
+            document.getElementById('hidden-insurance').value = document.getElementById('insurance').value || '';
+            document.getElementById('hidden-notes').value = document.getElementById('notes').value || '';
+            document.getElementById('hidden-appointmentDate').value = selectedAppointmentDate;
+            document.getElementById('hidden-appointmentTime').value = selectedAppointmentTime;
+            
+            // Collect selected tests and join as comma-separated string
+            const selectedTests = Array.from(document.querySelectorAll('.selected-item'))
+                .map(item => item.getAttribute('data-test'))
+                .join(',');
+            document.getElementById('hidden-selectedTests').value = selectedTests;
+            
+            // Submit the form
+            document.getElementById('final-submission-form').submit();
+        });
+        
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+{% endblock %}

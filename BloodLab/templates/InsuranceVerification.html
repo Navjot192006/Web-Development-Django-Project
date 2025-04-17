@@ -1,0 +1,757 @@
+{% extends "Test.html" %}
+{% load static %}
+{% block title_block %}Verify Insurance | BloodLab Diagnostics{% endblock %}
+{% block main_block %}
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.8), rgba(69, 123, 157, 0.8)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero img {
+            animation: fadeInUp 1.2s ease-out;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Insurance Verification Section */
+        .insurance-verification {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+        
+        /* Verification Card */
+        .verification-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .verification-header {
+            background: var(--dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+        
+        .verification-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .verification-body {
+            padding: 2rem;
+        }
+        
+        /* Insurance Provider Selection */
+        .provider-selection {
+            margin-bottom: 2rem;
+        }
+        
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .provider-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+        }
+        
+        .provider-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+        
+        .provider-card.selected {
+            border: 2px solid var(--primary);
+            background: rgba(230, 57, 70, 0.05);
+        }
+        
+        .provider-logo {
+            width: 100px;
+            height: 70px;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .provider-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            filter: none;
+            opacity: 1;
+            transition: all 0.3s;
+            object-fit: contain;
+        }
+        
+        .provider-card.selected .provider-logo img,
+        .provider-card:hover .provider-logo img {
+            transform: scale(1.05);
+            filter: none;
+            opacity: 1;
+        }
+        
+        .provider-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        /* Verification Form */
+        .verification-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+        
+        .form-actions {
+            grid-column: span 2;
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        /* Verification Status */
+        .verification-status {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+        
+        .status-icon.verified {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+        
+        .status-icon.not-verified {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+        
+        .status-icon.pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #FFC107;
+        }
+        
+        .verification-details {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .verification-details h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.8rem;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            width: 150px;
+            color: var(--dark);
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        /* Insurance Benefits */
+        .benefits-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .benefit-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover .benefit-icon {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .benefit-icon img {
+            max-width: 65%;
+            max-height: 65%;
+            filter: brightness(0) invert(1);
+        }
+        
+        .benefit-card h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .benefit-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Button styles */
+        .btn {
+            background-color: #E63946;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: inline-block;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #d32f3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #E63946;
+            border: 2px solid #E63946;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: inline-block;
+            font-size: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background-color: #E63946;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+                justify-content: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px 10px;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .verification-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .form-actions {
+                grid-column: span 1;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                width: 95%;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .provider-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Insurance Verification</h2>
+            <p>Check your insurance coverage quickly and easily before your visit. We work with most major insurance providers.</p>
+            <!-- <img src="{% static 'images/insurance-verification.svg' %}" alt="Insurance Verification" class="mt-3" style="max-width: 200px; display: block; margin: 0 auto; background-color: white; padding: 20px; border-radius: 50%;" onerror="this.src='https://cdn3.iconfinder.com/data/icons/insurance-flat-2/614/6153_-_Insurance_Shield-512.png';this.onerror=null;"> -->
+        </div>
+    </section>
+
+    <!-- Insurance Verification Section -->
+    <section class="insurance-verification">
+        <div class="container">
+            <div class="section-title">
+                <h2>Verify Your Coverage</h2>
+            </div>
+            
+            <div class="verification-card">
+                <div class="verification-header">
+                    <h3>Insurance Verification Portal</h3>
+                    <p>Complete the form below to check your benefits</p>
+                </div>
+                
+                <div class="verification-body" id="verification-form">
+                    <div class="provider-selection">
+                        <h4>Select Your Insurance Provider</h4>
+                        <p>Choose from our network of accepted insurance plans</p>
+                        
+                        <div class="provider-grid">
+                            <div class="provider-card" data-provider="bluecross">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/BlueCross.png' %}" alt="BlueCross">
+                                </div>
+                                <div class="provider-name">BlueCross</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="aetna">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/Aetna.png' %}" alt="Aetna">
+                                </div>
+                                <div class="provider-name">Aetna</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="united">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/UnitedHealthcare.png' %}" alt="UnitedHealthcare">
+                                </div>
+                                <div class="provider-name">UnitedHealthcare</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="cigna">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/Cigna.png' %}" alt="Cigna">
+                                </div>
+                                <div class="provider-name">Cigna</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="humana">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/Humana.png' %}" alt="Humana">
+                                </div>
+                                <div class="provider-name">Humana</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="medicare">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/Medicare.png' %}" alt="Medicare">
+                                </div>
+                                <div class="provider-name">Medicare</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="kaiser">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/Kaiser.png' %}" alt="Kaiser">
+                                </div>
+                                <div class="provider-name">Kaiser</div>
+                            </div>
+                            
+                            <div class="provider-card" data-provider="other">
+                                <div class="provider-logo">
+                                    <img src="{% static 'images/Others.png' %}" alt="Other">
+                                </div>
+                                <div class="provider-name">Other</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form class="verification-form">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="member-id">Member ID</label>
+                            <input type="text" id="member-id" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="group-number">Group Number (if applicable)</label>
+                            <input type="text" id="group-number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plan-type">Plan Type</label>
+                            <select id="plan-type" required>
+                                <option value="">Select Plan Type</option>
+                                <option value="ppo">PPO</option>
+                                <option value="hmo">HMO</option>
+                                <option value="epo">EPO</option>
+                                <option value="pos">POS</option>
+                                <option value="hdhp">HDHP</option>
+                                <option value="medicare">Medicare</option>
+                                <option value="medicaid">Medicaid</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship">Relationship to Subscriber</label>
+                            <select id="relationship" required>
+                                <option value="">Select Relationship</option>
+                                <option value="self">Self</option>
+                                <option value="spouse">Spouse</option>
+                                <option value="child">Child</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn pulse" id="verify-btn">Verify Insurance</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Verification Status (hidden by default) -->
+                <div class="verification-status" id="verification-status">
+                    <div class="status-icon verified">
+                        <img src="{% static 'images/check-circle.svg' %}" alt="Verified" style="width: 80%; height: 80%;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5290/5290058.png';this.onerror=null;">
+                    </div>
+                    <h3>Insurance Verified!</h3>
+                    <p>Your insurance coverage has been successfully verified with BloodLab Diagnostics.</p>
+                    
+                    <div class="verification-details">
+                        <h4>Coverage Details</h4>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Insurance Provider:</div>
+                            <div class="detail-value" id="detail-provider">BlueCross BlueShield</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Member Name:</div>
+                            <div class="detail-value" id="detail-name">John D. Smith</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Member ID:</div>
+                            <div class="detail-value" id="detail-id">BCBS123456789</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Plan Type:</div>
+                            <div class="detail-value" id="detail-plan">PPO</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Coverage Status:</div>
+                            <div class="detail-value" id="detail-status">Active</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Lab Tests Covered:</div>
+                            <div class="detail-value" id="detail-tests">100% after deductible</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Deductible Met:</div>
+                            <div class="detail-value" id="detail-deductible">$1,200 of $1,500</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions" style="margin-top: 2rem;">
+                        <button type="button" class="btn-outline" id="new-verification">Verify Another Insurance</button>
+                        <a href="n4tests.html" style="text-decoration: none; margin-left: 10px;">
+                            <button type="button" class="btn" id="book-appointment">Book Appointment Now</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="benefits-section">
+                <h3>Benefits of Verifying Your Insurance</h3>
+                <p>Checking your coverage beforehand helps avoid unexpected costs and ensures a smooth experience.</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon" style="background-color: #4285F4;">
+                            <img src="{% static 'images/dollar.svg' %}" alt="Cost" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2489/2489756.png';this.onerror=null;">
+                        </div>
+                        <h4>Cost Transparency</h4>
+                        <p>Know exactly what your insurance will cover and what your out-of-pocket costs will be.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" style="background-color: #34A853;">
+                            <img src="{% static 'images/check.svg' %}" alt="Pre-Approval" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4315/4315445.png';this.onerror=null;">
+                        </div>
+                        <h4>Pre-Approval</h4>
+                        <p>Some tests require prior authorization - we can help identify these in advance.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" style="background-color: #FBBC05;">
+                            <img src="{% static 'images/clock.svg' %}" alt="Faster Service" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2784/2784459.png';this.onerror=null;">
+                        </div>
+                        <h4>Faster Service</h4>
+                        <p>Verified insurance means quicker check-in and processing during your visit.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" style="background-color: #EA4335;">
+                            <img src="{% static 'images/shield.svg' %}" alt="No Surprises" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1176/1176080.png';this.onerror=null;">
+                        </div>
+                        <h4>No Surprises</h4>
+                        <p>Avoid unexpected bills by understanding your coverage before your tests.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Insurance Provider Selection
+        document.querySelectorAll('.provider-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Verify Insurance Button
+        document.getElementById('verify-btn').addEventListener('click', function() {
+            // Validate form
+            const providerSelected = document.querySelector('.provider-card.selected');
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const dob = document.getElementById('dob').value;
+            const memberId = document.getElementById('member-id').value;
+            
+            if (!providerSelected || !firstName || !lastName || !dob || !memberId) {
+                alert('Please complete all required fields to verify your insurance.');
+                return;
+            }
+            
+            // Show loading state
+            this.textContent = 'Verifying...';
+            this.disabled = true;
+            
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Hide form, show verification status
+                document.getElementById('verification-form').style.display = 'none';
+                document.getElementById('verification-status').style.display = 'block';
+                
+                // Update verification details with entered information
+                document.getElementById('detail-provider').textContent = providerSelected.querySelector('.provider-name').textContent;
+                document.getElementById('detail-name').textContent = `${firstName} ${lastName}`;
+                document.getElementById('detail-id').textContent = memberId;
+                document.getElementById('detail-plan').textContent = document.getElementById('plan-type').value.toUpperCase();
+                
+                // Reset verify button
+                this.textContent = 'Verify Insurance';
+                this.disabled = false;
+            }, 2000);
+        });
+        
+        // New Verification Button
+        document.getElementById('new-verification').addEventListener('click', function() {
+            document.getElementById('verification-status').style.display = 'none';
+            document.getElementById('verification-form').style.display = 'block';
+            
+            // Reset form
+            document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('verification-form').reset();
+        });
+        
+        // Book Appointment Button
+        document.getElementById('book-appointment').addEventListener('click', function() {
+            window.location.href = 'book-appointment.html';
+        });
+    </script>
+</body>
+{% endblock %}

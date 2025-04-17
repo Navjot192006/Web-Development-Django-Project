@@ -1,0 +1,712 @@
+{% extends "base1.html" %}
+{% block title_block %} Our Services | HealthConnect Medical Care {% endblock %}
+{% block main_block %}
+
+
+<style>
+    
+    /* Hero Section */
+    .services-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .hero-content h1 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+    
+    .hero-content p {
+        font-size: 20px;
+        margin-bottom: 30px;
+        font-weight: 300;
+    }
+    
+    /* Services Section */
+    .services-section {
+        margin-bottom: 80px;
+    }
+    
+    .section-title {
+        font-size: 32px;
+        color: #e74c3c;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+        text-align: center;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: #e74c3c;
+    }
+    
+    .section-intro {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 50px;
+        font-size: 18px;
+        color: #555;
+    }
+    
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+    }
+    
+    .service-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .service-image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+    
+    .service-content {
+        padding: 25px;
+    }
+    
+    .service-content h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .service-content p {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 15px;
+    }
+    
+    .service-features {
+        margin-bottom: 20px;
+    }
+    
+    .service-features li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 25px;
+        color: #555;
+    }
+    
+    .service-features li:before {
+        content: '\f058';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        color: #e74c3c;
+        position: absolute;
+        left: 0;
+    }
+    
+    /* Specialty Services */
+    .specialty-section {
+        margin-bottom: 80px;
+    }
+    
+    .specialty-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 40px;
+    }
+    
+    .tab-btn {
+        padding: 12px 25px;
+        background-color: #f1f1f1;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .tab-btn.active {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .specialty-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+    }
+    
+    .specialty-card h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #e74c3c;
+    }
+    
+    .specialty-card p {
+        margin-bottom: 20px;
+        color: #555;
+    }
+    
+    .specialty-doctors {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .doctor-mini-card {
+        display: flex;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .doctor-mini-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+    
+    .doctor-mini-info h4 {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .doctor-mini-info p {
+        font-size: 13px;
+        color: #e74c3c;
+        margin-bottom: 0;
+    }
+    
+    /* Virtual Care Section */
+    .virtual-care {
+        background-color: #e74c3c;
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 80px;
+        border-radius: 10px;
+    }
+    
+    .virtual-content {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+    }
+    
+    .virtual-text {
+        flex: 1;
+    }
+    
+    .virtual-text h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+    
+    .virtual-text p {
+        margin-bottom: 25px;
+        opacity: 0.9;
+    }
+    
+    .virtual-image {
+        flex: 1;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .virtual-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    
+    /* Preventive Care */
+    .preventive-section {
+        margin-bottom: 80px;
+    }
+    
+    .preventive-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+    
+    .preventive-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .preventive-icon {
+        font-size: 40px;
+        color: #e74c3c;
+        margin-bottom: 20px;
+    }
+    
+    .preventive-card h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .preventive-card p {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        margin-bottom: 80px;
+    }
+    
+    .cta-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 50px;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cta-card h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .cta-card p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #666;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+        transition: all 0.3s;
+        border: 2px solid #e74c3c;
+    }
+    
+    .btn:hover {
+        background-color: transparent;
+        color: #e74c3c;
+    }
+    
+    .btn-outline {
+        background-color: transparent;
+        color: #e74c3c;
+        margin-left: 20px;
+    }
+    
+    .btn-outline:hover {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .virtual-content {
+            flex-direction: column;
+        }
+        
+        .hero-content h1 {
+            font-size: 36px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            display: none;
+        }
+        
+        .btn-outline {
+            margin-left: 0;
+            margin-top: 15px;
+            display: block;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+<section class="services-hero">
+    <div class="hero-content">
+        <h1>Comprehensive Healthcare Services</h1>
+        <p>Access to quality care when and where you need it, from routine checkups to specialized treatments.</p>
+    </div>
+</section>
+
+<div class="container">
+    <section class="services-section">
+        <h2 class="section-title">Our Medical Services</h2>
+        <p class="section-intro">HealthConnect offers a wide range of healthcare services designed to meet your needs at every stage of life. Our network of board-certified physicians and specialists provide exceptional care through both in-person and virtual visits.</p>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1579684453423-f84349ef60b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Primary Care" class="service-image">
+                <div class="service-content">
+                    <h3>Primary Care</h3>
+                    <p>Your first point of contact for comprehensive healthcare, managing your overall wellbeing and coordinating with specialists when needed.</p>
+                    <ul class="service-features">
+                        <li>Annual physical exams and health screenings</li>
+                        <li>Chronic disease management</li>
+                        <li>Preventive care and health counseling</li>
+                        <li>Treatment of acute illnesses</li>
+                        <li>Vaccinations and immunizations</li>
+                    </ul>
+                    <a href="#" class="btn">Find a Primary Care Doctor</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <img src="data:image/jpeg;base64,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" alt="Pediatric Care" class="service-image">
+                <div class="service-content">
+                    <h3>Pediatric Care</h3>
+                    <p>Specialized healthcare for infants, children, and adolescents, focused on growth, development, and preventive care.</p>
+                    <ul class="service-features">
+                        <li>Well-child visits and developmental screenings</li>
+                        <li>Childhood vaccinations</li>
+                        <li>Treatment of common childhood illnesses</li>
+                        <li>Nutrition and lifestyle counseling</li>
+                        <li>School and sports physicals</li>
+                    </ul>
+                    <a href="#" class="btn">Find a Pediatrician</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Women's Health" class="service-image">
+                <div class="service-content">
+                    <h3>Women's Health</h3>
+                    <p>Comprehensive care tailored to women's unique health needs through all stages of life.</p>
+                    <ul class="service-features">
+                        <li>Annual well-woman exams</li>
+                        <li>Prenatal and postpartum care</li>
+                        <li>Family planning and contraceptive counseling</li>
+                        <li>Menopause management</li>
+                        <li>Breast health services</li>
+                    </ul>
+                    <a href="#" class="btn">Find a Women's Health Specialist</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Mental Health" class="service-image">
+                <div class="service-content">
+                    <h3>Mental Health</h3>
+                    <p>Compassionate care for emotional, psychological, and social wellbeing.</p>
+                    <ul class="service-features">
+                        <li>Depression and anxiety treatment</li>
+                        <li>Stress management counseling</li>
+                        <li>ADHD evaluation and management</li>
+                        <li>Couples and family therapy</li>
+                        <li>Substance abuse counseling</li>
+                    </ul>
+                    <a href="#" class="btn">Find a Mental Health Provider</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Senior Care" class="service-image">
+                <div class="service-content">
+                    <h3>Senior Care</h3>
+                    <p>Specialized healthcare services addressing the unique needs of older adults.</p>
+                    <ul class="service-features">
+                        <li>Geriatric assessments</li>
+                        <li>Chronic disease management</li>
+                        <li>Medication management</li>
+                        <li>Memory care and dementia support</li>
+                        <li>Fall prevention programs</li>
+                    </ul>
+                    <a href="#" class="btn">Find a Geriatric Specialist</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Urgent Care" class="service-image">
+                <div class="service-content">
+                    <h3>Urgent Care</h3>
+                    <p>Prompt treatment for non-life-threatening illnesses and injuries when you can't wait for a scheduled appointment.</p>
+                    <ul class="service-features">
+                        <li>Treatment of minor injuries</li>
+                        <li>Illness diagnosis and treatment</li>
+                        <li>X-rays and lab tests</li>
+                        <li>Stitches and minor wound care</li>
+                        <li>Same-day appointments available</li>
+                    </ul>
+                    <a href="#" class="btn">Find Urgent Care Locations</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="specialty-section">
+        <h2 class="section-title">Specialty Care Services</h2>
+        <p class="section-intro">When specialized care is needed, our network includes top specialists across all major medical disciplines.</p>
+        
+        <div class="specialty-tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'cardiology')">Cardiology</button>
+            <button class="tab-btn" onclick="openTab(event, 'orthopedics')">Orthopedics</button>
+            <button class="tab-btn" onclick="openTab(event, 'neurology')">Neurology</button>
+            <button class="tab-btn" onclick="openTab(event, 'dermatology')">Dermatology</button>
+            <button class="tab-btn" onclick="openTab(event, 'gastroenterology')">Gastroenterology</button>
+        </div>
+        
+        <div id="cardiology" class="tab-content active">
+            <div class="specialty-card">
+                <h3>Cardiology Services</h3>
+                <p>Comprehensive heart care including prevention, diagnosis, and treatment of cardiovascular conditions. Our cardiologists use advanced technology to provide personalized care for heart health.</p>
+                
+                <h4>Available Treatments & Services:</h4>
+                <ul class="service-features" style="columns: 2;">
+                    <li>Cardiac stress testing</li>
+                    <li>Echocardiography</li>
+                    <li>Holter monitoring</li>
+                    <li>Hypertension management</li>
+                    <li>Cholesterol management</li>
+                    <li>Heart failure treatment</li>
+                    <li>Arrhythmia treatment</li>
+                    <li>Preventive cardiology</li>
+                </ul>
+                
+                <h4 style="margin-top: 20px;">Our Cardiology Team:</h4>
+                <div class="specialty-doctors">
+                    <div class="doctor-mini-card">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Sarah Johnson" class="doctor-mini-img">
+                        <div class="doctor-mini-info">
+                            <h4>Dr. Sarah Johnson</h4>
+                            <p>Interventional Cardiologist</p>
+                        </div>
+                    </div>
+                    <div class="doctor-mini-card">
+                        <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Michael Rodriguez" class="doctor-mini-img">
+                        <div class="doctor-mini-info">
+                            <h4>Dr. Michael Rodriguez</h4>
+                            <p>Electrophysiologist</p>
+                        </div>
+                    </div>
+                    <div class="doctor-mini-card">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dr. Priya Patel" class="doctor-mini-img">
+                        <div class="doctor-mini-info">
+                            <h4>Dr. Priya Patel</h4>
+                            <p>Preventive Cardiologist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="orthopedics" class="tab-content">
+            <div class="specialty-card">
+                <h3>Orthopedic Services</h3>
+                <p>Expert care for musculoskeletal conditions including bones, joints, ligaments, tendons, muscles, and nerves. Our orthopedic specialists provide both surgical and non-surgical treatments.</p>
+                
+                <h4>Available Treatments & Services:</h4>
+                <ul class="service-features" style="columns: 2;">
+                    <li>Joint replacement surgery</li>
+                    <li>Arthroscopic surgery</li>
+                    <li>Fracture care</li>
+                    <li>Sports medicine</li>
+                    <li>Spine care</li>
+                    <li>Physical therapy</li>
+                    <li>Osteoporosis treatment</li>
+                    <li>Pain management</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="neurology" class="tab-content">
+            <div class="specialty-card">
+                <h3>Neurology Services</h3>
+                <p>Specialized care for disorders of the nervous system, including the brain, spinal cord, peripheral nerves, and muscles.</p>
+                
+                <h4>Available Treatments & Services:</h4>
+                <ul class="service-features" style="columns: 2;">
+                    <li>Epilepsy treatment</li>
+                    <li>Migraine management</li>
+                    <li>Multiple sclerosis care</li>
+                    <li>Parkinson's disease treatment</li>
+                    <li>Stroke care</li>
+                    <li>EEG and EMG testing</li>
+                    <li>Nerve conduction studies</li>
+                    <li>Memory disorder treatment</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="dermatology" class="tab-content">
+            <div class="specialty-card">
+                <h3>Dermatology Services</h3>
+                <p>Comprehensive care for skin, hair, and nail conditions, from medical dermatology to cosmetic procedures.</p>
+                
+                <h4>Available Treatments & Services:</h4>
+                <ul class="service-features" style="columns: 2;">
+                    <li>Skin cancer screening</li>
+                    <li>Acne treatment</li>
+                    <li>Psoriasis management</li>
+                    <li>Eczema treatment</li>
+                    <li>Mole removal</li>
+                    <li>Cosmetic procedures</li>
+                    <li>Hair loss treatment</li>
+                    <li>Laser therapy</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="gastroenterology" class="tab-content">
+            <div class="specialty-card">
+                <h3>Gastroenterology Services</h3>
+                <p>Expert care for digestive system disorders, including the esophagus, stomach, intestines, liver, pancreas, and gallbladder.</p>
+                
+                <h4>Available Treatments & Services:</h4>
+                <ul class="service-features" style="columns: 2;">
+                    <li>Colonoscopy</li>
+                    <li>Endoscopy</li>
+                    <li>GERD treatment</li>
+                    <li>IBD management</li>
+                    <li>Liver disease treatment</li>
+                    <li>Nutrition counseling</li>
+                    <li>Celiac disease management</li>
+                    <li>Pancreatic care</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <section class="virtual-care">
+        <div class="container">
+            <div class="virtual-content">
+                <div class="virtual-text">
+                    <h2>Virtual Care Services</h2>
+                    <p>Receive quality healthcare from the comfort of your home through our secure telehealth platform. Our virtual visits provide convenient access to healthcare providers for many common conditions.</p>
+                    <p>Virtual care is ideal for follow-up visits, medication management, minor illnesses, chronic condition management, and mental health services.</p>
+                    <a href="#" class="btn" style="background-color: white; color: #e74c3c;">Learn About Virtual Visits</a>
+                </div>
+                <div class="virtual-image">
+                    <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Virtual care">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="preventive-section">
+        <h2 class="section-title">Preventive Health Services</h2>
+        <p class="section-intro">Preventive care can help you stay healthy by identifying health problems early or preventing them altogether.</p>
+        
+        <div class="preventive-grid">
+            <div class="preventive-card">
+                <div class="preventive-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3>Health Screenings</h3>
+                <p>Regular screenings for blood pressure, cholesterol, diabetes, and other conditions based on your age and risk factors.</p>
+            </div>
+            
+            <div class="preventive-card">
+                <div class="preventive-icon">
+                    <i class="fas fa-syringe"></i>
+                </div>
+                <h3>Vaccinations</h3>
+                <p>Immunizations for flu, pneumonia, shingles, HPV, and other preventable diseases across all age groups.</p>
+            </div>
+            
+            <div class="preventive-card">
+                <div class="preventive-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Nutrition Counseling</h3>
+                <p>Personalized dietary advice to help prevent and manage chronic conditions like diabetes and heart disease.</p>
+            </div>
+            
+            <div class="preventive-card">
+                <div class="preventive-icon">
+                    <i class="fas fa-running"></i>
+                </div>
+                <h3>Lifestyle Medicine</h3>
+                <p>Guidance on exercise, stress management, sleep, and other lifestyle factors that impact health.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2>Ready to Take Charge of Your Health?</h2>
+            <p>Whether you need routine care, specialized treatment, or preventive services, HealthConnect makes it easy to access quality healthcare.</p>
+            <a href="{% url 'health:book_appointment_home' %}" class="btn">Schedule an Appointment</a>
+            <a href="#" class="btn btn-outline">Contact Our Team</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    // Tab functionality
+    function openTab(evt, tabName) {
+        var i, tabcontent, tabbuttons;
+        
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].classList.remove("active");
+        }
+        
+        tabbuttons = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabbuttons.length; i++) {
+            tabbuttons[i].classList.remove("active");
+        }
+        
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
+</body>
+
+
+{% endblock %}

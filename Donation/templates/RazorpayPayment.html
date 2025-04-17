@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% block title_block %} Process Payment {% endblock %}
+{% block main_block %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .payment-container {
+        max-width: 500px;
+        margin: 150px auto 50px;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+
+    .payment-container h2 {
+        font-size: 28px;
+        color: #4e0000;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .payment-container h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .payment-details {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background: #f9f9f9;
+        text-align: left;
+    }
+
+    .payment-details p {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .payment-details strong {
+        color: #4e0000;
+        font-weight: 600;
+    }
+    
+    .payment-method-details {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px dashed #ddd;
+    }
+    
+    .payment-method-details h3 {
+        font-size: 18px;
+        color: #4e0000;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        margin-bottom: 15px;
+    }
+
+    button:hover {
+        background-color: #e64444;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.4);
+    }
+
+    .alternate-payment {
+        display: none; /* Hidden by default, shown if JavaScript fails */
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px dashed #ddd;
+    }
+
+    .secured-by {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .razorpay-logo {
+        height: 30px;
+        margin-top: 10px;
+    }
+
+    .error-message {
+        display: none;
+        color: #e64444;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #ffe6e6;
+        border: 1px solid #ffcccc;
+    }
+</style>
+
+<div class="payment-container">
+    <h2>Complete Your Donation</h2>
+    
+    <div class="payment-details">
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Amount:</strong> ₹{{ amount }} INR</p>
+        <p><strong>Payment Method:</strong> {{ payment_method }}</p>
+        
+        {% if payment_details %}
+        <div class="payment-method-details">
+            <h3>Payment Details</h3>
+            {% if payment_method == 'credit_card' %}
+                <p><strong>Name on Card:</strong> {{ payment_details.card_name }}</p>
+                <p><strong>Card Number:</strong> {{ payment_details.card_number }}</p>
+                <p><strong>Expiry Date:</strong> {{ payment_details.expiry_date }}</p>
+            {% elif payment_method == 'upi' %}
+                <p><strong>UPI ID:</strong> {{ payment_details.upi_id }}</p>
+            {% elif payment_method == 'bank_transfer' %}
+                <p><strong>Bank:</strong> {{ payment_details.bank_name }}</p>
+            {% elif payment_method == 'paypal' %}
+                <p><strong>PayPal Email:</strong> {{ payment_details.paypal_email }}</p>
+            {% elif payment_method == 'wallet' %}
+                <p><strong>Wallet Type:</strong> {{ payment_details.wallet_type }}</p>
+                <p><strong>Mobile/Email:</strong> {{ payment_details.wallet_number }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div id="error-message" class="error-message">
+        There was a problem loading the payment gateway. You can try again or use the alternate payment method below.
+    </div>
+    
+    <button id="pay-button">Pay Now</button>
+    
+    <div id="alternate-payment" class="alternate-payment">
+        <p>If the payment gateway doesn't load, you can use our alternate payment method:</p>
+        <form method="POST" action="{% url 'Donation' %}">
+            {% csrf_token %}
+            <input type="hidden" name="simulated_payment" value="true">
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="email" value="{{ email }}">
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="payment" value="alternate">
+            <input type="hidden" name="message" value="">
+            
+            <button type="submit">Use Alternate Payment Method</button>
+        </form>
+    </div>
+    
+    <div class="secured-by">
+        <p>Secured by</p>
+        <img src="https://razorpay.com/assets/razorpay-glyph.svg" alt="Razorpay" class="razorpay-logo">
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    // Show the alternate payment option if the razorpay script fails to load
+    window.addEventListener('error', function(e) {
+        if (e.target.src && e.target.src.indexOf('razorpay') !== -1) {
+            document.getElementById('alternate-payment').style.display = 'block';
+            document.getElementById('error-message').style.display = 'block';
+        }
+    }, true);
+    
+    // Handle errors in Razorpay initialization
+    function showPaymentError() {
+        document.getElementById('alternate-payment').style.display = 'block';
+        document.getElementById('error-message').style.display = 'block';
+    }
+    
+    // Set a timeout to show the alternate payment option if Razorpay takes too long
+    var paymentTimeout = setTimeout(function() {
+        document.getElementById('alternate-payment').style.display = 'block';
+    }, 5000);
+    
+    // Load the Razorpay checkout when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            document.getElementById('pay-button').addEventListener('click', function() {
+                try {
+                    var options = {
+                        "key": "{{ razorpay_key_id }}",
+                        "amount": "{{ amount_in_paise }}",
+                        "currency": "{{ currency }}",
+                        "name": "Blood Donation Portal",
+                        "description": "Donation for Blood Bank",
+                        "image": "https://i.imgur.com/n5tjHFD.png",
+                        "order_id": "{{ razorpay_order_id }}",
+                        "handler": function (response) {
+                            // Create a form to submit the payment details
+                            var form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = "{{ callback_url }}";
+                            
+                            // Add CSRF token
+                            var csrf = document.createElement('input');
+                            csrf.type = 'hidden';
+                            csrf.name = 'csrfmiddlewaretoken';
+                            csrf.value = '{{ csrf_token }}';
+                            form.appendChild(csrf);
+                            
+                            // Add payment details
+                            for(var key in response) {
+                                var input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = key;
+                                input.value = response[key];
+                                form.appendChild(input);
+                            }
+                            
+                            document.body.appendChild(form);
+                            form.submit();
+                        },
+                        "prefill": {
+                            "name": "{{ name }}",
+                            "email": "{{ email }}"
+                            {% if payment_method == 'credit_card' and payment_details.card_number %}
+                            , "contact": "{{ payment_details.card_number }}"
+                            {% elif payment_method == 'upi' and payment_details.upi_id %}
+                            , "vpa": "{{ payment_details.upi_id }}"
+                            {% elif payment_method == 'wallet' and payment_details.wallet_number %}
+                            , "contact": "{{ payment_details.wallet_number }}"
+                            {% endif %}
+                        },
+                        "notes": {
+                            "name": "{{ name }}",
+                            "email": "{{ email }}"
+                        },
+                        "theme": {
+                            "color": "#ff4d4d"
+                        }
+                    };
+                    
+                    // Clear the timeout since Razorpay is now loaded
+                    clearTimeout(paymentTimeout);
+                    
+                    var rzp = new Razorpay(options);
+                    rzp.on('payment.failed', function(response){
+                        document.getElementById('alternate-payment').style.display = 'block';
+                        document.getElementById('error-message').style.display = 'block';
+                        document.getElementById('error-message').innerText = 'Payment failed. You can try again or use the alternate payment method.';
+                    });
+                    rzp.open();
+                } catch (e) {
+                    showPaymentError();
+                }
+            });
+        } catch (e) {
+            showPaymentError();
+        }
+    });
+</script>
+
+{% endblock %} 

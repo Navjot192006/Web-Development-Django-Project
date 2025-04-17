@@ -1,0 +1,801 @@
+{% extends "Test.html" %}
+{% load static %}
+{% block title_block %}Pricing - BloodLab Diagnostics{% endblock %}
+{% block main_block %}
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.8), rgba(69, 123, 157, 0.8)), url('https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Pricing Section */
+        .pricing-main {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+        
+        .pricing-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        
+        .pricing-intro p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .pricing-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .tab-btn:hover:not(.active) {
+            color: var(--secondary);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+        }
+        
+        .popular-tag {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pricing-header {
+            padding: 2rem;
+            background: var(--dark);
+            color: white;
+            text-align: center;
+        }
+        
+        .pricing-card.popular .pricing-header {
+            background: var(--primary);
+        }
+        
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        
+        .pricing-body {
+            padding: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .pricing-features li.disabled {
+            color: #aaa;
+        }
+        
+        .pricing-features li.disabled::before {
+            content: '✗';
+            color: #aaa;
+        }
+        
+        .pricing-actions {
+            text-align: center;
+        }
+        
+        /* Insurance Section */
+        .insurance {
+            background: var(--light);
+            padding: 4rem 0;
+            margin-top: 4rem;
+        }
+        
+        .insurance-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .insurance-content h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .insurance-content h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        .insurance-content p {
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        .insurance-content .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .insurance-content .btn:hover {
+            background-color: #d32f3c;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+        }
+        
+        .insurance-logos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .insurance-logo {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            height: 120px;
+            transition: all 0.3s;
+        }
+        
+        .insurance-logo img {
+            max-width: 100%;
+            height: auto;
+            filter: none;
+            opacity: 1;
+            transition: all 0.3s;
+            object-fit: contain;
+            max-height: 60px;
+        }
+        
+        .insurance-logo:hover img {
+            transform: scale(1.05);
+        }
+        
+        .insurance-logo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* FAQ Section */
+        .faq {
+            padding: 4rem 0;
+        }
+        
+        .faq h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+        
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .accordion-header {
+            background: var(--dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .accordion-header:hover {
+            background: #14213d;
+        }
+        
+        .accordion-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .accordion-header .icon {
+            transition: transform 0.3s;
+        }
+        
+        .accordion-header.active .icon {
+            transform: rotate(45deg);
+        }
+        
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        
+        .accordion-content.show {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+        
+        .accordion-content p {
+            color: #555;
+        }
+        
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--secondary), var(--dark));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .insurance-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .insurance-logos {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .pricing-tabs {
+                flex-direction: column;
+                align-items: center;
+                border-bottom: none;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                border-bottom: 1px solid #ddd;
+            }
+            
+            .tab-btn.active::after {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                width: 95%;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .insurance-logos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Transparent Pricing for Your Health Needs</h2>
+            <p>Get affordable, high-quality diagnostic testing with no hidden fees. We believe in complete transparency when it comes to your healthcare costs.</p>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-main">
+        <div class="container">
+            <div class="pricing-intro">
+                <h2 class="section-title">Our Pricing Plans</h2>
+                <p>Choose the package that fits your needs. All our tests are performed in our CAP-accredited laboratories by certified professionals. We offer competitive pricing without compromising on quality or accuracy.</p>
+            </div>
+            
+            <div class="pricing-tabs">
+                <button class="tab-btn active" data-tab="individual">Individual Tests</button>
+                <button class="tab-btn" data-tab="packages">Test Packages</button>
+                <button class="tab-btn" data-tab="corporate">Corporate Plans</button>
+            </div>
+            
+            <div class="pricing-grid" id="individual-tab">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Basic Health</h3>
+                        <div class="price">$49<span>/test</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Complete Blood Count (CBC)</li>
+                            <li>Basic Metabolic Panel</li>
+                            <li>Lipid Panel</li>
+                            <li>Results in 48 hours</li>
+                            <li>Email report</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn btn-outline">Select Plan</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="popular-tag">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3>Comprehensive</h3>
+                        <div class="price">$129<span>/test</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Everything in Basic Panel</li>
+                            <li>Thyroid Function Test</li>
+                            <li>Liver Function Test</li>
+                            <li>Vitamin D Level</li>
+                            <li>Results in 24 hours</li>
+                            <li>Detailed report with explanations</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn pulse">Select Plan</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Specialized</h3>
+                        <div class="price">$199<span>/test</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Hormone Level Testing</li>
+                            <li>Advanced Cardiac Markers</li>
+                            <li>Genetic Risk Assessment</li>
+                            <li>Food Sensitivity Panel</li>
+                            <li>Results in 24-48 hours</li>
+                            <li>Consultation with specialist</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn btn-outline">Select Plan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pricing-grid" id="packages-tab" style="display: none;">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Essential Package</h3>
+                        <div class="price">$199<span>/package</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Complete Blood Count (CBC)</li>
+                            <li>Comprehensive Metabolic Panel</li>
+                            <li>Lipid Profile</li>
+                            <li>Thyroid Stimulating Hormone</li>
+                            <li>Urinalysis</li>
+                            <li>Save 20% vs individual tests</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn btn-outline">Select Package</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="popular-tag">Best Value</div>
+                    <div class="pricing-header">
+                        <h3>Executive Package</h3>
+                        <div class="price">$399<span>/package</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Everything in Essential Package</li>
+                            <li>Hemoglobin A1C</li>
+                            <li>Vitamin D, B12, Folate</li>
+                            <li>Liver Function Tests</li>
+                            <li>Kidney Function Tests</li>
+                            <li>Save 30% vs individual tests</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn pulse">Select Package</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Premium Package</h3>
+                        <div class="price">$599<span>/package</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Everything in Executive Package</li>
+                            <li>Advanced Cardiac Risk Panel</li>
+                            <li>Complete Hormone Panel</li>
+                            <li>Inflammatory Markers</li>
+                            <li>Nutritional Deficiency Panel</li>
+                            <li>Save 40% vs individual tests</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn btn-outline">Select Package</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pricing-grid" id="corporate-tab" style="display: none;">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Small Business</h3>
+                        <div class="price">$99<span>/employee/mo</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Up to 50 employees</li>
+                            <li>Annual health screenings</li>
+                            <li>Basic metabolic panel</li>
+                            <li>Lipid profile</li>
+                            <li>On-site phlebotomy available</li>
+                            <li>Dedicated account manager</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn btn-outline">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="popular-tag">Most Flexible</div>
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom Pricing</div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>51+ employees</li>
+                            <li>Customizable test panels</li>
+                            <li>Biannual health screenings</li>
+                            <li>Advanced cardiac markers</li>
+                            <li>On-site or at our facilities</li>
+                            <li>Detailed analytics dashboard</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn pulse">Contact Sales</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Wellness Program</h3>
+                        <div class="price">$149<span>/employee/mo</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Comprehensive annual physical</li>
+                            <li>Quarterly health checkups</li>
+                            <li>Nutritional counseling</li>
+                            <li>Fitness assessments</li>
+                            <li>Health coaching sessions</li>
+                            <li>Custom wellness challenges</li>
+                        </ul>
+                        <div class="pricing-actions">
+                            <a href="#" class="btn btn-outline">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Insurance Section -->
+    <section class="insurance">
+        <div class="container">
+            <div class="insurance-container">
+                <div class="insurance-content">
+                    <h2>Insurance & Payment Options</h2>
+                    <p>We accept most major insurance plans and offer flexible payment options to make quality healthcare accessible to everyone. Our team can help verify your benefits before your visit.</p>
+                    <p>For self-pay patients, we offer transparent pricing and payment plans for larger test panels. Ask about our 10% discount for seniors, students, and military personnel.</p>
+                    <a href="{% url 'bloodlab:insurance_verification' %}" class="btn">Verify Your Insurance</a>
+                </div>
+                <div class="insurance-logos">
+                    <div class="insurance-logo">
+                        <img src="{% static 'images/BlueCross.png' %}" alt="BlueCross">
+                    </div>
+                    <div class="insurance-logo">
+                        <img src="{% static 'images/Aetna.png' %}" alt="Aetna">
+                    </div>
+                    <div class="insurance-logo">
+                        <img src="{% static 'images/UnitedHealthcare.png' %}" alt="UnitedHealthcare">
+                    </div>
+                    <div class="insurance-logo">
+                        <img src="{% static 'images/Cigna.png' %}" alt="Cigna">
+                    </div>
+                    <div class="insurance-logo">
+                        <img src="{% static 'images/Humana.png' %}" alt="Humana">
+                    </div>
+                    <div class="insurance-logo">
+                        <img src="{% static 'images/Medicare.png' %}" alt="Medicare">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2>Pricing FAQs</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Do you offer discounts for multiple tests?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Yes! Our test packages offer significant savings compared to ordering tests individually. Packages are designed by our medical team to provide comprehensive health insights at a reduced cost. Savings range from 20-40% depending on the package.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>What payment methods do you accept?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>We accept all major credit cards (Visa, Mastercard, American Express, Discover), HSA/FSA cards, personal checks, and cash. We also offer payment plans for amounts over $200, with 0% interest when paid within 6 months.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Will my insurance cover these tests?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Coverage depends on your specific insurance plan and whether the tests are deemed medically necessary. Our team can help verify your benefits before your visit. For tests not covered by insurance, we offer competitive self-pay prices.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Are there any hidden fees?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>No. We believe in transparent pricing. The price you see is what you'll pay, with no hidden fees. The only additional charge would be if your physician orders additional tests after reviewing your initial results.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Do you offer refunds if I cancel my test?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>We offer full refunds if you cancel at least 24 hours before your appointment. For cancellations with less notice, we may charge a $25 fee. Once testing has begun, we cannot offer refunds as the laboratory resources have already been allocated.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <!-- <section class="cta">
+        <div class="container">
+            <h2>Ready to Take Control of Your Health?</h2>
+            <p>Schedule your tests today and get results you can trust. Our team is standing by to answer your questions and help you choose the right tests for your needs.</p>
+            <a href="n4tests.html" class="btn">Book an Appointment</a>
+        </div>
+    </section> -->
+
+    <script>
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('[id$="-tab"]');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                // Show the selected tab content
+                const tabId = button.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).style.display = 'grid';
+            });
+        });
+        
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('active');
+                const content = header.nextElementSibling;
+                if (header.classList.contains('active')) {
+                    content.classList.add('show');
+                } else {
+                    content.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+{% endblock %}

@@ -1,0 +1,828 @@
+{% extends "base.html" %}
+{% block title_block %} Health Screening {% endblock %}
+{% block main_block %}
+    <style>
+        /* Global Styles */
+        /* * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f8f8f8;
+            color: #490101;
+            line-height: 1.6;
+            overflow-x: hidden;
+        } */
+
+
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            margin-top: 70px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #d10000;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .btn:hover {
+            background-color: transparent;
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            color: #d10000;
+            font-size: 36px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #d10000;
+            margin: 15px auto 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Health Screening Section */
+        .screening-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            gap: 40px;
+        }
+        
+        .screening-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .screening-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .screening-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .screening-image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .screening-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .feature-list {
+            margin: 25px 0;
+            padding-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 30px;
+            list-style-type: none;
+        }
+
+        .feature-list li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #d10000;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .benefit-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border-top: 4px solid #d10000;
+            text-align: center;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .benefit-card h3 {
+            color: #d10000;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .benefit-card i {
+            font-size: 50px;
+            color: #d10000;
+            margin-bottom: 20px;
+            background: rgba(209, 0, 0, 0.1);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            text-align: center;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            background: linear-gradient(rgba(78, 0, 0, 0.05), rgba(78, 0, 0, 0.05));
+        }
+
+        .testimonials-container {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding: 20px 0;
+            scroll-snap-type: x mandatory;
+        }
+
+        .testimonial-card {
+            min-width: 350px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            scroll-snap-align: start;
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 3px solid #d10000;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #4e0000;
+        }
+
+        .testimonial-role {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .testimonial-text::before {
+            content: '\201C';
+            font-size: 60px;
+            color: rgba(209, 0, 0, 0.2);
+            position: absolute;
+            left: -15px;
+            top: -20px;
+            font-family: Georgia, serif;
+        }
+
+        /* Process Section */
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .process-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -30px;
+            width: 30px;
+            height: 3px;
+            background: #d10000;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: #d10000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(209, 0, 0, 0.3);
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #4e0000;
+            margin-bottom: 10px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(rgba(78, 0, 0, 0.9), rgba(78, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(209, 0, 0, 0.7);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .stat-title {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #d10000, #a80000);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+            background-size: cover;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-light {
+            background-color: white;
+            color: #d10000;
+            border: 2px solid white;
+        }
+
+        .btn-light:hover {
+            background-color: transparent;
+            color: white;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: #f9f9f9;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-question {
+            padding: 20px;
+            background: #4e0000;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #3a0000;
+        }
+
+        .faq-question::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #ff4d4d;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #4e0000;
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 42px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .section-title h2 {
+                font-size: 32px;
+            }
+
+            .process-step:not(:last-child)::after {
+                display: none;
+            }
+
+            .process-step {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+           
+            .hero {
+                height: 400px;
+                margin-top: 70px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .screening-content {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .section-title h2 {
+                font-size: 26px;
+            }
+            
+            .cta-section h2 {
+                font-size: 28px;
+            }
+            
+            .cta-section p {
+                font-size: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-step {
+                min-width: 100%;
+            }
+        }
+    </style>
+    </head>
+<body>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Comprehensive Health Screening</h1>
+            <p>Get valuable health insights with every blood donation at no additional cost</p>
+            <a href="#screening" class="btn">Learn More</a>
+        </div>
+    </section>
+    
+    <!-- Health Screening Section -->
+    <section class="section" id="screening">
+        <div class="container">
+            <div class="section-title">
+                <h2>Your Health Matters</h2>
+            </div>
+            <div class="screening-content">
+                <div class="screening-text">
+                    <h3>Free Health Check With Every Donation</h3>
+                    <p>At LifeBlood, we believe that donating blood should benefit both the recipient and the donor. That's why we provide comprehensive health screening with every donation, giving you valuable insights into your health status at no additional cost.</p>
+                    <p>Our health screening includes:</p>
+                    <ul class="feature-list">
+                        <li>Complete blood pressure measurement (systolic and diastolic)</li>
+                        <li>Hemoglobin level testing with immediate results</li>
+                        <li>Pulse rate and rhythm assessment</li>
+                        <li>Body temperature evaluation</li>
+                        <li>Basic cardiovascular health screening</li>
+                        <li>Blood type verification (if unknown)</li>
+                        <li>Infectious disease testing (post-donation)</li>
+                    </ul>
+                    <p>These quick and painless tests can help identify potential health issues early, when they're most treatable. Many of our donors have discovered previously unknown health conditions through our screening process.</p>
+                </div>
+                <div class="screening-image">
+                    <img src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Health Screening">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Benefits Section -->
+    <section class="section" style="background-color: #f5f5f5;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Our Health Screening Matters</h2>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>Early Detection</h3>
+                    <p>Identify potential health issues before symptoms appear, allowing for early intervention and better outcomes. Our screening has helped detect hypertension, anemia, and other conditions in many donors.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Health Tracking</h3>
+                    <p>Monitor changes in your vital statistics over time to understand your health trends and patterns. Regular donors receive a health history report showing their measurements over time.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-user-md"></i>
+                    <h3>Professional Review</h3>
+                    <p>All results are reviewed by our medical staff who can advise if follow-up with your physician is recommended. Our team includes licensed nurses and healthcare professionals.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Cost Effective</h3>
+                    <p>Receive health screening that would typically cost $100-200 at a doctor's office completely free with your donation. It's our way of thanking you for your lifesaving gift.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h3>Convenient</h3>
+                    <p>Get screened while doing something good for others - no extra appointments needed. Our screening adds minimal time to your donation appointment.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Safety First</h3>
+                    <p>Our screening ensures you're healthy enough to donate and identifies any conditions that might make donation inadvisable. Your health and safety are our top priorities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Detailed Screening Section -->
+    <section class="section">
+        <div class="container">
+            <div class="screening-content" style="flex-direction: row-reverse;">
+                <div class="screening-text">
+                    <h3>Understanding Your Results</h3>
+                    <p>After your donation, you'll receive a detailed report of your health screening results with explanations of what each measurement means. Our staff is always available to answer any questions you might have about your results.</p>
+                    <p><strong>Blood Pressure:</strong> We measure both systolic and diastolic pressure. Normal range is typically 120/80 mmHg or lower. High readings may indicate hypertension, while low readings could suggest hypotension.</p>
+                    <p><strong>Hemoglobin Levels:</strong> This measures the oxygen-carrying protein in your blood. For men, normal is 13.5-17.5 g/dL; for women, 12.0-15.5 g/dL. Low levels may suggest anemia, while high levels could indicate other conditions.</p>
+                    <p><strong>Pulse Rate:</strong> A normal resting heart rate is between 60-100 beats per minute. We also check for irregular rhythms that might need medical attention.</p>
+                    <p><strong>Temperature:</strong> Normal body temperature ranges from 97.8°F to 99.0°F. Elevated temperature may indicate infection or illness.</p>
+                    <p>Remember that our screening is not a substitute for regular medical checkups, but it can serve as an important health indicator between visits to your doctor.</p>
+                </div>
+                <div class="screening-image">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Medical Examination">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="section" style="background-color: #f5f5f5;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Screening Process</h2>
+            </div>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px;">Every blood donation includes our comprehensive health screening. Here's what to expect during your appointment:</p>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Registration</h4>
+                    <p>Complete basic paperwork and provide identification. Our staff will review your health history questionnaire.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Health Screening</h4>
+                    <p>We'll check your blood pressure, pulse, temperature, and hemoglobin levels. This takes about 10 minutes.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Medical Review</h4>
+                    <p>A healthcare professional will review your results and discuss any concerns with you privately.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Blood Donation</h4>
+                    <p>If all screening results are acceptable, you'll proceed to donate blood (about 10 minutes).</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h4 class="step-title">Results & Refreshments</h4>
+                    <p>Receive your health screening report and enjoy some refreshments while you recover.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="section-title">
+                <h2 style="color: white;">Health Screening By The Numbers</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-title">of donors receive their screening results immediately</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-title">health concerns identified through our screening last year</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">56</div>
+                    <div class="stat-title">days between eligible donations (and screenings)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-title">confidential handling of all health information</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Donor Experiences</h2>
+            </div>
+            <div class="testimonials-container">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah J." class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-author">Sarah J.</div>
+                            <div class="testimonial-role">Regular Donor (12 donations)</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "I had no idea my blood pressure was high until I donated at LifeBlood. Their screening caught it early, and my doctor was able to help me get it under control before it caused serious problems. I'm so grateful for this service!"
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael T." class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-author">Michael T.</div>
+                            <div class="testimonial-role">Frequent Donor (8 donations/year)</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "As someone without health insurance, the free health screening with my donation is incredibly valuable. It's how I discovered I was anemic and needed to adjust my diet. Now I donate regularly and get peace of mind about my health."
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya K." class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-author">Priya K.</div>
+                            <div class="testimonial-role">First-time Donor</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "I was nervous about donating for the first time, but the health screening made me feel so cared for. The nurse noticed my pulse was irregular and recommended I see my doctor. Turns out I had a minor heart condition that needed treatment. Lifesaving in more ways than one!"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    </body>
+    <script>
+        // Back to Top Button
+        const backToTopBtn = document.querySelector('.back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('active', window.scrollY > 300);
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+
+
+{% endblock %} 

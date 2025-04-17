@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title_block %} Donation Eligibility {% endblock %}
+
+{% block main_block %}
+
+<style>
+    .eligibility-container {
+        max-width: 700px;
+        margin: 120px auto 50px;
+        padding: 40px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 5px solid #dc3545; /* Red border for emphasis */
+    }
+
+    .eligibility-icon {
+        font-size: 60px;
+        color: #dc3545;
+        margin-bottom: 25px;
+    }
+
+    .eligibility-header h1 {
+        font-size: 32px;
+        color: #4e0000;
+        margin-bottom: 15px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .eligibility-message p {
+        font-size: 18px;
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+
+    .countdown {
+        background: #f8f8f8;
+        padding: 20px;
+        border-radius: 10px;
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+
+    .countdown span {
+        font-size: 36px;
+        font-weight: bold;
+        color: #4e0000;
+        margin: 0 5px;
+    }
+
+    .countdown .label {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        background: #ff4d4d;
+        color: white;
+    }
+
+    .btn:hover {
+        background: #4e0000;
+    }
+
+</style>
+
+<div class="eligibility-container">
+    <div class="eligibility-icon">
+        <i class="fas fa-exclamation-circle"></i>
+    </div>
+    <div class="eligibility-header">
+        <h1>Temporarily Not Eligible to Donate</h1>
+    </div>
+    <div class="eligibility-message">
+        <p>
+            Thank you for your continued willingness to donate blood! Based on your donation history, 
+            you need to wait a bit longer before your next donation. The standard waiting period between 
+            whole blood donations is 56 days to ensure your safety and well-being.
+        </p>
+        <div class="countdown">
+            <span class="label">You can donate again in:</span>
+            <span>{{ days_until_eligible }}</span>
+            <span class="label">day{{ days_until_eligible|pluralize }}</span>
+        </div>
+        <p>
+            We appreciate your patience and look forward to seeing you soon. 
+            In the meantime, you can explore other ways to help or encourage friends and family to donate.
+        </p>
+    </div>
+    <a href="{% url 'home' %}" class="btn">Back to Home</a>
+</div>
+
+{% endblock %} 

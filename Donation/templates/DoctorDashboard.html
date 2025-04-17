@@ -1,0 +1,203 @@
+            <!-- Doctor Profile Section -->
+            <section class="doctor-profile">
+                <div class="section-title">
+                    <h2>Doctor Profile</h2>
+                </div>
+                <div class="profile-details">
+                    <div class="profile-image">
+                        <img src="{{ doctor_profile.profile_image.url|default:'static/images/default-doctor.png' }}" alt="Doctor Profile">
+                    </div>
+                    <div class="profile-info">
+                        <h3>{{ doctor_profile.full_name }}</h3>
+                        <p><strong>Specialty:</strong> {{ doctor_profile.specialty }}</p>
+                        <p><strong>License Number:</strong> {{ doctor_profile.license_number }}</p>
+                        <p><strong>Experience:</strong> {{ doctor_profile.years_of_experience }} years</p>
+                        <p><strong>Contact:</strong> {{ doctor_profile.contact_number }}</p>
+                        <p><strong>Email:</strong> {{ doctor_profile.email }}</p>
+                        <div class="profile-actions">
+                            <a href="{% url 'edit_doctor_profile' %}" class="btn btn-primary">Edit Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upcoming Appointments Section -->
+            <section class="upcoming-appointments">
+                <div class="section-title">
+                    <h2>Upcoming Appointments</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="doctor-table">
+                        <thead>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if upcoming_appointments %}
+                                {% for appointment in upcoming_appointments %}
+                                    <tr>
+                                        <td>{{ appointment.appointment_id }}</td>
+                                        <td>{{ appointment.patient_name }}</td>
+                                        <td>{{ appointment.appointment_date|date:"d M Y" }}</td>
+                                        <td>{{ appointment.appointment_time }}</td>
+                                        <td>{{ appointment.appointment_type }}</td>
+                                        <td>
+                                            {% if appointment.status == 'Requested' %}
+                                                <span class="badge badge-warning">Requested</span>
+                                            {% elif appointment.status == 'Confirmed' %}
+                                                <span class="badge badge-success">Confirmed</span>
+                                            {% elif appointment.status == 'Completed' %}
+                                                <span class="badge badge-info">Completed</span>
+                                            {% elif appointment.status == 'Cancelled' %}
+                                                <span class="badge badge-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'view_patient_details' appointment.patient_id %}" class="btn btn-sm btn-info">View Patient</a>
+                                                {% if appointment.status == 'Requested' %}
+                                                    <a href="{% url 'confirm_appointment' appointment.id %}" class="btn btn-sm btn-success">Confirm</a>
+                                                    <a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                {% elif appointment.status == 'Confirmed' %}
+                                                    <a href="{% url 'complete_appointment' appointment.id %}" class="btn btn-sm btn-primary">Complete</a>
+                                                    <a href="{% url 'reschedule_appointment' appointment.id %}" class="btn btn-sm btn-warning">Reschedule</a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">No upcoming appointments scheduled.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Appointment Requests Section -->
+            <section class="appointment-requests">
+                <div class="section-title">
+                    <h2>Appointment Requests</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="doctor-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Patient</th>
+                                <th>Preferred Date</th>
+                                <th>Preferred Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if appointment_requests %}
+                                {% for request in appointment_requests %}
+                                    <tr>
+                                        <td>{{ request.request_id }}</td>
+                                        <td>{{ request.patient_name }}</td>
+                                        <td>{{ request.preferred_date|date:"d M Y" }}</td>
+                                        <td>{{ request.preferred_time }}</td>
+                                        <td>{{ request.appointment_type }}</td>
+                                        <td>
+                                            {% if request.status == 'Pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% elif request.status == 'Reviewed' %}
+                                                <span class="badge badge-info">Reviewed</span>
+                                            {% elif request.status == 'Contacted' %}
+                                                <span class="badge badge-primary">Contacted</span>
+                                            {% elif request.status == 'Scheduled' %}
+                                                <span class="badge badge-success">Scheduled</span>
+                                            {% elif request.status == 'Declined' %}
+                                                <span class="badge badge-danger">Declined</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'view_patient_details' request.patient_id %}" class="btn btn-sm btn-info">View Patient</a>
+                                                {% if request.status == 'Pending' %}
+                                                    <a href="{% url 'review_appointment_request' request.id %}" class="btn btn-sm btn-primary">Review</a>
+                                                    <a href="{% url 'schedule_appointment' request.id %}" class="btn btn-sm btn-success">Schedule</a>
+                                                    <a href="{% url 'decline_appointment_request' request.id %}" class="btn btn-sm btn-danger">Decline</a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">No appointment requests to review.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Appointment History Section -->
+            <section class="appointment-history">
+                <div class="section-title">
+                    <h2>Appointment History</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="doctor-table">
+                        <thead>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if appointment_history %}
+                                {% for appointment in appointment_history %}
+                                    <tr>
+                                        <td>{{ appointment.appointment_id }}</td>
+                                        <td>{{ appointment.patient_name }}</td>
+                                        <td>{{ appointment.appointment_date|date:"d M Y" }}</td>
+                                        <td>{{ appointment.appointment_time }}</td>
+                                        <td>{{ appointment.appointment_type }}</td>
+                                        <td>
+                                            {% if appointment.status == 'Completed' %}
+                                                <span class="badge badge-success">Completed</span>
+                                            {% elif appointment.status == 'Cancelled' %}
+                                                <span class="badge badge-danger">Cancelled</span>
+                                            {% elif appointment.status == 'No-show' %}
+                                                <span class="badge badge-warning">No-show</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">View Details</a>
+                                                <a href="{% url 'view_patient_details' appointment.patient_id %}" class="btn btn-sm btn-primary">Patient History</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">No appointment history available.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section> 

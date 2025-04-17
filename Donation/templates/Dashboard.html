@@ -1,0 +1,831 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title_block %} Dashboard {% endblock %}
+{% block main_block %}
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Dashboard Styles */
+    .dashboard {
+        padding: 120px 20px 50px;
+        background: #f8f8f8;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 42px;
+        color: #4e0000;
+        margin-bottom: 15px;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .dashboard-header h1::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .dashboard-header p {
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 18px;
+        color: #555;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.15);
+    }
+
+    .stat-card i {
+        font-size: 40px;
+        color: #ff4d4d;
+        margin-bottom: 15px;
+    }
+
+    .stat-card h3 {
+        font-size: 18px;
+        color: #4e0000;
+        margin-bottom: 10px;
+    }
+
+    .stat-card .stat-number {
+        font-size: 36px;
+        font-weight: bold;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Tables Section */
+    .tables-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .table-section {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-section h2 {
+        font-size: 24px;
+        color: #4e0000;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .table-section h2::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 2px;
+        background: #ff4d4d;
+        bottom: 0;
+        left: 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th {
+        background: #4e0000;
+        color: #fff;
+        padding: 15px;
+        text-align: left;
+        font-weight: 500;
+    }
+
+    table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+        color: #555;
+    }
+
+    table tr:last-child td {
+        border-bottom: none;
+    }
+
+    table tr:hover td {
+        background: #fff9f9;
+    }
+
+    .table-link {
+        color: #ff4d4d;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .table-link:hover {
+        color: #4e0000;
+        text-decoration: underline;
+    }
+
+    /* Blood Stock Section */
+    .blood-stock {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 50px;
+    }
+
+    .blood-stock h2 {
+        font-size: 24px;
+        color: #4e0000;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .blood-stock h2::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 2px;
+        background: #ff4d4d;
+        bottom: 0;
+        left: 0;
+    }
+
+    .blood-groups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .blood-group-card {
+        background: #f8f8f8;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .blood-group-card.low {
+        background: #fff0f0;
+        border-left: 4px solid #ffc107;
+    }
+
+    .blood-group-card.critical {
+        background: #ffecec;
+        border-left: 4px solid #dc3545;
+    }
+
+    .blood-group-card.out-of-stock {
+         background: #ffecec;
+         border-left: 4px solid #dc3545;
+    }
+
+    .blood-group-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.1);
+    }
+
+    .blood-group {
+        font-size: 24px;
+        font-weight: bold;
+        color: #4e0000;
+        margin-bottom: 5px;
+    }
+
+    .blood-units {
+        font-size: 18px;
+        color: #666;
+    }
+
+    .blood-status {
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+
+    .status-normal {
+        color: #28a745;
+    }
+
+    .status-low {
+        color: #ffc107;
+    }
+
+    .status-critical {
+        color: #dc3545;
+    }
+
+    .status-out-of-stock {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    /* Recent Activity */
+    .activity-section {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .activity-section h2 {
+        font-size: 24px;
+        color: #4e0000;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .activity-section h2::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 2px;
+        background: #ff4d4d;
+        bottom: 0;
+        left: 0;
+    }
+
+    .activity-list {
+        list-style: none;
+    }
+
+    .activity-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    .activity-content {
+        flex-grow: 1;
+    }
+
+    .activity-text {
+        color: #555;
+    }
+
+    .activity-time {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background: #4e0000;
+        transform: translateY(-5px);
+    }
+
+    /* Animations */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .tables-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-header h1 {
+            font-size: 32px;
+        }
+        
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .blood-groups {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .stats-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .blood-groups {
+            grid-template-columns: 1fr;
+        }
+        
+    }
+
+    /* Table styles */
+    .table-container {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 40px;
+        overflow-x: auto; /* Ensure table is responsive */
+    }
+
+    .table-title {
+        font-size: 24px;
+        color: #4e0000;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ff4d4d;
+        font-family: 'Playfair Display', serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px; /* Prevent excessive shrinking */
+    }
+
+    th {
+        background: #4e0000;
+        color: white;
+        padding: 15px 12px;
+        text-align: left;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 15px 12px;
+        border-bottom: 1px solid #eee;
+        color: #555;
+        vertical-align: middle;
+    }
+
+    tr:hover {
+        background: rgba(255, 77, 77, 0.05);
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .action-link {
+        color: #ff4d4d;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .action-link:hover {
+        color: #4e0000;
+        text-decoration: underline;
+    }
+
+    /* Empty state message */
+    .empty-state {
+        text-align: center;
+        padding: 40px 0;
+        color: #777;
+    }
+
+    /* Main dashboard container */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 120px auto 50px; /* Adjust top margin */
+        padding: 0 20px;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two equal columns */
+        gap: 30px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr; /* Stack columns on smaller screens */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .table-title {
+            font-size: 20px;
+        }
+        th,
+        td {
+            padding: 12px 10px;
+            font-size: 14px;
+        }
+    }
+
+    /* Status badges */
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background-color: #f1c40f;
+        color: #8e7200;
+    }
+
+    .status-reviewed, .status-contacted {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .status-confirmed, .status-scheduled {
+        background-color: #2ecc71;
+        color: white;
+    }
+
+    .status-declined, .status-cancelled {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    .status-completed {
+        background-color: #9b59b6;
+        color: white;
+    }
+    
+    .status-requested {
+        background-color: #e67e22;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<!-- Dashboard Content -->
+<div class="dashboard">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <p>Monitor and manage all blood donation activities in one place</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>Total Donors</h3>
+                <div class="stat-number">{{ total_donors|intcomma }}</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-tint"></i>
+                <h3>Total Blood Donations</h3>
+                <div class="stat-number">{{ total_blood_donations|intcomma }}</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Funds Raised</h3>
+                <div class="stat-number">₹{{ total_funds|intcomma }}</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Lives Saved (Approx)</h3>
+                <div class="stat-number">{{ lives_saved_approx|intcomma }}</div>
+            </div>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="tables-container">
+            <div class="table-section">
+                <h2>Recent Donors</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Blood Group</th>
+                            <th>Last Donation</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for donation in recent_blood_donations %}
+                            <tr>
+                                <td>{{ donation.name|default:"N/A" }}</td>
+                                <td>{{ donation.blood_group|default:"N/A" }}</td>
+                                <td>{{ donation.donation_date|date:"d M Y" }}</td>
+                                <td><a href="{% url 'admin_edit_donor' donation.id %}" class="action-link">View</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                                <td colspan="4" class="empty-state">No recent blood donations found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <h2>Recent Fund Donations</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Donor</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for donation in recent_fund_donations %}
+                            <tr>
+                                <td>{{ donation.name|default:"Anonymous" }}</td>
+                                <td>₹{{ donation.amount|intcomma }}</td>
+                                <td>{{ donation.date|date:"d M Y" }}</td>
+                                <td>{{ donation.message|default:"General"|truncatewords:5 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                                <td colspan="4" class="empty-state">No recent fund donations found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Healthcare Section -->
+        <div class="tables-container">
+            <div class="table-section">
+                <h2>Recent Appointment Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in recent_appointment_requests %}
+                            <tr>
+                                <td>{{ request.requested_by.username }}</td>
+                                <td>{{ request.selected_doctor|default:"Any Available" }}</td>
+                                <td>{{ request.preferred_date|date:"d M Y" }}</td>
+                                <td><span class="status-badge status-{{ request.status|lower }}">{{ request.status }}</span></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty-state">No recent appointment requests found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <h2>Recent Doctor Appointments</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in recent_doctor_appointments %}
+                            <tr>
+                                <td>{{ appointment.patient.username }}</td>
+                                <td>{{ appointment.doctor_name }}</td>
+                                <td>{{ appointment.appointment_date|date:"d M Y" }}</td>
+                                <td><span class="status-badge status-{{ appointment.status|lower }}">{{ appointment.status }}</span></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty-state">No recent doctor appointments found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Blood Stock Section -->
+        <div class="blood-stock">
+            <h2>Blood Stock Levels</h2>
+            <div class="blood-groups">
+                {% for group, data in blood_stock.items %}
+                    {% with count=data.count %}
+                        {# Determine status based on count and display card #}
+                        {% if count == 0 %}
+                            {% with status="Out of Stock" status_class="out-of-stock" card_class="out-of-stock" %}
+                                <div class="blood-group-card {{ card_class }}">
+                                    <div class="blood-group">{{ data.name }}</div>
+                                    <div class="blood-units">{{ count }} unit{{ count|pluralize }}</div>
+                                    <div class="blood-status status-{{ status_class }}">{{ status }}</div>
+                </div>
+                            {% endwith %}
+                        {% elif count <= 2 %}
+                            {% with status="Critical" status_class="critical" card_class="critical" %}
+                                <div class="blood-group-card {{ card_class }}">
+                                    <div class="blood-group">{{ data.name }}</div>
+                                    <div class="blood-units">{{ count }} unit{{ count|pluralize }}</div>
+                                    <div class="blood-status status-{{ status_class }}">{{ status }}</div>
+                </div>
+                            {% endwith %}
+                        {% elif count <= 5 %}
+                            {% with status="Low Stock" status_class="low" card_class="low" %}
+                                <div class="blood-group-card {{ card_class }}">
+                                    <div class="blood-group">{{ data.name }}</div>
+                                    <div class="blood-units">{{ count }} unit{{ count|pluralize }}</div>
+                                    <div class="blood-status status-{{ status_class }}">{{ status }}</div>
+                </div>
+                            {% endwith %}
+                        {% else %}
+                            {% with status="In Stock" status_class="normal" card_class="" %}
+                                <div class="blood-group-card {{ card_class }}">
+                                    <div class="blood-group">{{ data.name }}</div>
+                                    <div class="blood-units">{{ count }} unit{{ count|pluralize }}</div>
+                                    <div class="blood-status status-{{ status_class }}">{{ status }}</div>
+                </div>
+                            {% endwith %}
+                        {% endif %}
+                    {% endwith %} {# Closes {% with count=data.count %} #}
+                {% empty %}
+                    <p class="empty-state" style="grid-column: 1 / -1;">Could not retrieve blood stock levels.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-section">
+            <h2>Recent Activity</h2>
+            <ul class="activity-list">
+                {% for activity in recent_activities %}
+                <li class="activity-item">
+                        {% if activity.type == 'blood' %}
+                            <div class="activity-icon" style="background-color: #dc3545;"> <!-- Red for blood -->
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="activity-content">
+                                <div class="activity-text">
+                                    <strong>{{ activity.item.name|default:'Donor' }}</strong> donated blood ({{ activity.item.blood_group|default:'N/A' }})
+                                </div>
+                                <div class="activity-time">{{ activity.timestamp|naturaltime }}</div>
+                    </div>
+                        {% elif activity.type == 'fund' %}
+                            <div class="activity-icon" style="background-color: #28a745;"> <!-- Green for funds -->
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="activity-content">
+                                <div class="activity-text">
+                                    <strong>{{ activity.item.name|default:'Anonymous' }}</strong> donated ₹{{ activity.item.amount|intcomma }}
+                    </div>
+                                <div class="activity-time">{{ activity.timestamp|naturaltime }}</div>
+                    </div>
+                        {% elif activity.type == 'appointment_request' %}
+                            <div class="activity-icon" style="background-color: #3498db;"> <!-- Blue for appointment requests -->
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">
+                                    <strong>{{ activity.item.requested_by.username }}</strong> requested an appointment with {{ activity.item.selected_doctor|default:'any available doctor' }}
+                                </div>
+                                <div class="activity-time">{{ activity.timestamp|naturaltime }}</div>
+                            </div>
+                        {% elif activity.type == 'doctor_appointment' %}
+                            <div class="activity-icon" style="background-color: #9b59b6;"> <!-- Purple for doctor appointments -->
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">
+                                    <strong>{{ activity.item.patient.username }}</strong> booked an appointment with {{ activity.item.doctor_name }}
+                                </div>
+                                <div class="activity-time">{{ activity.timestamp|naturaltime }}</div>
+                            </div>
+                        {% endif %}
+                         {# Add more activity types here if needed (e.g., registration, requests) #}
+                </li>
+                {% empty %}
+                    <li class="activity-item empty-state" style="justify-content: center;">No recent activity found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+</body>
+
+
+{% endblock %}

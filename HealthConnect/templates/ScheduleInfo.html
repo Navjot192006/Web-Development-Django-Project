@@ -1,0 +1,296 @@
+{% extends "base1.html" %}
+{% block title_block %} Scheduling Your Appointment | HealthConnect {% endblock %}
+{% block main_block %}
+
+<style>
+    /* Hero Section */
+    .appointment-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .hero-content h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+    
+    /* Appointment Form Section */
+    .appointment-section {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+    
+    .form-container {
+        flex: 1;
+        background-color: white;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-container h2 {
+        font-size: 24px;
+        margin-bottom: 25px;
+        color: #2c3e50;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #e74c3c;
+        outline: none;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+    }
+    
+    .radio-group {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .radio-option {
+        display: flex;
+        align-items: center;
+    }
+    
+    .radio-option input {
+        margin-right: 8px;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 14px 30px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .btn:hover {
+        background-color: #c0392b;
+    }
+    
+    .info-sidebar {
+        width: 300px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+    }
+    
+    .info-sidebar h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    
+    .contact-info {
+        margin-bottom: 25px;
+    }
+    
+    .contact-info p {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .contact-info i {
+        margin-right: 10px;
+        color: #e74c3c;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .appointment-section {
+            flex-direction: column;
+        }
+        
+        .info-sidebar {
+            width: 100%;
+        }
+        
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .nav-links {
+            display: none;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+<section class="appointment-hero">
+    <div class="container hero-content">
+        <h1>Schedule Your Appointment</h1>
+        <p>Book your in-person or virtual doctor visit in just a few clicks</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="appointment-section">
+        <div class="form-container">
+            <h2>Appointment Request Form</h2>
+            <div style="text-align: right; margin-bottom: 15px;">
+                <a href="{% url 'health:my_appointment_requests' %}" style="text-decoration: none; color: #e74c3c; font-weight: bold;">
+                    <i class="fas fa-list-alt"></i> View My Appointment Requests
+                </a>
+            </div>
+            <form id="scheduleInfoForm" method="post" action="{% url 'health:schedule_info' %}">
+                {% csrf_token %}
+                <div class="form-row">
+                    {# Removed name/email/phone/dob fields as they are not in the model and we use request.user #}
+                </div>
+
+                <div class="form-group">
+                    <label>Appointment Type</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            {# Ensure name attribute matches view expectation #}
+                            <input type="radio" id="inPerson" name="appointmentType" value="In-Person" checked>
+                            <label for="inPerson">In-Person</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="virtual" name="appointmentType" value="Virtual">
+                            <label for="virtual">Virtual</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="appointmentDate">Preferred Date</label>
+                        {# Ensure name attribute matches view expectation #}
+                        <input type="date" id="appointmentDate" name="appointmentDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentTime">Preferred Time</label>
+                        {# Ensure name attribute matches view expectation #}
+                        <select id="appointmentTime" name="appointmentTime" required>
+                            <option value="">Select a time</option>
+                            <option value="08:00">8:00 AM</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="doctor">Select Doctor (Optional)</label>
+                    {# Ensure name attribute matches view expectation #}
+                    <select id="doctor" name="doctor">
+                        <option value="">Any available doctor</option>
+                        {% for doctor in doctors %}
+                            <option value="Dr. {{ doctor.name }} - {{ doctor.specialty }}">Dr. {{ doctor.name }} - {{ doctor.specialty }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">Reason for Appointment</label>
+                    {# Ensure name attribute matches view expectation #}
+                    <textarea id="reason" name="reason" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="btn">Book Appointment</button>
+            </form>
+        </div>
+        
+        <div class="info-sidebar">
+            <h3>Need Help?</h3>
+            <div class="contact-info">
+                <p><i class="fas fa-phone-alt"></i> (555) 123-4567</p>
+                <p><i class="fas fa-envelope"></i> appointments@healthconnect.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Medical Drive, Health City</p>
+            </div>
+            
+            <h3>Office Hours</h3>
+            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+            <p>Saturday: 9:00 AM - 2:00 PM</p>
+            <p>Sunday: Closed</p>
+            
+            <h3>Emergency?</h3>
+            <p>For medical emergencies, please call 911 or go to your nearest emergency room.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('scheduleInfoForm').addEventListener('submit', function(e) {
+        // Removed e.preventDefault() to allow the form to submit
+        
+        // Form validation
+        const appointmentDate = document.getElementById('appointmentDate').value;
+        const appointmentTime = document.getElementById('appointmentTime').value;
+        const reason = document.getElementById('reason').value;
+        
+        if (!appointmentDate || !appointmentTime || !reason) {
+            alert('Please fill in all required fields');
+            e.preventDefault(); // Only prevent submission if validation fails
+            return;
+        }
+        
+        // Let the form submit normally if validation passes
+    });
+    
+    // Set minimum date for appointment to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('appointmentDate').min = today;
+</script>
+</body>
+
+{% endblock %} 

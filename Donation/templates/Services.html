@@ -1,0 +1,536 @@
+{% extends "base.html" %}
+{% block title_block %} Services {% endblock %}
+{% block main_block %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .services-hero {
+        position: relative;
+        width: 100%;
+        height: 60vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        margin-top: 80px;
+        background: linear-gradient(rgba(78, 0, 0, 0.8), rgba(78, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .services-hero-content {
+        max-width: 800px;
+        padding: 0 20px;
+    }
+
+    .services-hero h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .services-hero p {
+        font-size: 20px;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Main Content */
+    .main-container {
+        padding: 80px 20px;
+        background: #fff;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .section-title p {
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 18px;
+        color: #555;
+    }
+
+    /* Blood Groups Section */
+    .blood-groups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .blood-group {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .blood-group::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #ff4d4d;
+        transition: height 0.3s ease;
+    }
+
+    .blood-group:hover::before {
+        height: 10px;
+    }
+
+    .blood-group:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.15);
+    }
+
+    .group {
+        font-size: 36px;
+        font-weight: bold;
+        color: #4e0000;
+        display: block;
+        margin-bottom: 10px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .units {
+        font-size: 18px;
+        color: #666;
+        display: block;
+        margin: 15px 0;
+    }
+
+    .units span {
+        font-weight: bold;
+        color: #ff4d4d;
+        font-size: 24px;
+    }
+
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 25px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        min-width: 120px;
+    }
+
+    .btn-donate {
+        background: #ff4d4d;
+        color: white;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .btn-donate:hover {
+        background: #e64444;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.4);
+    }
+
+    .btn-request {
+        background: #4e0000;
+        color: white;
+        box-shadow: 0 5px 15px rgba(78, 0, 0, 0.3);
+    }
+
+    .btn-request:hover {
+        background: #3a0000;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(78, 0, 0, 0.4);
+    }
+
+    /* Additional Services Section */
+    .additional-services {
+        background: #f8f8f8;
+        padding: 80px 20px;
+        margin-top: 80px;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.1);
+    }
+
+    .service-card i {
+        font-size: 50px;
+        color: #ff4d4d;
+        margin-bottom: 20px;
+    }
+
+    .service-card h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .service-card p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    /* Emergency Section */
+    .emergency-section {
+        background: linear-gradient(135deg, #ff4d4d, #cc0000);
+        color: white;
+        padding: 60px 20px;
+        margin: 80px 0;
+        text-align: center;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .emergency-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+        background-size: cover;
+        opacity: 0.2;
+    }
+
+    .emergency-section h2 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        position: relative;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .emergency-section p {
+        max-width: 700px;
+        margin: 0 auto 30px;
+        font-size: 18px;
+        position: relative;
+    }
+
+    .btn-emergency {
+        background: white;
+        color: #ff4d4d;
+        font-size: 18px;
+        padding: 15px 40px;
+        font-weight: bold;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+
+    .btn-emergency:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background: #4e0000;
+        transform: translateY(-5px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .services-hero h1 {
+            font-size: 36px;
+        }
+        
+        .services-hero p {
+            font-size: 18px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+        
+        
+        .services-hero {
+            height: 50vh;
+            margin-top: 70px;
+        }
+        
+        .services-hero h1 {
+            font-size: 32px;
+        }
+        
+        .btn-group {
+            flex-direction: column;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .services-hero {
+            height: 60vh;
+        }
+        
+        .services-hero h1 {
+            font-size: 28px;
+        }
+        
+        .section-title h2 {
+            font-size: 24px;
+        }
+        
+        .blood-groups {
+            grid-template-columns: 1fr;
+        }
+
+    }
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="services-hero">
+    <div class="services-hero-content">
+        <h1>Blood Donation Services</h1>
+        <p>Find available blood types, request donations, or schedule your life-saving contribution today</p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="main-container">
+    <div class="section-title">
+        <h2>Available Blood Types</h2>
+        <p>Check the current inventory of blood types in our system. Your donation could help fill critical shortages.</p>
+    </div>
+    
+    <div class="blood-groups">
+        {% for key, data in blood_types.items %}
+            <div class="blood-group">
+                <span class="group">{{ data.name }}</span>
+                <span class="units">Available: <span>{{ data.count }}</span> units</span>
+                <div class="btn-group">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'check_eligibility' %}?blood_group={{ data.name|urlencode }}" class="btn btn-donate"><i class="fas fa-hand-holding-medical"></i> Donate</a>
+                    {% else %}
+                        <a href="{% url 'Login' %}" class="btn btn-donate"><i class="fas fa-hand-holding-medical"></i> Donate</a>
+                    {% endif %}
+                    <a href="{% url 'BloodRequest' %}" class="btn btn-request"><i class="fas fa-heartbeat"></i> Request</a> 
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Additional Services Section -->
+<div class="additional-services">
+    <div class="section-title">
+        <h2>Our Comprehensive Services</h2>
+        <p>Beyond blood donation, we offer a range of services to support donors and recipients</p>
+    </div>
+    
+    <div class="services-grid">
+        <div class="service-card">
+            <i class="fas fa-clipboard-check"></i>
+            <h3>Health Screening</h3>
+            <p>Free health check including blood pressure, hemoglobin levels, and basic health assessment with every donation.</p>
+            <a href="{% url 'HealthScreening' %}" class="btn btn-request">Learn More</a>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-calendar-alt"></i>
+            <h3>Appointment Scheduling</h3>
+            <p>Convenient online scheduling for blood donations at our centers or mobile blood drives.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'health:appointmentscheduling' %}" class="btn btn-request">Schedule Now</a>
+            {% else %}
+                <a href="{% url 'Login' %}" class="btn btn-request">Schedule Now</a>
+            {% endif %}
+        </div>
+        <div class="service-card">
+            <i class="fas fa-bell"></i>
+            <h3>Blood Alerts</h3>
+            <p>Get notified when your blood type is in critical need in your area.</p>
+            <a href="{% url 'BloodAlerts' %}" class="btn btn-request">Sign Up</a>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Donor Dashboard</h3>
+            <p>Track your donation history, health stats, and see the impact of your contributions.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'DonorDashboard' %}" class="btn btn-request">View Dashboard</a>
+            {% else %}
+                <a href="{% url 'Login' %}" class="btn btn-request">View Dashboard</a>
+            {% endif %}
+        </div>
+        <div class="service-card">
+            <i class="fas fa-users"></i>
+            <h3>Group Donations</h3>
+            <p>Organize workplace or community group blood donation events with our support.</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'groupdonate' %}" class="btn btn-request">Organize Event</a>
+            {% else %}
+            <a href="{% url 'Login' %}" class="btn btn-request">Organize Event</a>
+            {% endif %}
+        </div>
+        <div class="service-card">
+            <i class="fas fa-graduation-cap"></i>
+            <h3>Education Programs</h3>
+            <p>Learn about blood donation, transfusion medicine, and how you can help save lives.</p>
+            <a href="{% url 'education' %}" class="btn btn-request">Explore Programs</a>
+        </div>
+    </div>
+</div>
+
+<!-- Emergency Section -->
+<div class="emergency-section">
+    <div class="container">
+        <h2>Emergency Blood Request</h2>
+        <p>If you need blood urgently for a medical emergency, please contact us immediately. Our team is available 24/7 to assist with critical blood needs.</p>
+        <a href="tel:+1234567890" class="btn btn-emergency"><i class="fas fa-phone-alt"></i> Call Emergency Line</a>
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Smooth scrolling for all links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+</script>
+</body>
+
+{% endblock %}

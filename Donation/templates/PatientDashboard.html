@@ -1,0 +1,482 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Welcome, {{ patient.user.first_name }}!</h1>
+        <p>Patient Dashboard</p>
+    </div>
+
+    <div class="dashboard-content">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="dashboard-sidebar">
+                    <div class="user-profile">
+                        <div class="profile-image">
+                            <img src="{{ patient_profile.profile_image.url|default:'static/images/default-profile.png' }}" alt="Profile Image">
+                        </div>
+                        <div class="profile-info">
+                            <h3>{{ patient.user.first_name }} {{ patient.user.last_name }}</h3>
+                            <p>{{ patient.blood_group }}</p>
+                        </div>
+                    </div>
+                    <ul class="dashboard-menu">
+                        <li class="active"><a href="#profile"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="#medical-info"><i class="fas fa-notes-medical"></i> Medical Information</a></li>
+                        <li><a href="#appointments"><i class="fas fa-calendar-check"></i> My Appointments</a></li>
+                        <li><a href="#blood-requests"><i class="fas fa-tint"></i> Blood Requests</a></li>
+                        <li><a href="#lab-reports"><i class="fas fa-flask"></i> Lab Reports</a></li>
+                        <li><a href="#donation-history"><i class="fas fa-history"></i> Donation History</a></li>
+                        <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Personal Information Section -->
+                <section id="profile" class="dashboard-section">
+                    <div class="section-title">
+                        <h2>Personal Information</h2>
+                        <a href="{% url 'edit_patient_profile' %}" class="btn btn-sm btn-primary">Edit Profile</a>
+                    </div>
+                    <div class="profile-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-group">
+                                    <label>Full Name:</label>
+                                    <p>{{ patient.user.first_name }} {{ patient.user.last_name }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Date of Birth:</label>
+                                    <p>{{ patient.date_of_birth|date:"d M Y" }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Gender:</label>
+                                    <p>{{ patient.gender }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Blood Group:</label>
+                                    <p>{{ patient.blood_group }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-group">
+                                    <label>Email:</label>
+                                    <p>{{ patient.user.email }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Phone:</label>
+                                    <p>{{ patient.phone_number }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Address:</label>
+                                    <p>{{ patient.address }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Emergency Contact:</label>
+                                    <p>{{ patient.emergency_contact }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medical Information Section -->
+                <section id="medical-info" class="dashboard-section">
+                    <div class="section-title">
+                        <h2>Medical Information</h2>
+                        <a href="{% url 'update_medical_info' %}" class="btn btn-sm btn-primary">Update</a>
+                    </div>
+                    <div class="medical-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-group">
+                                    <label>Height:</label>
+                                    <p>{{ patient.height }} cm</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Weight:</label>
+                                    <p>{{ patient.weight }} kg</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Allergies:</label>
+                                    <p>{{ patient.allergies|default:"None" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-group">
+                                    <label>Chronic Conditions:</label>
+                                    <p>{{ patient.chronic_conditions|default:"None" }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Current Medications:</label>
+                                    <p>{{ patient.current_medications|default:"None" }}</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Past Surgeries:</label>
+                                    <p>{{ patient.past_surgeries|default:"None" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- My Appointments Section -->
+                <section id="appointments" class="dashboard-section">
+                    <div class="section-title">
+                        <h2>My Appointments</h2>
+                        <a href="{% url 'request_appointment' %}" class="btn btn-sm btn-primary">Request Appointment</a>
+                    </div>
+                    <ul class="nav nav-tabs" id="appointmentTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming" role="tab">Upcoming</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pending-tab" data-toggle="tab" href="#pending" role="tab">Pending</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="past-tab" data-toggle="tab" href="#past" role="tab">Past</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="appointmentTabContent">
+                        <!-- Upcoming Appointments -->
+                        <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table appointment-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Doctor</th>
+                                            <th>Specialty</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if upcoming_appointments %}
+                                            {% for appointment in upcoming_appointments %}
+                                                <tr>
+                                                    <td>{{ appointment.date|date:"d M Y" }}</td>
+                                                    <td>{{ appointment.time }}</td>
+                                                    <td>{{ appointment.doctor.name }}</td>
+                                                    <td>{{ appointment.doctor.specialty }}</td>
+                                                    <td>{{ appointment.appointment_type }}</td>
+                                                    <td>
+                                                        {% if appointment.status == 'Confirmed' %}
+                                                            <span class="badge badge-success">Confirmed</span>
+                                                        {% else %}
+                                                            <span class="badge badge-info">{{ appointment.status }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="action-buttons">
+                                                            <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">View</a>
+                                                            <a href="{% url 'reschedule_appointment_request' appointment.id %}" class="btn btn-sm btn-warning">Reschedule</a>
+                                                            <a href="{% url 'cancel_appointment_request' appointment.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="7" class="text-center">No upcoming appointments</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Pending Appointments -->
+                        <div class="tab-pane fade" id="pending" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table appointment-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Request Date</th>
+                                            <th>Preferred Date</th>
+                                            <th>Preferred Time</th>
+                                            <th>Doctor</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if pending_appointments %}
+                                            {% for appointment in pending_appointments %}
+                                                <tr>
+                                                    <td>{{ appointment.created_at|date:"d M Y" }}</td>
+                                                    <td>{{ appointment.preferred_date|date:"d M Y" }}</td>
+                                                    <td>{{ appointment.preferred_time }}</td>
+                                                    <td>{{ appointment.doctor.name }}</td>
+                                                    <td>{{ appointment.appointment_type }}</td>
+                                                    <td>
+                                                        <span class="badge badge-warning">Pending</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="action-buttons">
+                                                            <a href="{% url 'view_appointment_request' appointment.id %}" class="btn btn-sm btn-info">View</a>
+                                                            <a href="{% url 'edit_appointment_request' appointment.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                                            <a href="{% url 'cancel_appointment_request' appointment.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="7" class="text-center">No pending appointment requests</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Past Appointments -->
+                        <div class="tab-pane fade" id="past" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table appointment-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Doctor</th>
+                                            <th>Specialty</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if past_appointments %}
+                                            {% for appointment in past_appointments %}
+                                                <tr>
+                                                    <td>{{ appointment.date|date:"d M Y" }}</td>
+                                                    <td>{{ appointment.time }}</td>
+                                                    <td>{{ appointment.doctor.name }}</td>
+                                                    <td>{{ appointment.doctor.specialty }}</td>
+                                                    <td>{{ appointment.appointment_type }}</td>
+                                                    <td>
+                                                        {% if appointment.status == 'Completed' %}
+                                                            <span class="badge badge-success">Completed</span>
+                                                        {% elif appointment.status == 'Cancelled' %}
+                                                            <span class="badge badge-danger">Cancelled</span>
+                                                        {% elif appointment.status == 'No-show' %}
+                                                            <span class="badge badge-warning">No-show</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="action-buttons">
+                                                            <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">View</a>
+                                                            {% if appointment.status == 'Completed' %}
+                                                                <a href="{% url 'provide_feedback' appointment.id %}" class="btn btn-sm btn-primary">Feedback</a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="7" class="text-center">No past appointments</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Blood Requests Section -->
+                <section id="blood-requests" class="dashboard-section">
+                    <div class="section-title">
+                        <h2>Blood Requests</h2>
+                        <a href="{% url 'create_blood_request' %}" class="btn btn-sm btn-primary">Request Blood</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table blood-request-table">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Patient Name</th>
+                                    <th>Blood Type</th>
+                                    <th>Units</th>
+                                    <th>Priority</th>
+                                    <th>Date Requested</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if blood_requests %}
+                                    {% for request in blood_requests %}
+                                        <tr>
+                                            <td>{{ request.request_id }}</td>
+                                            <td>{{ request.patient_name }}</td>
+                                            <td>{{ request.blood_type }}</td>
+                                            <td>{{ request.units_needed }}</td>
+                                            <td>
+                                                {% if request.priority == 'Emergency' %}
+                                                    <span class="badge badge-danger">Emergency</span>
+                                                {% elif request.priority == 'Urgent' %}
+                                                    <span class="badge badge-warning">Urgent</span>
+                                                {% else %}
+                                                    <span class="badge badge-info">Regular</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ request.date_requested|date:"d M Y" }}</td>
+                                            <td>
+                                                {% if request.status == 'Pending' %}
+                                                    <span class="badge badge-warning">Pending</span>
+                                                {% elif request.status == 'In Progress' %}
+                                                    <span class="badge badge-info">In Progress</span>
+                                                {% elif request.status == 'Fulfilled' %}
+                                                    <span class="badge badge-success">Fulfilled</span>
+                                                {% elif request.status == 'Cancelled' %}
+                                                    <span class="badge badge-danger">Cancelled</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <a href="{% url 'view_blood_request' request.id %}" class="btn btn-sm btn-info">View</a>
+                                                    {% if request.status == 'Pending' %}
+                                                        <a href="{% url 'edit_blood_request' request.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                                        <a href="{% url 'cancel_blood_request' request.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="8" class="text-center">No blood requests found</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Lab Reports Section -->
+                <section id="lab-reports" class="dashboard-section">
+                    <div class="section-title">
+                        <h2>Lab Reports</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table lab-reports-table">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Test Name</th>
+                                    <th>Date</th>
+                                    <th>Doctor</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if lab_reports %}
+                                    {% for report in lab_reports %}
+                                        <tr>
+                                            <td>{{ report.report_id }}</td>
+                                            <td>{{ report.test_name }}</td>
+                                            <td>{{ report.date|date:"d M Y" }}</td>
+                                            <td>{{ report.doctor.name }}</td>
+                                            <td>
+                                                {% if report.status == 'Pending' %}
+                                                    <span class="badge badge-warning">Pending</span>
+                                                {% elif report.status == 'In Progress' %}
+                                                    <span class="badge badge-info">In Progress</span>
+                                                {% elif report.status == 'Completed' %}
+                                                    <span class="badge badge-success">Completed</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    {% if report.status == 'Completed' %}
+                                                        <a href="{% url 'view_lab_report' report.id %}" class="btn btn-sm btn-info">View</a>
+                                                        <a href="{% url 'download_lab_report' report.id %}" class="btn btn-sm btn-primary">Download</a>
+                                                    {% else %}
+                                                        <a href="{% url 'check_lab_report_status' report.id %}" class="btn btn-sm btn-info">Check Status</a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No lab reports found</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Donation History Section -->
+                <section id="donation-history" class="dashboard-section">
+                    <div class="section-title">
+                        <h2>Donation History</h2>
+                        <a href="{% url 'schedule_donation' %}" class="btn btn-sm btn-primary">Schedule Donation</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table donation-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Donation ID</th>
+                                    <th>Date</th>
+                                    <th>Center</th>
+                                    <th>Blood Type</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if donation_history %}
+                                    {% for donation in donation_history %}
+                                        <tr>
+                                            <td>{{ donation.donation_id }}</td>
+                                            <td>{{ donation.date|date:"d M Y" }}</td>
+                                            <td>{{ donation.center.name }}</td>
+                                            <td>{{ donation.blood_type }}</td>
+                                            <td>{{ donation.units }}</td>
+                                            <td>
+                                                {% if donation.status == 'Scheduled' %}
+                                                    <span class="badge badge-info">Scheduled</span>
+                                                {% elif donation.status == 'Completed' %}
+                                                    <span class="badge badge-success">Completed</span>
+                                                {% elif donation.status == 'Cancelled' %}
+                                                    <span class="badge badge-danger">Cancelled</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <a href="{% url 'view_donation_details' donation.id %}" class="btn btn-sm btn-info">View</a>
+                                                    {% if donation.status == 'Scheduled' %}
+                                                        <a href="{% url 'reschedule_donation' donation.id %}" class="btn btn-sm btn-warning">Reschedule</a>
+                                                        <a href="{% url 'cancel_donation' donation.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">No donation history found</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

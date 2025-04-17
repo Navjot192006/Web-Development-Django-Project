@@ -1,0 +1,941 @@
+{% extends "Test.html" %}
+{% block title_block %} BloodLab Diagnostics - Advanced Blood Testing {% endblock %}
+{% block main_block %}
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.8), rgba(69, 123, 157, 0.8)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: fadeIn 1.5s ease-in;
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .service-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .service-card:hover .service-img img {
+            transform: scale(1.1);
+        }
+        
+        .service-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-content h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .service-content p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+        
+        .service-content .btn {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            align-self: flex-start;
+            margin-top: auto;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 5rem 0;
+            background-color: var(--light);
+        }
+        
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .about-img img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-content h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-content p {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        
+        .about-features {
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .feature-text h4 {
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--secondary), var(--dark));
+            color: white;
+        }
+        
+        .testimonials .section-title h2 {
+            color: white;
+        }
+        
+        .testimonials .section-title h2::after {
+            background: var(--accent);
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            font-size: 2rem;
+            color: var(--accent);
+            opacity: 0.5;
+        }
+        
+        .testimonial-text::before {
+            position: absolute;
+            top: -15px;
+            left: -10px;
+        }
+        
+        .testimonial-text::after {
+            position: absolute;
+            bottom: -30px;
+            right: -10px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+        
+        .author-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            margin-bottom: 0.2rem;
+        }
+        
+        .author-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            text-align: center;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .pricing-header {
+            padding: 1.5rem;
+            background: var(--dark);
+            color: white;
+        }
+        
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        
+        .pricing-body {
+            padding: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .popular-tag {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background-color: var(--light);
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .contact-info h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-details {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .contact-text h4 {
+            color: var(--dark);
+            margin-bottom: 0.2rem;
+        }
+        
+        .contact-text p, .contact-text a {
+            color: #555;
+            text-decoration: none;
+        }
+        
+        .contact-text a:hover {
+            color: var(--primary);
+        }
+        
+        .contact-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        /* FAQ Section */
+        .faq {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .accordion-header {
+            background: var(--dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .accordion-header:hover {
+            background: #14213d;
+        }
+        
+        .accordion-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .accordion-header .icon {
+            transition: transform 0.3s;
+        }
+        
+        .accordion-header.active .icon {
+            transform: rotate(45deg);
+        }
+        
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        
+        .accordion-content.show {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+        
+        .accordion-content p {
+            color: #555;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .about-container,
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-img {
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                width: 95%;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Advanced Blood Testing for Better Health</h2>
+            <p>Get accurate and fast blood test results with our state-of-the-art laboratory services. Our certified professionals ensure your health is in good hands.</p>
+            <a href="{% url 'bloodlab:test_form' %}" class="btn">Book an Appointment</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Complete Blood Count">
+                    </div>
+                    <div class="service-content">
+                        <h3>Complete Blood Count (CBC)</h3>
+                        <p>A complete blood count helps evaluate your overall health and detect a wide range of disorders, including anemia, infection, and leukemia.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1579684453423-f84349ef60b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Lipid Panel">
+                    </div>
+                    <div class="service-content">
+                        <h3>Lipid Panel</h3>
+                        <p>Measures cholesterol levels and triglycerides to assess your risk of cardiovascular disease and monitor treatment effectiveness.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Metabolic Panel">
+                    </div>
+                    <div class="service-content">
+                        <h3>Basic Metabolic Panel</h3>
+                        <p>Provides information about your body's metabolism, including kidney function, blood glucose levels, and electrolyte balance.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Thyroid Test">
+                    </div>
+                    <div class="service-content">
+                        <h3>Thyroid Function Tests</h3>
+                        <p>Evaluates how well your thyroid is working by measuring thyroid hormone levels to diagnose thyroid disorders.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Diabetes Test">
+                    </div>
+                    <div class="service-content">
+                        <h3>Diabetes Screening</h3>
+                        <p>Includes HbA1c, fasting glucose, and other tests to diagnose diabetes or prediabetes and monitor glucose control.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1576091160501-bbe57469278b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Vitamin Test">
+                    </div>
+                    <div class="service-content">
+                        <h3>Vitamin Deficiency Tests</h3>
+                        <p>Measures levels of essential vitamins like D, B12, and others to identify deficiencies that may affect your health.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container about-container">
+            <div class="about-content">
+                <h2>About BloodLab Diagnostics</h2>
+                <p>BloodLab Diagnostics is a leading provider of clinical laboratory services, dedicated to delivering accurate, timely, and affordable diagnostic testing to healthcare providers and patients.</p>
+                <p>Founded in 2005, we have grown to become one of the most trusted names in diagnostic testing, with a team of over 200 certified professionals working in our state-of-the-art facilities.</p>
+                <div class="about-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i>✓</i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Accurate Results</h4>
+                            <p>Our advanced technology and rigorous quality control ensure 99.9% accuracy in all test results.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i>⌚</i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Fast Turnaround</h4>
+                            <p>Most test results available within 24-48 hours, with STAT options for urgent cases.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i>🏆</i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Certified Professionals</h4>
+                            <p>All our lab technicians and pathologists are board-certified and undergo continuous training.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="BloodLab Team">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Patients Say</h2>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        The staff at BloodLab made my experience comfortable and stress-free. I got my results faster than expected and the online portal is very easy to use.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson">
+                        </div>
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Regular Patient</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        As a physician, I rely on BloodLab for accurate and timely test results. Their comprehensive reports help me make better treatment decisions for my patients.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. Michael Chen">
+                        </div>
+                        <div class="author-info">
+                            <h4>Dr. Michael Chen</h4>
+                            <p>Partner Physician</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        I was nervous about getting blood drawn, but the phlebotomist was so skilled I barely felt anything. The whole process was quick and professional.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emily Rodriguez">
+                        </div>
+                        <div class="author-info">
+                            <h4>Emily Rodriguez</h4>
+                            <p>First-time Patient</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Pricing</h2>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Basic Panel</h3>
+                        <div class="price">$49<span>/test</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Complete Blood Count (CBC)</li>
+                            <li>Basic Metabolic Panel</li>
+                            <li>Lipid Panel</li>
+                            <li>Results in 48 hours</li>
+                            <li>Email report</li>
+                        </ul>
+                        <a href="#" class="btn">Get Started</a>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="popular-tag">Popular</div>
+                    <div class="pricing-header">
+                        <h3>Comprehensive Panel</h3>
+                        <div class="price">$129<span>/test</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Everything in Basic Panel</li>
+                            <li>Thyroid Function Test</li>
+                            <li>Liver Function Test</li>
+                            <li>Vitamin D Level</li>
+                            <li>Results in 24 hours</li>
+                            <li>Detailed report with explanations</li>
+                        </ul>
+                        <a href="#" class="btn">Get Started</a>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Executive Health Panel</h3>
+                        <div class="price">$249<span>/test</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li>Everything in Comprehensive Panel</li>
+                            <li>Advanced Cardiac Risk Assessment</li>
+                            <li>Diabetes Screening</li>
+                            <li>Complete Vitamin Panel</li>
+                            <li>Hormone Level Check</li>
+                            <li>Results in 12 hours</li>
+                            <li>Consultation with physician</li>
+                        </ul>
+                        <a href="#" class="btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i>📍</i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Address</h4>
+                                <p>123 Medical Drive, Suite 100<br>Healthville, HV 12345</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i>📞</i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Phone</h4>
+                                <p><a href="tel:+18005551234">(800) 555-1234</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i>✉️</i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Email</h4>
+                                <p><a href="mailto:info@bloodlab.com">info@bloodlab.com</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i>🕒</i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Hours</h4>
+                                <p>Monday-Friday: 7am-7pm<br>Saturday: 8am-4pm<br>Sunday: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Locations</h3>
+                    <p>We have multiple locations throughout the city for your convenience. Find the one nearest to you.</p>
+                    <a href="#" class="btn">View All Locations</a>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="service">Service Interested In</label>
+                            <select id="service" name="service">
+                                <option value="">Select a service</option>
+                                <option value="cbc">Complete Blood Count</option>
+                                <option value="lipid">Lipid Panel</option>
+                                <option value="metabolic">Metabolic Panel</option>
+                                <option value="thyroid">Thyroid Test</option>
+                                <option value="diabetes">Diabetes Screening</option>
+                                <option value="vitamin">Vitamin Test</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message"></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>How should I prepare for my blood test?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Most blood tests require fasting for 8-12 hours beforehand. This means no food or drink except water. Avoid alcohol for 24 hours before your test. Continue taking prescribed medications unless your doctor instructs otherwise. Wear loose clothing that allows easy access to your arm. Stay hydrated by drinking water before your test.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>How long does it take to get results?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Turnaround times vary by test: Basic tests (CBC, metabolic panel) typically take 24-48 hours. Specialized tests (hormone levels, genetic tests) may take 3-7 days. STAT tests ordered by physicians are prioritized and may be available within hours. You'll receive an email notification when your results are ready in our secure patient portal.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Do I need a doctor's order for blood tests?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>In most states, you can order your own lab tests without a doctor's order through our direct access testing service. However, some specialized tests may require a physician's order. We recommend consulting with your healthcare provider to determine which tests are appropriate for you. If you don't have a doctor, we can connect you with one of our telemedicine providers.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Will my insurance cover the cost of tests?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>We accept most major insurance plans. Coverage depends on your specific plan and whether the tests are deemed medically necessary. For self-ordered tests without insurance, we offer affordable cash prices. Our staff can help verify your benefits before your visit. We also offer payment plans for larger test panels.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>What safety measures are in place during COVID-19?</h3>
+                        <div class="icon">+</div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>We've implemented extensive safety protocols: Mandatory masks for all staff and patients, enhanced cleaning between patients, social distancing in waiting areas, HEPA air filtration systems, staff health screenings, and optional curbside check-in. We also offer in-home phlebotomy services for high-risk patients.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('active');
+                const content = header.nextElementSibling;
+                if (header.classList.contains('active')) {
+                    content.classList.add('show');
+                } else {
+                    content.classList.remove('show');
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

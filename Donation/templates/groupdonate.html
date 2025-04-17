@@ -1,0 +1,652 @@
+{% extends "base.html" %}
+{% block title_block %} Group Donate {% endblock %}
+{% block main_block %}
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    /* ... (keep existing navbar styles from previous code) ... */
+
+    /* Hero Section */
+    .group-hero {
+        position: relative;
+        width: 100%;
+        height: 80vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+    }
+
+    .group-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.03)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+        background-size: cover;
+        opacity: 0.1;
+    }
+
+    .group-hero-content {
+        position: relative;
+        z-index: 3;
+        max-width: 900px;
+        padding: 0 20px;
+    }
+
+    .group-hero h1 {
+        font-size: 72px;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        font-family: 'Playfair Display', serif;
+        line-height: 1.2;
+        background: linear-gradient(to right, #ff4d4d, #fff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .group-hero p {
+        font-size: 24px;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Floating Blood Cells Animation */
+    .blood-cells {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        overflow: hidden;
+    }
+
+    .blood-cell {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background: rgba(255, 77, 77, 0.6);
+        border-radius: 50%;
+        filter: blur(2px);
+        animation: float 15s linear infinite;
+        opacity: 0.7;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0) translateX(0) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.7;
+        }
+        100% {
+            transform: translateY(-1000px) translateX(200px) rotate(720deg);
+            opacity: 0;
+        }
+    }
+
+    /* Main Content */
+    .group-main {
+        padding: 100px 20px;
+        background: #fff;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Group Benefits */
+    .group-benefits {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-bottom: 80px;
+    }
+
+    .benefit-card {
+        width: 300px;
+        background: #f8f8f8;
+        border-radius: 15px;
+        padding: 40px 30px;
+        text-align: center;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .benefit-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #ff4d4d;
+        transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover::before {
+        height: 10px;
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.1);
+    }
+
+    .benefit-card i {
+        font-size: 50px;
+        color: #ff4d4d;
+        margin-bottom: 25px;
+    }
+
+    .benefit-card h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .benefit-card p {
+        color: #555;
+        font-size: 16px;
+    }
+
+    /* How It Works */
+    .group-process {
+        background: #f8f8f8;
+        padding: 80px 20px;
+        border-radius: 15px;
+        margin-bottom: 80px;
+    }
+
+    .process-steps {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .process-step {
+        width: 250px;
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+
+    .process-step:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.1);
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0 auto 20px;
+    }
+
+    .process-step h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #4e0000;
+        text-align: center;
+    }
+
+    .process-step p {
+        color: #555;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    /* CTA Section */
+    .group-cta {
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+        color: white;
+        padding: 80px 20px;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 80px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .group-cta::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+        background-size: cover;
+        opacity: 0.1;
+    }
+
+    .group-cta h2 {
+        font-size: 42px;
+        margin-bottom: 30px;
+        position: relative;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .group-cta p {
+        max-width: 700px;
+        margin: 0 auto 40px;
+        font-size: 18px;
+        position: relative;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 16px 40px;
+        font-size: 18px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+        z-index: -1;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        background: #fff;
+        color: #ff4d4d;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(255, 77, 77, 0.7);
+    }
+
+    /* Success Stories */
+    .success-stories {
+        margin-bottom: 80px;
+    }
+
+    .story-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .story-card {
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .story-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.1);
+    }
+
+    .story-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .story-content {
+        padding: 25px;
+    }
+
+    .story-content h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .story-content p {
+        color: #555;
+        margin-bottom: 15px;
+        font-size: 15px;
+    }
+
+    .story-meta {
+        display: flex;
+        align-items: center;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .story-meta i {
+        margin-right: 5px;
+        color: #ff4d4d;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background: #4e0000;
+        transform: translateY(-5px);
+    }
+
+    /* Animations */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .group-hero h1 {
+            font-size: 56px;
+        }
+        
+        .group-hero p {
+            font-size: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .group-hero {
+            height: 70vh;
+        }
+        
+        .group-hero h1 {
+            font-size: 42px;
+        }
+        
+        .group-hero p {
+            font-size: 18px;
+        }
+        
+        .benefit-card {
+            width: 100%;
+            max-width: 400px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .group-hero h1 {
+            font-size: 36px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+        }
+        
+        .group-cta h2 {
+            font-size: 32px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="group-hero">
+    <div class="blood-cells" id="bloodCells"></div>
+    <div class="group-hero-content">
+        <h1>Group Donations</h1>
+        <p>Unite your workplace, school, or community to save lives together</p>
+        <a href="{% url 'OrganizeEvent' %}" class="btn pulse"><i class="fas fa-handshake"></i> Organize an Event</a>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="group-main">
+    <!-- Benefits Section -->
+    <section class="group-benefits-section">
+        <div class="section-title">
+            <h2>The Power of Giving Together</h2>
+            <p>Group donations create a bigger impact while fostering team spirit and community engagement</p>
+        </div>
+        <div class="group-benefits">
+            <div class="benefit-card">
+                <i class="fas fa-users"></i>
+                <h3>Community Building</h3>
+                <p>Strengthen bonds within your organization while making a meaningful difference in people's lives.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-trophy"></i>
+                <h3>Friendly Competition</h3>
+                <p>Challenge other departments or organizations to see who can donate the most and save more lives.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-gift"></i>
+                <h3>Special Rewards</h3>
+                <p>Groups that donate together receive recognition certificates and special LifeDrops rewards.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="group-process">
+        <div class="section-title">
+            <h2>How Group Donations Work</h2>
+            <p>Organizing a group donation event is simple with our support</p>
+        </div>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <h3>Plan Your Event</h3>
+                <p>Choose a date and location that works for your group. We'll help you find the best option.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <h3>Promote Participation</h3>
+                <p>Use our toolkit to encourage sign-ups and educate participants about the donation process.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <h3>Donation Day</h3>
+                <p>Our mobile unit comes to you or we'll schedule a group appointment at a nearby center.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <h3>Celebrate Impact</h3>
+                <p>Receive a report on lives saved and recognition for your group's contribution.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="group-cta" id="organize-event">
+        <h2>Ready to Organize Your Group Donation?</h2>
+        <p>Join hundreds of organizations making a collective impact on blood supply in our community.</p>
+        <a href="{% url 'OrganizeEvent' %}" class="btn"><i class="fas fa-calendar-check"></i> Schedule Your Event</a>
+    </section>
+
+    <!-- Success Stories -->
+    <section class="success-stories">
+        <div class="section-title">
+            <h2>Group Donation Success Stories</h2>
+            <p>See how organizations like yours are making a difference</p>
+        </div>
+        <div class="story-grid">
+            <div class="story-card">
+                <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1521791055366-0d553872125f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="story-content">
+                    <h3>TechCorp Annual Drive</h3>
+                    <p>Collected 127 units in a single day, setting a new company record and saving up to 381 lives.</p>
+                    <div class="story-meta">
+                        <i class="fas fa-users"></i> 89 employees participated
+                    </div>
+                </div>
+            </div>
+            <div class="story-card">
+                <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="story-content">
+                    <h3>University Blood Challenge</h3>
+                    <p>Student organizations competed to donate the most, resulting in 243 units collected campus-wide.</p>
+                    <div class="story-meta">
+                        <i class="fas fa-users"></i> 12 student groups involved
+                    </div>
+                </div>
+            </div>
+            <div class="story-card">
+                <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="story-content">
+                    <h3>Community Church Initiative</h3>
+                    <p>Local congregation members donated 68 units to support children at the nearby hospital.</p>
+                    <div class="story-meta">
+                        <i class="fas fa-users"></i> 3 generations participated
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // Blood Cells Animation
+    function createBloodCells() {
+        const container = document.getElementById('bloodCells');
+        const cellCount = 20;
+        
+        for (let i = 0; i < cellCount; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('blood-cell');
+            
+            // Random properties
+            const size = Math.random() * 20 + 10;
+            const posX = Math.random() * 100;
+            const delay = Math.random() * 15;
+            const duration = Math.random() * 10 + 10;
+            const blur = Math.random() * 3;
+            const opacity = Math.random() * 0.5 + 0.3;
+            
+            cell.style.width = `${size}px`;
+            cell.style.height = `${size}px`;
+            cell.style.left = `${posX}%`;
+            cell.style.animationDelay = `${delay}s`;
+            cell.style.animationDuration = `${duration}s`;
+            cell.style.filter = `blur(${blur}px)`;
+            cell.style.opacity = opacity;
+            
+            container.appendChild(cell);
+        }
+    }
+    
+    // Initialize animations when page loads
+    window.addEventListener('load', () => {
+        createBloodCells();
+        
+        // Back to top button
+        document.querySelector('.back-to-top').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+</body>
+
+
+{% endblock %}
+

@@ -1,0 +1,552 @@
+{% extends "base.html" %}
+{% block title_block %} Blood Alerts {% endblock %}
+{% block main_block %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+    }
+
+    /* Header Styles */
+    .page-header {
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+        color: white;
+        padding: 120px 20px 60px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.03)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+        background-size: cover;
+        opacity: 0.1;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .page-header h1 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .page-header p {
+        font-size: 18px;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Content Styles */
+    .main-content {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+    }
+
+    @media (max-width: 992px) {
+        .main-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .content-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 40px;
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .section-title h2 {
+        font-size: 28px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Alert Form Styles */
+    .alert-form {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 40px;
+        position: sticky;
+        top: 120px;
+    }
+
+    .form-title {
+        font-size: 24px;
+        color: #4e0000;
+        margin-bottom: 25px;
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #ff4d4d;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.2);
+    }
+
+    .notification-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .notification-option {
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .notification-option.active {
+        background: rgba(255, 77, 77, 0.1);
+        border-color: #ff4d4d;
+        color: #ff4d4d;
+    }
+
+    .notification-option i {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .notification-option span {
+        display: block;
+        font-weight: 500;
+    }
+
+    .btn {
+        display: inline-block;
+        width: 100%;
+        padding: 14px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: #ff4d4d;
+        color: white;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .btn-primary:hover {
+        background: #e64444;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.4);
+    }
+
+    /* Feature Card Styles */
+    .feature-card {
+        background: #f8f8f8;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #ff4d4d;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .feature-card i {
+        font-size: 40px;
+        color: #ff4d4d;
+        margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .feature-card p {
+        color: #555;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background: #4e0000;
+        transform: translateY(-5px);
+    }
+
+    /* Additional styles for alert info */
+    .alert-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: rgba(255, 77, 77, 0.1);
+        border-radius: 10px;
+    }
+
+    .alert-info i {
+        font-size: 24px;
+        color: #ff4d4d;
+        margin-right: 15px;
+    }
+
+    .alert-info p {
+        margin: 0;
+        color: #333;
+    }
+
+    .testimonial {
+        background: #f8f8f8;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .testimonial::before {
+        content: """;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        font-size: 60px;
+        color: rgba(255, 77, 77, 0.2);
+        font-family: Georgia, serif;
+        line-height: 0.8;
+    }
+
+    .testimonial p {
+        position: relative;
+        z-index: 1;
+        padding-left: 20px;
+        font-style: italic;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .testimonial-author img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .testimonial-author .author-name {
+        font-weight: 600;
+        color: #4e0000;
+    }
+
+    .testimonial-author .author-location {
+        font-size: 14px;
+        color: #666;
+    }
+
+    /* Messages styles */
+    .messages {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .messages li {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+    }
+
+    .messages .success {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid #28a745;
+    }
+
+    .messages .error {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid #dc3545;
+    }
+</style>
+
+<!-- Header -->
+<header class="page-header">
+    <div class="header-content">
+        <h1>Blood Alerts</h1>
+        <p>Get notified when your blood type is in critical need in your area.</p>
+    </div>
+</header>
+
+{% if messages %}
+<div class="main-content" style="margin-bottom: -30px; margin-top: 30px; grid-template-columns: 1fr;">
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Left Column: Information -->
+    <div class="information-column">
+        <div class="content-section">
+            <div class="section-title">
+                <h2>Why Sign Up for Blood Alerts?</h2>
+            </div>
+            <p>Blood supply needs are constantly changing. By signing up for Blood Alerts, you'll be notified when your specific blood type is in critical demand, allowing you to make a life-saving donation exactly when it's needed most.</p>
+            
+            <div class="alert-info">
+                <i class="fas fa-info-circle"></i>
+                <p>Blood has a limited shelf life. Red blood cells can be stored for only 42 days, platelets for just 5 days. This is why we need regular donors.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Rapid Response</h3>
+                <p>Receive immediate notifications when your blood type reaches critical levels in your local area, enabling you to respond quickly to emergencies.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Location-Based Alerts</h3>
+                <p>Our system sends alerts based on your location, ensuring you're only notified about shortages in donation centers near you.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Critical Need Focus</h3>
+                <p>We only send alerts when your blood type is critically needed, respecting your time while maximizing the impact of your donation.</p>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <div class="section-title">
+                <h2>How It Works</h2>
+            </div>
+            <p>Our Blood Alerts system is designed to be efficient and respectful of your time. Here's how it works:</p>
+            
+            <ol style="margin-left: 20px; margin-top: 20px;">
+                <li style="margin-bottom: 15px;">Sign up with your blood type and preferred notification method</li>
+                <li style="margin-bottom: 15px;">Our system monitors blood supply levels across donation centers</li>
+                <li style="margin-bottom: 15px;">When your blood type reaches critical levels, you receive an alert</li>
+                <li style="margin-bottom: 15px;">Follow the instructions in the alert to make your life-saving donation</li>
+            </ol>
+            
+            <div class="testimonial">
+                <p>Blood Alerts helped me donate when it mattered most. I received a notification that O- blood was critically needed, and I was able to donate that same day. Knowing my donation was immediately helping someone made the experience even more meaningful.</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John D.">
+                    <div>
+                        <div class="author-name">John D.</div>
+                        <div class="author-location">Regular Donor, Mumbai</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column: Sign-up Form -->
+    <div class="form-column">
+        <div class="alert-form">
+            <h3 class="form-title">Sign Up for Blood Alerts</h3>
+            
+            <form action="{% url 'BloodAlerts' %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="blood_group">Your Blood Type:</label>
+                    <select id="blood_group" name="blood_group" required>
+                        <option value="">Select Blood Type</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                </div>
+                
+                <div class="form-group">
+                    <label>Notification Method:</label>
+                    <div class="notification-options">
+                        <div class="notification-option active" data-value="email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </div>
+                        <div class="notification-option" data-value="sms">
+                            <i class="fas fa-sms"></i>
+                            <span>SMS</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="notification_method" name="notification_method" value="email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Alert Frequency:</label>
+                    <select name="frequency">
+                        <option value="critical_only">Critical Needs Only</option>
+                        <option value="all_needs">All Blood Needs</option>
+                        <option value="weekly">Weekly Summary</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" required style="margin-right: 10px; width: auto;">
+                        <span>I agree to receive notifications about blood donation needs</span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Sign Up for Alerts</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // Notification options toggle
+    const notificationOptions = document.querySelectorAll('.notification-option');
+    const notificationMethodInput = document.getElementById('notification_method');
+    
+    notificationOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active class from all options
+            notificationOptions.forEach(opt => opt.classList.remove('active'));
+            
+            // Add active class to clicked option
+            this.classList.add('active');
+            
+            // Update hidden input value
+            notificationMethodInput.value = this.dataset.value;
+        });
+    });
+
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+
+{% endblock %} 

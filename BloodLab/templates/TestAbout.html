@@ -1,0 +1,335 @@
+{% extends "Test.html" %}
+{% block title_block %}About Us - BloodLab Diagnostics {% endblock %}
+{% block main_block %}
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.8), rgba(69, 123, 157, 0.8)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        /* About Section */
+        .about-main {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-content p {
+            margin-bottom: 2rem;
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .mission-vision {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        
+        .mission, .vision {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .mission h3, .vision h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .team {
+            margin: 4rem 0;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-img {
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .team-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .team-member:hover .team-img img {
+            transform: scale(1.1);
+        }
+        
+        .team-info {
+            padding: 1.5rem;
+        }
+        
+        .team-info h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-info p {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-info .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .team-info .social-links a {
+            color: var(--dark);
+            transition: color 0.3s;
+        }
+        
+        .team-info .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        .achievements {
+            margin: 4rem 0;
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .achievement-item {
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .achievement-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .achievement-text {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .mission-vision {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                width: 95%;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>About BloodLab Diagnostics</h2>
+        </div>
+    </section>
+
+    <!-- Main About Content -->
+    <section class="about-main">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="section-title">Our Story</h2>
+                <p>Founded in 2005, BloodLab Diagnostics began as a small laboratory with a big vision: to revolutionize diagnostic testing through accuracy, speed, and patient-centered care. What started as a team of five passionate professionals has grown into one of the region's most trusted diagnostic laboratories, serving thousands of patients and healthcare providers each year.</p>
+                
+                <p>Our journey has been marked by continuous innovation. We were among the first in our region to implement fully automated testing systems, reducing human error and improving turnaround times. In 2015, we opened our second location, and by 2020, we had expanded to five state-of-the-art facilities across the state.</p>
+                
+                <div class="mission-vision">
+                    <div class="mission">
+                        <h3>Our Mission</h3>
+                        <p>To provide accurate, timely, and affordable diagnostic testing that empowers patients and healthcare providers to make informed decisions about health and wellness. We are committed to excellence in every test we perform and every interaction we have.</p>
+                    </div>
+                    <div class="vision">
+                        <h3>Our Vision</h3>
+                        <p>To be the most trusted name in diagnostic testing, recognized for our technological leadership, clinical expertise, and uncompromising commitment to patient care. We aim to expand access to advanced diagnostics while maintaining the personal touch that defines our service.</p>
+                    </div>
+                </div>
+                
+                <p>At BloodLab Diagnostics, we believe that accurate diagnostics are the foundation of effective healthcare. Our team of board-certified pathologists, PhD scientists, and certified medical technologists work together to ensure that every test meets the highest standards of quality and reliability.</p>
+                
+                <div class="team">
+                    <h2 class="section-title">Leadership Team</h2>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <div class="team-img">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. Robert Chen">
+                            </div>
+                            <div class="team-info">
+                                <h4>Dr. Robert Chen</h4>
+                                <p>Chief Medical Officer</p>
+                                <p>Board Certified Pathologist</p>
+                                <div class="social-links">
+                                    <a href="#"><i>in</i></a>
+                                    <a href="#"><i>✉️</i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-img">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Dr. Sarah Johnson">
+                            </div>
+                            <div class="team-info">
+                                <h4>Dr. Sarah Johnson</h4>
+                                <p>Laboratory Director</p>
+                                <p>PhD in Clinical Pathology</p>
+                                <div class="social-links">
+                                    <a href="#"><i>in</i></a>
+                                    <a href="#"><i>✉️</i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-img">
+                                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Michael Rodriguez">
+                            </div>
+                            <div class="team-info">
+                                <h4>Michael Rodriguez</h4>
+                                <p>Chief Executive Officer</p>
+                                <p>20+ Years Healthcare Leadership</p>
+                                <div class="social-links">
+                                    <a href="#"><i>in</i></a>
+                                    <a href="#"><i>✉️</i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="achievements">
+                    <h2 class="section-title">Our Achievements</h2>
+                    <div class="achievements-grid">
+                        <div class="achievement-item">
+                            <div class="achievement-number">15,000+</div>
+                            <div class="achievement-text">Tests Performed Monthly</div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-number">99.9%</div>
+                            <div class="achievement-text">Accuracy Rate</div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-number">5</div>
+                            <div class="achievement-text">State-of-the-Art Facilities</div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-number">200+</div>
+                            <div class="achievement-text">Certified Professionals</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p>We are proud to be accredited by the College of American Pathologists (CAP) and certified under the Clinical Laboratory Improvement Amendments (CLIA). These recognitions reflect our commitment to meeting the highest standards in laboratory practice.</p>
+                
+                <a href="#" class="btn">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

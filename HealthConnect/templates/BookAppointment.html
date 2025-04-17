@@ -1,0 +1,711 @@
+{% extends "base1.html" %}
+{% block title_block %} Book Doctor Appointments Online {% endblock %}
+{% block main_block %}
+
+
+<style>
+    /* Hero Section */
+    .schedule-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .hero-content h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+    
+    /* Main Scheduling Section */
+    .scheduling-container {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+    
+    .filter-sidebar {
+        width: 300px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+    }
+    
+    .filter-group {
+        margin-bottom: 25px;
+    }
+    
+    .filter-group h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #e74c3c;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .filter-options {
+        list-style: none;
+    }
+    
+    .filter-options li {
+        margin-bottom: 10px;
+    }
+    
+    .filter-options label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 15px;
+    }
+    
+    .filter-options input[type="checkbox"],
+    .filter-options input[type="radio"] {
+        margin-right: 10px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .date-picker {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 15px;
+    }
+    
+    .results-main {
+        flex: 1;
+    }
+    
+    .search-summary {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .search-summary h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+    
+    .search-summary p {
+        color: #666;
+        font-size: 15px;
+    }
+    
+    .doctor-results {
+        display: grid;
+        gap: 20px;
+    }
+    
+    .doctor-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        gap: 25px;
+    }
+    
+    .doctor-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #f1f1f1;
+    }
+    
+    .doctor-info {
+        flex: 1;
+    }
+    
+    .doctor-info h3 {
+        font-size: 20px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+    
+    .doctor-specialty {
+        color: #e74c3c;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .doctor-bio {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .doctor-rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .stars {
+        color: #f1c40f;
+        margin-right: 10px;
+    }
+    
+    .rating-count {
+        color: #666;
+        font-size: 13px;
+    }
+    
+    .doctor-location {
+        display: flex;
+        align-items: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .doctor-location i {
+        margin-right: 8px;
+        color: #e74c3c;
+    }
+    
+    .doctor-schedule {
+        flex: 0 0 250px;
+    }
+    
+    .schedule-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .time-slots {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .time-slot {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 8px 5px;
+        text-align: center;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .time-slot:hover {
+        background-color: #e74c3c;
+        color: white;
+        border-color: #e74c3c;
+    }
+    
+    .time-slot.booked {
+        background-color: #eee;
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    .view-more {
+        color: #e74c3c;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 5px;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 15px;
+        transition: all 0.3s;
+        border: 2px solid #e74c3c;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .btn:hover {
+        background-color: transparent;
+        color: #e74c3c;
+    }
+    
+    .btn-outline {
+        background-color: transparent;
+        color: #e74c3c;
+        margin-top: 10px;
+    }
+    
+    .btn-outline:hover {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    /* Appointment Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-content {
+        background-color: white;
+        border-radius: 10px;
+        width: 500px;
+        max-width: 90%;
+        padding: 30px;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 22px;
+        color: #333;
+    }
+    
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 15px;
+    }
+    
+    .form-group textarea {
+        height: 100px;
+        resize: vertical;
+    }
+    
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    
+    /* Responsive Styles */
+    @media (max-width: 900px) {
+        .scheduling-container {
+            flex-direction: column;
+        }
+        
+        .filter-sidebar {
+            width: 100%;
+        }
+        
+        .doctor-card {
+            flex-direction: column;
+        }
+        
+        .doctor-image {
+            margin-bottom: 15px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+        
+        .time-slots {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .time-slots {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+<section class="schedule-hero">
+    <div class="hero-content">
+        <h1>Book Your Doctor Appointment</h1>
+        <p>Find and schedule with the right specialist for your health needs</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="scheduling-container">
+        <div class="filter-sidebar">
+            <form method="POST" action="{% url 'health:book_appointment_home' %}">
+                {% csrf_token %}
+                <div class="filter-group">
+                    <h3>Search Doctors</h3>
+                    <input type="text" class="search-input" name="search_term" placeholder="Doctor name or specialty...">
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Specialty</h3>
+                    <ul class="filter-options">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Cardiology"> Cardiology
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Dermatology"> Dermatology
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Endocrinology"> Endocrinology
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Gastroenterology"> Gastroenterology
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Neurology"> Neurology
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Orthopedics"> Orthopedics
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Pediatrics"> Pediatrics
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="specialty" value="Psychiatry"> Psychiatry
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Appointment Date</h3>
+                    <input type="date" class="date-picker" id="appointment-date" name="appointment_date" value="{{ today }}">
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Appointment Type</h3>
+                    <ul class="filter-options">
+                        <li>
+                            <label>
+                                <input type="radio" name="appointment_type" value="In-Person" checked> In-Person Visit
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" name="appointment_type" value="Virtual"> Virtual Visit
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Health Concern</h3>
+                    <ul class="filter-options">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="heart"> Heart Disease
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="diabetes"> Diabetes
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="arthritis"> Arthritis
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="asthma"> Asthma
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="depression"> Depression
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="hypertension"> Hypertension
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="migraine"> Migraine
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="concern" value="skin"> Skin Conditions
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                
+                <button type="submit" class="btn">Apply Filters</button>
+            </form>
+        </div>
+        
+        <div class="results-main">
+            <div class="search-summary">
+                <h2>Doctors Available</h2>
+                <p>{% if request.method == 'POST' %}Showing filtered results{% else %}Showing all doctors{% endif %}</p>
+            </div>
+            
+            <div class="doctor-results">
+                {% if doctors %}
+                    {% for doctor in doctors %}
+                    <div class="doctor-card">
+                        <img src="{{ doctor.profile_image }}" alt="Dr. {{ doctor.name }}" class="doctor-image">
+                        <div class="doctor-info">
+                            <h3>Dr. {{ doctor.name }}</h3>
+                            <span class="doctor-specialty">{{ doctor.specialty }}</span>
+                            <div class="doctor-rating">
+                                <div class="stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= doctor.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% elif forloop.counter <= doctor.rating|add:"0.5" %}
+                                            <i class="fas fa-star-half-alt"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <span class="rating-count">{{ doctor.reviews_count }} reviews</span>
+                            </div>
+                            <p class="doctor-bio">{{ doctor.bio }}</p>
+                            <div class="doctor-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ doctor.clinic_name }}, {{ doctor.clinic_address }}</span>
+                            </div>
+                        </div>
+                        <div class="doctor-schedule">
+                            <div class="schedule-title">Available Today</div>
+                            <div class="time-slots">
+                                {% for slot in doctor.time_slots.all|slice:":6" %}
+                                    {% if slot.is_available %}
+                                        <div class="time-slot" onclick="openModal('Dr. {{ doctor.name }}', '{{ doctor.specialty }}', '{{ slot.date }}T{{ slot.time }}')">{{ slot.time }}</div>
+                                    {% else %}
+                                        <div class="time-slot booked">{{ slot.time }}</div>
+                                    {% endif %}
+                                {% empty %}
+                                    <div class="time-slot">9:00 AM</div>
+                                    <div class="time-slot">10:30 AM</div>
+                                    <div class="time-slot booked">11:45 AM</div>
+                                    <div class="time-slot">2:00 PM</div>
+                                    <div class="time-slot">3:30 PM</div>
+                                    <div class="time-slot booked">4:45 PM</div>
+                                {% endfor %}
+                            </div>
+                            <a href="#" class="view-more">View more availability</a>
+                            <a href="{% url 'health:appointment_form' %}?doctor=Dr.%20{{ doctor.name }}&specialty={{ doctor.specialty }}" class="btn btn-outline">Request Different Time</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-results">
+                        <h3>No doctors found matching your criteria</h3>
+                        <p>Please try adjusting your search filters</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointment Modal -->
+<div class="modal" id="appointment-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Book Appointment</h2>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <form id="appointment-form">
+            <div class="form-group">
+                <label for="doctor-name">Doctor</label>
+                <input type="text" id="doctor-name" readonly>
+            </div>
+            <div class="form-group">
+                <label for="specialty">Specialty</label>
+                <input type="text" id="specialty" readonly>
+            </div>
+            <div class="form-group">
+                <label for="appointment-time">Appointment Time</label>
+                <input type="text" id="appointment-time" readonly>
+            </div>
+            <div class="form-group">
+                <label for="patient-name">Your Full Name</label>
+                <input type="text" id="patient-name" required>
+            </div>
+            <div class="form-group">
+                <label for="patient-dob">Date of Birth</label>
+                <input type="date" id="patient-dob" required>
+            </div>
+            <div class="form-group">
+                <label for="patient-phone">Phone Number</label>
+                <input type="tel" id="patient-phone" required>
+            </div>
+            <div class="form-group">
+                <label for="patient-email">Email Address</label>
+                <input type="email" id="patient-email" required>
+            </div>
+            <div class="form-group">
+                <label for="health-concern">Primary Health Concern</label>
+                <select id="health-concern" required>
+                    <option value="">Select your concern</option>
+                    <option value="heart-disease">Heart Disease</option>
+                    <option value="high-blood-pressure">High Blood Pressure</option>
+                    <option value="high-cholesterol">High Cholesterol</option>
+                    <option value="arrhythmia">Heart Rhythm Problems</option>
+                    <option value="chest-pain">Chest Pain</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="symptoms">Symptoms/Reason for Visit</label>
+                <textarea id="symptoms" placeholder="Please describe your symptoms and reason for scheduling this appointment"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn">Confirm Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Modal functionality
+    function openModal(doctorName, specialty, appointmentTime) {
+        const modal = document.getElementById('appointment-modal');
+        document.getElementById('doctor-name').value = doctorName;
+        document.getElementById('specialty').value = specialty;
+        
+        if (appointmentTime) {
+            const timeString = formatAppointmentTime(appointmentTime);
+            document.getElementById('appointment-time').value = timeString;
+        } else {
+            document.getElementById('appointment-time').value = "Specific time to be determined";
+        }
+        
+        modal.style.display = 'flex';
+    }
+    
+    function closeModal() {
+        document.getElementById('appointment-modal').style.display = 'none';
+    }
+    
+    function formatAppointmentTime(isoString) {
+        const date = new Date(isoString);
+        const options = { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        };
+        return date.toLocaleDateString('en-US', options);
+    }
+    
+    // Form submission
+    document.getElementById('appointment-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Here you would typically send the data to your server
+        // For this example, we'll just show an alert
+        alert('Appointment booked successfully! You will receive a confirmation shortly.');
+        closeModal();
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        const modal = document.getElementById('appointment-modal');
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Set default date to today
+    document.getElementById('appointment-date').valueAsDate = new Date();
+</script>
+</body>
+
+
+{% endblock %}

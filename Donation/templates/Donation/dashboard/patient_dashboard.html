@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Patient Dashboard</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% if appointments %}
+                        <ul class="list-group">
+                            {% for appointment in appointments %}
+                                <li class="list-group-item">
+                                    <h6>Dr. {{ appointment.doctor.user.get_full_name }}</h6>
+                                    <p>Date: {{ appointment.appointment_date|date:"F d, Y" }}</p>
+                                    <p>Time: {{ appointment.appointment_time }}</p>
+                                    <p>Status: <span class="badge {% if appointment.status == 'confirmed' %}bg-success{% elif appointment.status == 'pending' %}bg-warning{% elif appointment.status == 'completed' %}bg-info{% else %}bg-secondary{% endif %}">{{ appointment.get_status_display }}</span></p>
+                                    <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">Details</a>
+                                    {% if appointment.status == 'pending' or appointment.status == 'confirmed' %}
+                                    <a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-sm btn-danger">Cancel</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No appointments scheduled.</p>
+                    {% endif %}
+                    <div class="mt-3">
+                        <a href="{% url 'request_appointment' %}" class="btn btn-primary">Request New Appointment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Donation History</h5>
+                </div>
+                <div class="card-body">
+                    {% if donations %}
+                        <ul class="list-group">
+                            {% for donation in donations %}
+                                <li class="list-group-item">
+                                    <h6>Donation #{{ donation.id }}</h6>
+                                    <p>Date: {{ donation.donation_date|date:"F d, Y" }}</p>
+                                    <p>Blood Type: {{ donation.blood_type }}</p>
+                                    <p>Quantity: {{ donation.quantity }} units</p>
+                                    <a href="{% url 'view_donation_details' donation.id %}" class="btn btn-sm btn-info">Details</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No donation history.</p>
+                    {% endif %}
+                    <div class="mt-3">
+                        <a href="{% url 'schedule_donation' %}" class="btn btn-success">Schedule Donation</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Blood Requests</h5>
+                </div>
+                <div class="card-body">
+                    {% if blood_requests %}
+                        <ul class="list-group">
+                            {% for request in blood_requests %}
+                                <li class="list-group-item">
+                                    <h6>Request #{{ request.id }}</h6>
+                                    <p>Date: {{ request.request_date|date:"F d, Y" }}</p>
+                                    <p>Blood Type: {{ request.blood_type }}</p>
+                                    <p>Status: <span class="badge {% if request.status == 'fulfilled' %}bg-success{% elif request.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">{{ request.get_status_display }}</span></p>
+                                    <a href="{% url 'view_blood_request' request.id %}" class="btn btn-sm btn-info">Details</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No blood requests.</p>
+                    {% endif %}
+                    <div class="mt-3">
+                        <a href="{% url 'create_blood_request' %}" class="btn btn-info">Request Blood</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Lab Reports</h5>
+                </div>
+                <div class="card-body">
+                    {% if lab_reports %}
+                        <ul class="list-group">
+                            {% for report in lab_reports %}
+                                <li class="list-group-item">
+                                    <h6>Report #{{ report.id }}</h6>
+                                    <p>Date: {{ report.report_date|date:"F d, Y" }}</p>
+                                    <p>Type: {{ report.report_type }}</p>
+                                    <a href="{% url 'view_lab_report' report.id %}" class="btn btn-sm btn-info">View Report</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No lab reports available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

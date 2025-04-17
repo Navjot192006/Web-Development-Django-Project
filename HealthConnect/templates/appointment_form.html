@@ -1,0 +1,276 @@
+{% extends "base1.html" %}
+{% block title_block %} Book Appointment - {{ doctor_name }} {% endblock %}
+{% block main_block %}
+
+<style>
+    .appointment-container {
+        max-width: 700px; /* Slightly narrower */
+        margin: 50px auto;
+        padding: 40px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+    }
+    
+    .appointment-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .appointment-header h1 {
+        color: #e74c3c; /* Red color */
+        margin-bottom: 10px;
+        font-size: 32px; /* Slightly larger */
+        font-family: 'Georgia', serif; /* More formal font */
+    }
+     .appointment-header p {
+        color: #666;
+        font-size: 16px;
+    }
+    
+    .doctor-info-display {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: center;
+        border: 1px solid #eee; /* Subtle border */
+    }
+    
+    .doctor-info-display h3 {
+        margin-bottom: 5px;
+        font-size: 22px; /* Larger doctor name */
+        color: #333;
+        font-weight: bold;
+    }
+    
+    .doctor-specialty-display {
+        color: #555;
+        font-weight: normal; /* Lighter weight */
+        margin-bottom: 10px;
+        display: block;
+        font-size: 17px; /* Slightly larger */
+    }
+    
+    .available-date-display {
+        color: #666;
+        font-size: 15px;
+        margin-top: 5px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #555;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="tel"],
+    .form-group input[type="email"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 15px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #e74c3c;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+    }
+    
+    .form-group textarea {
+        height: 120px;
+        resize: vertical;
+    }
+    
+    /* Time Slot Styling */
+    .time-slots-container {
+        margin-bottom: 30px;
+    }
+    
+    .time-slots-container label { /* Style the "Preferred Time" label */
+         display: block;
+        margin-bottom: 15px; /* More space below label */
+        font-weight: 600;
+        font-size: 16px; /* Make label slightly larger */
+        color: #444;
+    }
+    
+    .time-slots-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Explicitly 3 columns */
+        gap: 15px; /* Space between slots */
+    }
+    
+    .time-slot-btn {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 12px 10px;
+        text-align: center;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .time-slot-btn:hover {
+        background-color: #f0f0f0;
+        border-color: #ccc;
+    }
+    
+    .time-slot-btn.selected {
+        background-color: #e74c3c; /* Red background for selected */
+        color: white;
+        border-color: #c0392b; /* Darker red border */
+        font-weight: bold;
+    }
+    
+     .time-slot-btn.booked { /* Optional: Style for booked slots if needed */
+        background-color: #eee;
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    .btn {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s;
+        border: 2px solid #e74c3c;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px; /* Add margin above button */
+    }
+    
+    .btn:hover {
+        background-color: #c0392b;
+        border-color: #c0392b;
+    }
+    
+</style>
+
+<div class="container">
+    <div class="appointment-container">
+        <div class="appointment-header">
+            <h1>Book Your Appointment</h1> {# Updated Title #}
+            <p>Please fill out the form below to request an appointment</p> {# Updated Subtitle #}
+        </div>
+        
+        <div class="doctor-info-display">
+            <h3>{{ doctor_name|default:"Doctor Name Not Provided" }}</h3>
+            <span class="doctor-specialty-display">{{ specialty|default:"Specialty Not Provided" }}</span>
+        </div>
+        
+        <form id="appointment-request-form" method="post" action="{% url 'health:appointment_form' %}">
+            {% csrf_token %}
+            {# Hidden fields to pass doctor info and selected time #}
+            <input type="hidden" name="doctor_name" value="{{ doctor_name }}">
+            <input type="hidden" name="specialty" value="{{ specialty }}">
+            <input type="hidden" name="appointment_date" value="{{ appointment_date }}">
+            <input type="hidden" id="selected-time-slot" name="selected_time_slot" value=""> {# Stores selected time #}
+            
+            {# Time Slot Selection Grid #}
+            <div class="time-slots-container">
+                 <label>Preferred Time</label> {# Changed label #}
+                 <div class="time-slots-grid">
+                     {# Example time slots - these should be dynamically generated from view context #}
+                     {# Replace these with a loop: {% for slot in time_slots %} #}
+                     <button type="button" class="time-slot-btn" data-time="9:00 AM">9:00 AM</button>
+                     <button type="button" class="time-slot-btn" data-time="10:30 AM">10:30 AM</button>
+                     <button type="button" class="time-slot-btn" data-time="12:00 PM">12:00 PM</button>
+                     <button type="button" class="time-slot-btn" data-time="2:00 PM">2:00 PM</button>
+                     <button type="button" class="time-slot-btn" data-time="3:30 PM">3:30 PM</button>
+                     <button type="button" class="time-slot-btn" data-time="5:00 PM">5:00 PM</button>
+                     {# End loop: {% endfor %} #}
+                </div>
+            </div>
+            
+            {# Standard Patient Information Fields #}
+            <div class="form-group">
+                <label for="patient-name">Your Full Name</label>
+                <input type="text" id="patient-name" name="patient_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="patient-dob">Date of Birth</label>
+                <input type="date" id="patient-dob" name="patient_dob" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="patient-phone">Phone Number</label>
+                <input type="tel" id="patient-phone" name="patient_phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="patient-email">Email Address</label>
+                <input type="email" id="patient-email" name="patient_email" required>
+            </div>
+            
+            {# Removed Preferred Dates Text Input #}
+            {# Removed Reason for Visit / Additional Notes (can be added back if needed) #}
+            <div class="form-group">
+                <label for="reason-for-visit">Reason for Visit / Notes (Optional)</label>
+                <textarea id="reason-for-visit" name="reason_for_visit" placeholder="Briefly mention why you need the appointment"></textarea>
+            </div>
+            
+            <button type="submit" class="btn">Confirm Appointment</button> {# Updated Button Text #}
+        </form>
+    </div>
+</div>
+
+<script>
+    // JavaScript for Time Slot Selection
+    const timeSlotButtons = document.querySelectorAll('.time-slot-btn');
+    const selectedTimeInput = document.getElementById('selected-time-slot');
+
+    timeSlotButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove 'selected' class from all buttons
+            timeSlotButtons.forEach(btn => btn.classList.remove('selected'));
+
+            // Add 'selected' class to the clicked button
+            this.classList.add('selected');
+
+            // Update the hidden input field with the selected time
+            selectedTimeInput.value = this.getAttribute('data-time');
+            console.log('Selected time:', selectedTimeInput.value); // For debugging
+        });
+    });
+
+     // Optional: Add validation on submit to ensure a time slot is selected
+    const form = document.getElementById('appointment-request-form');
+    form.addEventListener('submit', function(event) {
+        if (!selectedTimeInput.value) {
+            alert('Please select a preferred time slot.');
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+</script>
+
+{% endblock %}

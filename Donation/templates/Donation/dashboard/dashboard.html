@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Blood Donation Management System Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <h4>Welcome, {{ user.get_full_name|default:user.username }}</h4>
+                    
+                    <div class="mt-4">
+                        {% if is_doctor %}
+                            <p>You are logged in as a doctor. Access your specialized dashboard:</p>
+                            <a href="{% url 'doctor_dashboard' %}" class="btn btn-primary btn-lg">Doctor Dashboard</a>
+                        {% elif is_patient %}
+                            <p>You are logged in as a patient. Access your specialized dashboard:</p>
+                            <a href="{% url 'patient_dashboard' %}" class="btn btn-success btn-lg">Patient Dashboard</a>
+                        {% else %}
+                            <p>Please select your dashboard:</p>
+                            <div class="d-flex justify-content-around mt-4">
+                                <a href="{% url 'doctor_dashboard' %}" class="btn btn-primary btn-lg">Doctor Dashboard</a>
+                                <a href="{% url 'patient_dashboard' %}" class="btn btn-success btn-lg">Patient Dashboard</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-5">
+                        <h5>System Overview</h5>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3>{{ donation_count|default:"0" }}</h3>
+                                        <p>Total Donations</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3>{{ request_count|default:"0" }}</h3>
+                                        <p>Blood Requests</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

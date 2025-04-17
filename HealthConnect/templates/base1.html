@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title_block %}HealthConnect | Book Doctor Appointments Online{% endblock %}</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+        
+        .nav-links a:hover {
+            color: #e74c3c;
+        }
+        
+        .nav-links a.active {
+            color: #e74c3c;
+        }
+
+/* Footer */
+footer {
+            background-color: #222;
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .contact-info {
+            list-style: none;
+        }
+        
+        .contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            color: #e74c3c;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #e74c3c;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #bbb;
+            font-size: 14px;
+        }        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            
+            .nav-links {
+                display: none;
+            }
+        }    
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'Profile' %}" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>HealthConnect</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'Login' %}" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>HealthConnect</span>
+                    </a>
+                    {% endif %}
+                </div>
+                <ul class="nav-links">
+                    <li><a href="{% url 'home' %}" class="active">LifeDrops</a></li>
+                    <li><a href="{% url 'health:appointmentscheduling' %}" class="active">Appointments</a></li>
+                    <li><a href="{% url 'bloodlab:labtest_home' %}">Lab Tests</a></li>
+                    <li><a href="{% url 'health:services' %}">Services</a></li>
+                    <li><a href="{% url 'health:about' %}">About</a></li>
+                    <li><a href="{% url 'Logout' %}" class="btn" style="padding: 8px 20px; font-size: 14px;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% block main_block %}{% endblock %}
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>HealthConnect</h3>
+                    <p style="color: #bbb; margin-bottom: 20px;">Your trusted partner in healthcare access and appointment scheduling.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="s1appointment.html" class="active">Appointments</a></li>
+                        <li><a href="n1labtest.html">Lab Tests</a></li>
+                        <li><a href="s3services.html">Services</a></li>
+                        <li><a href="s2about.html">About</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Primary Care</a></li>
+                        <li><a href="#">Specialty Care</a></li>
+                        <li><a href="#">Virtual Visits</a></li>
+                        <li><a href="#">Preventive Care</a></li>
+                        <li><a href="#">Urgent Care</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Medical Drive, Health City, HC 12345</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@healthconnect.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Mon-Fri: 8am-8pm<br>Sat-Sun: 9am-5pm</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 HealthConnect. All rights reserved. | <a href="#" style="color: #bbb;">Privacy Policy</a> | <a href="#" style="color: #bbb;">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>    
+        

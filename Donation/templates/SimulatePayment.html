@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title_block %} Simulated Payment {% endblock %}
+{% block main_block %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .payment-container {
+        max-width: 500px;
+        margin: 150px auto 50px;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+
+    .payment-container h2 {
+        font-size: 28px;
+        color: #4e0000;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .payment-container h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .payment-details {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background: #f9f9f9;
+    }
+
+    .payment-details p {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #333;
+        text-align: left;
+    }
+
+    .payment-details strong {
+        color: #4e0000;
+        font-weight: 600;
+    }
+    
+    .payment-method-details {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px dashed #ddd;
+    }
+    
+    .payment-method-details h3 {
+        font-size: 18px;
+        color: #4e0000;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .note {
+        margin: 20px 0;
+        padding: 15px;
+        background: #fff8e1;
+        border-left: 4px solid #ffb74d;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #5d4037;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: 600;
+        background-color: #ff4d4d;
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .submit-btn:hover {
+        background-color: #e64444;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.4);
+    }
+</style>
+
+<div class="payment-container">
+    <h2>Complete Your Donation</h2>
+    
+    <div class="payment-details">
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Amount:</strong> ₹{{ amount }} INR</p>
+        <p><strong>Payment Method:</strong> {{ payment_method }}</p>
+        
+        {% if payment_details %}
+        <div class="payment-method-details">
+            <h3>Payment Details</h3>
+            {% if payment_method == 'credit_card' %}
+                <p><strong>Name on Card:</strong> {{ payment_details.card_name }}</p>
+                <p><strong>Card Number:</strong> {{ payment_details.card_number }}</p>
+                <p><strong>Expiry Date:</strong> {{ payment_details.expiry_date }}</p>
+            {% elif payment_method == 'upi' %}
+                <p><strong>UPI ID:</strong> {{ payment_details.upi_id }}</p>
+            {% elif payment_method == 'bank_transfer' %}
+                <p><strong>Bank:</strong> {{ payment_details.bank_name }}</p>
+            {% elif payment_method == 'paypal' %}
+                <p><strong>PayPal Email:</strong> {{ payment_details.paypal_email }}</p>
+            {% elif payment_method == 'wallet' %}
+                <p><strong>Wallet Type:</strong> {{ payment_details.wallet_type }}</p>
+                <p><strong>Mobile/Email:</strong> {{ payment_details.wallet_number }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="note">
+        <p><strong>Note:</strong> This is a simulated payment for development/testing purposes. No actual payment will be processed.</p>
+    </div>
+    
+    <form method="POST" action="{% url 'Donation' %}">
+        {% csrf_token %}
+        <input type="hidden" name="simulated_payment" value="true">
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="payment" value="{{ payment_method }}">
+        <input type="hidden" name="message" value="{{ message }}">
+        
+        <button type="submit" class="submit-btn">Simulate Payment</button>
+    </form>
+</div>
+
+{% endblock %} 

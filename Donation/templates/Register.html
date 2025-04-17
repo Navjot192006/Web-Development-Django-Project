@@ -1,0 +1,541 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title_block %} Register {% endblock %}
+{% block main_block %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: linear-gradient(rgba(78, 0, 0, 0.7), rgba(78, 0, 0, 0.7)), 
+                    url("{%static 'images/loginsignup.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+        color: #490101;
+        line-height: 1.6;
+    }
+
+
+    /* Main Container */
+    .main-container {
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Hero Section for Signup */
+    .signup-hero {
+        padding: 80px 20px 40px;
+        text-align: center;
+        color: white;
+    }
+
+    .signup-hero h1 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .signup-hero p {
+        font-size: 18px;
+        max-width: 700px;
+        margin: 0 auto 30px;
+        opacity: 0.9;
+    }
+
+    /* Signup Section */
+    .signup-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        flex-grow: 1;
+    }
+
+    .signup-container {
+        max-width: 1200px;
+        width: 100%;
+        display: flex;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .signup-info {
+        flex: 1;
+        padding: 60px;
+        background: linear-gradient(135deg, #ff4d4d, #cc0000);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .signup-info h2 {
+        font-size: 36px;
+        margin-bottom: 25px;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+    }
+
+    .signup-info h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: white;
+    }
+
+    .signup-info p {
+        margin-bottom: 30px;
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .benefits-list {
+        list-style: none;
+        margin-bottom: 40px;
+    }
+
+    .benefits-list li {
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 35px;
+    }
+
+    .benefits-list li::before {
+        content: '\f058';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        top: 2px;
+        color: white;
+        font-size: 20px;
+    }
+
+    .signup-box {
+        flex: 1;
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .signup-box h3 {
+        font-size: 28px;
+        margin-bottom: 30px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+    }
+
+    .signup-box h3::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: #ff4d4d;
+    }
+
+    .signup-box p {
+        margin-bottom: 30px;
+        color: #666;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #4e0000;
+        font-weight: 500;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        border-color: #ff4d4d;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.2);
+    }
+
+    .password-strength {
+        height: 5px;
+        background: #eee;
+        border-radius: 5px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .password-strength-bar {
+        height: 100%;
+        width: 0%;
+        background: #ff4d4d;
+        transition: width 0.3s ease;
+    }
+
+    .password-requirements {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .password-requirements ul {
+        list-style: none;
+        padding-left: 15px;
+    }
+
+    .password-requirements li {
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+    .password-requirements li::before {
+        content: '\f00d';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: -15px;
+        color: #ff4d4d;
+        font-size: 10px;
+    }
+
+    .password-requirements li.valid::before {
+        content: '\f00c';
+        color: #28a745;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 16px;
+        font-size: 18px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease-in-out;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .btn:hover {
+        background: #4e0000;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.3);
+    }
+
+    .social-signup {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .social-signup p {
+        position: relative;
+        margin-bottom: 20px;
+        color: #666;
+    }
+
+    .social-signup p::before,
+    .social-signup p::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 30%;
+        height: 1px;
+        background: #ddd;
+    }
+
+    .social-signup p::before {
+        left: 0;
+    }
+
+    .social-signup p::after {
+        right: 0;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .social-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .social-icon.facebook {
+        background: #3b5998;
+    }
+
+    .social-icon.google {
+        background: #db4437;
+    }
+
+    .social-icon.twitter {
+        background: #1da1f2;
+    }
+
+    .social-icon:hover {
+        transform: translateY(-5px);
+        opacity: 0.9;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 30px;
+        color: #666;
+    }
+
+    .login-link a {
+        color: #ff4d4d;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .signup-container {
+            flex-direction: column;
+        }
+        
+        .signup-info, .signup-box {
+            padding: 40px;
+        }
+        
+        .signup-hero h1 {
+            font-size: 36px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+        
+        
+        .signup-hero {
+            padding: 60px 20px 30px;
+        }
+        
+        .signup-hero h1 {
+            font-size: 32px;
+        }
+        
+        .signup-hero p {
+            font-size: 16px;
+        }
+        
+        .signup-info h2, .signup-box h3 {
+            font-size: 28px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .signup-info, .signup-box {
+            padding: 30px 20px;
+        }
+        
+        .signup-hero h1 {
+            font-size: 28px;
+        }
+    
+    }
+</style>
+</head>
+<body>
+
+
+<!-- Main Container -->
+<div class="main-container">
+    <!-- Hero Section -->
+    <section class="signup-hero">
+        <h1>Join Our Community of Lifesavers</h1>
+        <p>Create your account to become a blood donor and start making a difference today</p>
+    </section>
+
+    <!-- Signup Section -->
+    <section class="signup-section">
+        <div class="signup-container">
+            <div class="signup-info">
+                <h2>Why Register?</h2>
+                <p>Becoming a registered donor with LifeDrops gives you access to exclusive benefits and makes it easier to save lives.</p>
+                
+                <ul class="benefits-list">
+                    <li>Track your donation history and impact</li>
+                    <li>Receive notifications when your blood type is needed</li>
+                    <li>Schedule appointments at your convenience</li>
+                    <li>Earn rewards and recognition for your donations</li>
+                    <li>Access your donor health information</li>
+                    <li>Join a community of lifesavers</li>
+                </ul>
+                
+                <p>Already have an account? Sign in to access your donor dashboard.</p>
+                <a href="{% url 'Login' %}" class="btn">Login Here</a>
+            </div>
+            
+            <div class="signup-box">
+                <h3>Create Account</h3>
+                <p>Fill in your details to join our donor community</p>
+                
+                <form id="signupForm" method="post" action="{% url 'Register' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required placeholder="Choose a username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Create a password">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrength"></div>
+                        </div>
+                        <div class="password-requirements">
+                            <ul>
+                                <li id="lengthReq">At least 8 characters</li>
+                                <li id="numberReq">Contains a number</li>
+                                <li id="specialReq">Contains a special character</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cpassword">Confirm Password</label>
+                        <input type="password" id="cpassword" name="cpassword" required placeholder="Confirm your password">
+                    </div>
+                    
+                    <input type="submit" value="Signup" class="btn btn-primary">
+                    
+                    <div class="social-signup">
+                        <p>Or sign up with</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-icon google"><i class="fab fa-google"></i></a>
+                            <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="login-link">
+                        Already have an account? <a href="{% url 'Login' %}">Login here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+
+    // Password Strength Checker
+    const passwordInput = document.getElementById('password');
+    const passwordStrength = document.getElementById('passwordStrength');
+    const lengthReq = document.getElementById('lengthReq');
+    const numberReq = document.getElementById('numberReq');
+    const specialReq = document.getElementById('specialReq');
+
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        // Check length
+        if (password.length >= 8) {
+            strength += 1;
+            lengthReq.classList.add('valid');
+        } else {
+            lengthReq.classList.remove('valid');
+        }
+        
+        // Check for numbers
+        if (/\d/.test(password)) {
+            strength += 1;
+            numberReq.classList.add('valid');
+        } else {
+            numberReq.classList.remove('valid');
+        }
+        
+        // Check for special characters
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            strength += 1;
+            specialReq.classList.add('valid');
+        } else {
+            specialReq.classList.remove('valid');
+        }
+        
+        // Update strength bar
+        const width = (strength / 3) * 100;
+        passwordStrength.style.width = width + '%';
+
+        
+        // Change color based on strength
+        if (strength === 1) {
+            passwordStrength.style.background = '#ff4d4d';
+        } else if (strength === 2) {
+            passwordStrength.style.background = '#ffc107';
+        } else if (strength === 3) {
+            passwordStrength.style.background = '#28a745';
+        }
+    });
+
+    // Form Submission
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', (e) => {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('cpassword').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+        });
+    }
+</script>
+</body>
+
+
+{% endblock %}

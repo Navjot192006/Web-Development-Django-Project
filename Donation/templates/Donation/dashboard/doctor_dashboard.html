@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Doctor Dashboard</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Upcoming Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_appointments %}
+                        <ul class="list-group">
+                            {% for appointment in upcoming_appointments %}
+                                <li class="list-group-item">
+                                    <h6>{{ appointment.patient.user.get_full_name }}</h6>
+                                    <p>Date: {{ appointment.appointment_date|date:"F d, Y" }}</p>
+                                    <p>Time: {{ appointment.appointment_time }}</p>
+                                    <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">Details</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming appointments.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Pending Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% if pending_appointments %}
+                        <ul class="list-group">
+                            {% for appointment in pending_appointments %}
+                                <li class="list-group-item">
+                                    <h6>{{ appointment.patient.user.get_full_name }}</h6>
+                                    <p>Date: {{ appointment.appointment_date|date:"F d, Y" }}</p>
+                                    <p>Time: {{ appointment.appointment_time }}</p>
+                                    <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">Details</a>
+                                    <a href="{% url 'confirm_appointment' appointment.id %}" class="btn btn-sm btn-success">Confirm</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No pending appointments.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Past Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% if past_appointments %}
+                        <ul class="list-group">
+                            {% for appointment in past_appointments %}
+                                <li class="list-group-item">
+                                    <h6>{{ appointment.patient.user.get_full_name }}</h6>
+                                    <p>Date: {{ appointment.appointment_date|date:"F d, Y" }}</p>
+                                    <p>Status: {{ appointment.get_status_display }}</p>
+                                    <a href="{% url 'view_appointment_details' appointment.id %}" class="btn btn-sm btn-info">Details</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No past appointments.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% block title_block %}Privacy Policy{% endblock %}
+
+{% block main_block %}
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+    }
+
+    /* Privacy Policy Section */
+    .privacy-section {
+        padding: 120px 20px 60px;
+        background: #fff;
+        position: relative;
+    }
+
+    .privacy-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10px;
+        background: linear-gradient(to right, #ff4d4d, #cc0000);
+    }
+
+    .privacy-section .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .privacy-section h1 {
+        font-size: 42px;
+        margin-bottom: 25px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        text-align: center;
+        position: relative;
+    }
+
+    .privacy-section h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: #ff4d4d;
+    }
+
+    .privacy-intro {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 40px;
+        font-size: 18px;
+        color: #555;
+    }
+
+    .privacy-section h2 {
+        font-size: 28px;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .privacy-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 2px;
+        background: #ff4d4d;
+    }
+
+    .privacy-section p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #555;
+        line-height: 1.8;
+    }
+
+    .privacy-section ul,
+    .privacy-section ol {
+        margin-left: 30px;
+        margin-bottom: 30px;
+    }
+
+    .privacy-section li {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #555;
+        position: relative;
+        padding-left: 25px;
+        line-height: 1.6;
+    }
+
+    .privacy-section li::before {
+        content: '\f054';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: #ff4d4d;
+        font-size: 14px;
+    }
+
+    .privacy-section .highlight-box {
+        background: rgba(255, 77, 77, 0.1);
+        border-left: 4px solid #ff4d4d;
+        padding: 20px;
+        margin: 30px 0;
+        border-radius: 0 5px 5px 0;
+    }
+
+    .privacy-section .highlight-box p {
+        margin-bottom: 0;
+        color: #4e0000;
+        font-weight: 500;
+    }
+
+    .privacy-section .last-updated {
+        font-size: 14px;
+        color: #999;
+        margin-top: 50px;
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .privacy-section h1 {
+            font-size: 36px;
+        }
+        
+        .privacy-section h2 {
+            font-size: 24px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        
+        .privacy-section {
+            padding: 100px 20px 40px;
+        }
+        
+        .privacy-section h1 {
+            font-size: 32px;
+        }
+        
+        .privacy-section h2 {
+            font-size: 22px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .privacy-section h1 {
+            font-size: 28px;
+        }
+        
+        .privacy-section h2 {
+            font-size: 20px;
+        }
+        
+        .privacy-section p,
+        .privacy-section li {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Privacy Policy Section -->
+<section class="privacy-section">
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p class="privacy-intro">At LifeDrops, we are committed to protecting your privacy and ensuring the security of your personal information. This policy outlines how we collect, use, and safeguard your data when you use our blood donation services.</p>
+
+        <div class="highlight-box">
+            <p><i class="fas fa-info-circle"></i> This policy applies to all information collected through our website, mobile applications, and any related services.</p>
+        </div>
+
+        <h2>1. Information We Collect</h2>
+        <p>To provide our blood donation services effectively, we may collect the following types of information:</p>
+        <ul>
+            <li><strong>Personal Identification:</strong> Full name, date of birth, gender, contact details (email, phone number, address), and government-issued identification numbers when required by law.</li>
+            <li><strong>Health Information:</strong> Blood type, medical history, recent travel, medications, and other health-related data necessary to determine donation eligibility.</li>
+            <li><strong>Donation Records:</strong> Date, time, and location of donations, type of donation (whole blood, plasma, platelets), and any adverse reactions.</li>
+            <li><strong>Technical Data:</strong> IP address, browser type, device information, and usage patterns when you interact with our digital platforms.</li>
+            <li><strong>Location Data:</strong> With your permission, we may collect precise location data to help you find nearby donation centers.</li>
+        </ul>
+
+        <h2>2. How We Use Your Information</h2>
+        <p>Your information helps us provide and improve our services in the following ways:</p>
+        <ol>
+            <li><strong>Service Provision:</strong> To register you as a donor, schedule appointments, and maintain your donation history.</li>
+            <li><strong>Health Safety:</strong> To ensure both donor and recipient safety by screening for eligibility and tracking donations.</li>
+            <li><strong>Communication:</strong> To send appointment reminders, donation requests, and important service updates.</li>
+            <li><strong>Research & Improvement:</strong> Aggregated, anonymized data helps us improve donation processes and blood supply management.</li>
+            <li><strong>Legal Compliance:</strong> To meet regulatory requirements and respond to lawful requests from authorities.</li>
+        </ol>
+
+        <div class="highlight-box">
+            <p><i class="fas fa-lock"></i> We never sell your personal information. All data is used strictly for blood donation-related purposes.</p>
+        </div>
+
+        <h2>3. Data Security Measures</h2>
+        <p>We implement robust security measures to protect your information:</p>
+        <ul>
+            <li><strong>Encryption:</strong> All sensitive data is encrypted both in transit (using TLS/SSL) and at rest.</li>
+            <li><strong>Access Controls:</strong> Strict role-based access ensures only authorized personnel can view your information.</li>
+            <li><strong>Regular Audits:</strong> We conduct frequent security assessments and penetration testing.</li>
+            <li><strong>Training:</strong> All staff receive comprehensive privacy and security training.</li>
+            <li><strong>Incident Response:</strong> We have protocols to quickly address any potential data breaches.</li>
+        </ul>
+
+        <h2>4. Information Sharing & Disclosure</h2>
+        <p>We may share your information in limited circumstances:</p>
+        <ul>
+            <li><strong>Medical Facilities:</strong> With hospitals and blood banks when your donation is used, maintaining confidentiality.</li>
+            <li><strong>Service Providers:</strong> With trusted partners who assist our operations under strict confidentiality agreements.</li>
+            <li><strong>Legal Requirements:</strong> When required by law or to protect vital interests.</li>
+            <li><strong>With Your Consent:</strong> For specific purposes not covered by this policy.</li>
+        </ul>
+
+        <h2>5. Your Privacy Rights</h2>
+        <p>You have significant control over your personal information:</p>
+        <ul>
+            <li><strong>Access:</strong> Request a copy of the personal data we hold about you.</li>
+            <li><strong>Correction:</strong> Update or correct inaccurate information.</li>
+            <li><strong>Deletion:</strong> Request deletion of your data, subject to legal retention requirements.</li>
+            <li><strong>Restriction:</strong> Limit how we use your information.</li>
+            <li><strong>Objection:</strong> Object to certain processing activities.</li>
+            <li><strong>Portability:</strong> Request transfer of your data to another organization.</li>
+            <li><strong>Withdraw Consent:</strong> Where processing is based on consent.</li>
+        </ul>
+
+        <div class="highlight-box">
+            <p><i class="fas fa-user-shield"></i> To exercise these rights, please contact our Data Protection Officer at privacy@lifedrops.org.</p>
+        </div>
+
+        <h2>6. Cookies & Tracking Technologies</h2>
+        <p>We use cookies and similar technologies to:</p>
+        <ul>
+            <li>Remember your preferences and login information</li>
+            <li>Analyze site traffic and usage patterns</li>
+            <li>Improve our services and user experience</li>
+            <li>Deliver targeted information about blood donation opportunities</li>
+        </ul>
+        <p>You can manage cookie preferences through your browser settings.</p>
+
+        <h2>7. International Data Transfers</h2>
+        <p>As a global organization, we may transfer and process your information in countries outside your residence. We ensure all transfers comply with applicable data protection laws and implement appropriate safeguards.</p>
+
+        <h2>8. Policy Updates</h2>
+        <p>We may update this policy periodically to reflect changes in our practices or legal requirements. Significant changes will be communicated through our website or direct notifications when appropriate.</p>
+
+        <h2>9. Contact Information</h2>
+        <p>For any privacy-related questions or concerns, please contact our Data Protection Team:</p>
+        <ul>
+            <li>Email: privacy@lifedrops.org</li>
+            <li>Phone: +1 (800) 555-LIFE</li>
+            <li>Mail: Data Protection Officer, LifeDrops, 123 LifeSaver Ave, Health City</li>
+        </ul>
+
+        <p class="last-updated">This policy was last updated on October 15, 2023</p>
+    </div>
+</section>
+</body>
+
+
+{% endblock %}

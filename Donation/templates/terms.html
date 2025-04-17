@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title_block %}Terms and Conditions{% endblock %}
+
+{% block main_block %}
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+    }
+
+    /* Terms and Conditions Section */
+    .terms-section {
+        padding: 100px 20px 50px; /* Adjusted for fixed navbar */
+        background: #fff;
+    }
+
+    .terms-section .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .terms-section h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .terms-section h2 {
+        font-size: 24px;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        color: #4e0000;
+    }
+
+    .terms-section p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #666;
+    }
+
+    .terms-section ul,
+    .terms-section ol {
+        margin-left: 30px;
+        margin-bottom: 20px;
+    }
+
+    .terms-section li {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #666;
+    }
+
+    .terms-section .last-updated {
+        font-size: 14px;
+        color: #999;
+        margin-top: 30px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .terms-section {
+            padding: 80px 20px 30px;
+        }
+
+        .terms-section h1 {
+            font-size: 28px;
+        }
+
+        .terms-section h2 {
+            font-size: 22px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .terms-section h1 {
+            font-size: 26px;
+        }
+        
+        .terms-section h2 {
+            font-size: 20px;
+        }
+        
+        .terms-section p,
+        .terms-section li {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Terms and Conditions Section -->
+<section class="terms-section">
+    <div class="container">
+        <h1>Terms and Conditions</h1>
+        <p>Please read these terms and conditions carefully before using our blood donation services.</p>
+
+        <h2>1. Eligibility</h2>
+        <p>To donate blood, you must meet the following criteria:</p>
+        <ul>
+            <li>Be between 18 and 65 years old.</li>
+            <li>Weigh at least 50 kg (110 lbs).</li>
+            <li>Be in good health and free from infectious diseases.</li>
+            <li>Not have donated blood in the last 56 days.</li>
+        </ul>
+
+        <h2>2. Donation Process</h2>
+        <p>The blood donation process includes the following steps:</p>
+        <ol>
+            <li>Registration and health screening.</li>
+            <li>Blood donation (takes 10-15 minutes).</li>
+            <li>Post-donation refreshments and rest.</li>
+        </ol>
+
+        <h2>3. Privacy Policy</h2>
+        <p>We respect your privacy and ensure that all personal information is handled securely. Your data will only be used for blood donation purposes.</p>
+
+        <h2>4. Liability</h2>
+        <p>We are not liable for any health issues arising from blood donation if you do not meet the eligibility criteria or fail to disclose relevant health information.</p>
+
+        <h2>5. Changes to Terms</h2>
+        <p>We reserve the right to update these terms and conditions at any time. Please review this page periodically for changes.</p>
+
+        <p class="last-updated">Last updated: October 2023</p>
+    </div>
+</section>
+</body>
+
+
+{% endblock %}

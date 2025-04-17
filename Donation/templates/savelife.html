@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% block title_block %}Save Life{% endblock %}
+
+{% block main_block %}
+
+
+<style>
+    /* Reusing styles from the main page */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #f8f8f8;
+        color: #490101;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .save-lives-hero {
+        height: 100vh;
+        background: linear-gradient(rgba(78, 0, 0, 0.7), rgba(78, 0, 0, 0.7)), 
+                    url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 0 20px;
+    }
+
+    .hero-content {
+        max-width: 800px;
+    }
+
+    .hero-content h1 {
+        font-size: 72px;
+        margin-bottom: 25px;
+        font-family: 'Playfair Display', serif;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.5s ease;
+    }
+
+    .hero-content p {
+        font-size: 24px;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 2s ease;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 16px 40px;
+        font-size: 18px;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease-in-out;
+        box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 2.5s ease;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        background: #fff;
+        color: #ff4d4d;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(255, 77, 77, 0.7);
+    }
+
+    /* Main Content Sections */
+    .main-content {
+        padding: 100px 20px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 42px;
+        margin-bottom: 20px;
+        color: #4e0000;
+        font-family: 'Playfair Display', serif;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 3px;
+        background: #ff4d4d;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Impact Section */
+    .impact-section {
+        margin-bottom: 100px;
+    }
+
+    .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .impact-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+        text-align: center;
+    }
+
+    .impact-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+    }
+
+    .impact-card i {
+        font-size: 50px;
+        color: #ff4d4d;
+        margin-bottom: 25px;
+    }
+
+    .impact-card h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #4e0000;
+    }
+
+    .impact-card p {
+        color: #555;
+    }
+
+    /* Stories Section */
+    .stories-section {
+        background: linear-gradient(135deg, #4e0000, #6a0000);
+        color: white;
+        padding: 100px 20px;
+        margin-bottom: 100px;
+        border-radius: 15px;
+    }
+
+    .stories-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .story-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 40px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .story-card h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #ff4d4d;
+    }
+
+    .story-card p {
+        margin-bottom: 20px;
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    .story-author {
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    /* Blood Facts Section */
+    .facts-section {
+        margin-bottom: 100px;
+    }
+
+    .facts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .fact-item {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #ff4d4d;
+    }
+
+    .fact-item h3 {
+        color: #4e0000;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .fact-item p {
+        color: #555;
+        font-size: 15px;
+    }
+
+    /* CTA Section */
+     .cta-section {
+        background: linear-gradient(135deg, #ff4d4d, #cc0000);
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin-bottom: 100px;
+    }
+
+    .cta-section h2 {
+        font-size: 42px;
+        margin-bottom: 30px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 40px;
+        font-size: 20px;
+    } 
+
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .hero-content h1 {
+            font-size: 58px;
+        }
+        
+        .hero-content p {
+            font-size: 22px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        
+        .hero-content h1 {
+            font-size: 42px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-content h1 {
+            font-size: 36px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+        }
+        
+        .cta-section h2 {
+            font-size: 32px;
+        }
+        
+        .cta-section p {
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+<body>
+<!-- Hero Section -->
+<section class="save-lives-hero">
+    <div class="hero-content">
+        <h1>Save Lives Through Blood Donation</h1>
+        <p>One blood donation can save up to three lives. Your contribution could help accident victims, surgery patients, newborns, and those battling cancer.</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'check_eligibility' %}" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Become a Donor Today</a>
+    {% else %}
+        <a href="{% url 'Login' %}" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Become a Donor Today</a>
+    {% endif %} 
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Impact Section -->
+    <section class="impact-section">
+        <div class="section-title">
+            <h2>The Power of Your Donation</h2>
+            <p>Every drop of blood you donate creates a ripple effect of life-saving impact</p>
+        </div>
+        
+        <div class="impact-grid">
+            <div class="impact-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Immediate Impact</h3>
+                <p>Your blood can be used within hours of donation to save someone's life during emergencies like car accidents or childbirth complications.</p>
+            </div>
+            
+            <div class="impact-card">
+                <i class="fas fa-procedures"></i>
+                <h3>Medical Treatments</h3>
+                <p>Patients undergoing surgeries, cancer treatments, and organ transplants often require multiple blood transfusions to survive.</p>
+            </div>
+            
+            <div class="impact-card">
+                <i class="fas fa-baby"></i>
+                <h3>Newborn Survival</h3>
+                <p>Premature babies often need blood transfusions to treat anemia and other complications in their first days of life.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stories Section -->
+    <section class="stories-section">
+        <div class="section-title">
+            <h2 style="color: white;">Real Stories of Hope</h2>
+            <p style="color: rgba(255,255,255,0.8);">Hear from those whose lives were saved by blood donors</p>
+        </div>
+        
+        <div class="stories-container">
+            <div class="story-card">
+                <h3>A Second Chance at Life</h3>
+                <p>"After a terrible car accident, I needed 7 units of blood to survive. I wouldn't be here today if not for the generosity of strangers who took the time to donate. Now I donate regularly to pay it forward."</p>
+                <p class="story-author">- Michael T., accident survivor</p>
+            </div>
+            
+            <div class="story-card">
+                <h3>My Daughter's Miracle</h3>
+                <p>"Our premature baby needed three blood transfusions in her first week of life. The donated blood gave her the strength to fight and grow. She just celebrated her 5th birthday thanks to blood donors."</p>
+                <p class="story-author">- Sarah J., grateful parent</p>
+            </div>
+            
+            <div class="story-card">
+                <h3>Battling Cancer Together</h3>
+                <p>"During my chemotherapy treatments, I needed blood transfusions every two weeks. Those donations gave me the energy to keep fighting. I'm now in remission and volunteer at blood drives to encourage others to donate."</p>
+                <p class="story-author">- David R., cancer survivor</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blood Facts Section -->
+    <section class="facts-section">
+        <div class="section-title">
+            <h2>Facts About Blood Donation</h2>
+            <p>Knowledge is power - understand how your donation makes a difference</p>
+        </div>
+        
+        <div class="facts-grid">
+            <div class="fact-item">
+                <h3>Frequent Need</h3>
+                <p>Every 2 seconds someone in the U.S. needs blood, requiring about 36,000 units of red blood cells each day.</p>
+            </div>
+            
+            <div class="fact-item">
+                <h3>Short Shelf Life</h3>
+                <p>Red blood cells must be used within 42 days, while platelets must be used within just 5 days.</p>
+            </div>
+            
+            <div class="fact-item">
+                <h3>Universal Donors</h3>
+                <p>Type O-negative blood can be given to patients of all blood types, making it especially valuable.</p>
+            </div>
+            
+            <div class="fact-item">
+                <h3>Regular Donors</h3>
+                <p>Only 3% of age-eligible people donate blood yearly, yet 25% will need blood in their lifetime.</p>
+            </div>
+            
+            <div class="fact-item">
+                <h3>Quick Recovery</h3>
+                <p>Your body replaces the fluid lost during donation within 24 hours and red cells within 4-6 weeks.</p>
+            </div>
+            
+            <div class="fact-item">
+                <h3>Multiple Uses</h3>
+                <p>One donation can be separated into red cells, plasma, and platelets to help multiple patients.</p>
+            </div>
+        </div>
+    </section>
+
+    CTA Section
+    <section class="cta-section">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join thousands of lifesavers in your community. Schedule your donation appointment today and become someone's hero.</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'check_eligibility' %}" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Now</a>
+    {% else %}
+        <a href="{% url 'Login' %}" class="btn pulse"><i class="fas fa-hand-holding-heart"></i> Donate Now</a>
+    {% endif %} 
+   </section>
+</div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // Back to Top Button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 300);
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+</body>
+
+
+{% endblock %}
